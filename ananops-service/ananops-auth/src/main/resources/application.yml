@@ -1,0 +1,9 @@
+server:
+  port: 8005
+
+spring:
+  application:
+    name: ananops-auth
+  profiles:
+    active: dev
+

@@ -1,0 +1,11 @@
+server:
+  port: 9527
+
+spring:
+  application:
+    name: ananops-gateway
+  devtools:
+    restart:
+      enabled: true
+  profiles:
+    active: dev

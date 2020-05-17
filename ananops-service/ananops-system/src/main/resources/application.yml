@@ -1,0 +1,10 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: ananops-system
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true
