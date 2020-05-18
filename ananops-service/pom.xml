@@ -16,5 +16,6 @@
         <module>ananops-gen</module>
         <module>ananops-dfs</module>
         <module>ananops-activiti</module>
+        <module>ananops-imc</module>
     </modules>
 </project>
