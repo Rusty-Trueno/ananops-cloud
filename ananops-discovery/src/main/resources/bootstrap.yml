@@ -5,10 +5,8 @@ spring:
   cloud:
     config:
       server:
-      uri: ananops-discovery
-      search-paths: /*
-      default-label: ${spring.profiles.active}
-      basedir: /home/ananops/ananops-config-repo
+        native:
+          search-locations: /home/ananops-cloud/ananops-config-repo
 
 # 注册中心配置
 eureka:
@@ -17,6 +15,8 @@ eureka:
       defaultZone: http://ananops-eureka:8761/eureka
       #defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/
   instance:
+    ip-address: ananops-discovery
+    non-secure-port: ${server.port}
     instance-id: ${spring.application.name}:${server.port}
     prefer-ip-address: true     #访问路径可以显示IP地址
 

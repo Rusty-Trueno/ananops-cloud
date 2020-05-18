@@ -1,11 +1,13 @@
 package com.ananops.gateway.fiflt;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -35,7 +37,8 @@ public class AuthFilter implements GlobalFilter, Ordered
 {
     // 排除过滤的 uri 地址
     // swagger排除自行添加
-    private static final String[]           whiteList = {"/auth/login", "/user/register", "/system/v2/api-docs"};
+    @Value("#{'${spring.cloud.gateway.whiteList}'.split(',')}")
+    private List<String> whiteList = new ArrayList<>();
 
     @Resource(name = "stringRedisTemplate")
     private ValueOperations<String, String> ops;
@@ -46,7 +49,7 @@ public class AuthFilter implements GlobalFilter, Ordered
         String url = exchange.getRequest().getURI().getPath();
         log.info("url:{}", url);
         // 跳过不需要验证的路径
-        if (Arrays.asList(whiteList).contains(url))
+        if (whiteList.contains(url))
         {
             return chain.filter(exchange);
         }
