@@ -1,5 +1,5 @@
 ## 安安运维平台简介
-
+![](./doc/ruoyi-cloud.png)
 
 依次绑定host：
 
