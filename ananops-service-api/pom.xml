@@ -11,6 +11,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>ananops-system-api</module>
+        <module>ananops-imc-api</module>
     </modules>
     <dependencies>
         <dependency>

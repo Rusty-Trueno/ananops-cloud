@@ -1,5 +1,6 @@
 package com.ananops;
 
+import com.ananops.imc.annotation.EnableRyFeignClients;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -11,6 +12,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  */
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @EnableEurekaClient
+@EnableRyFeignClients
 @MapperScan("com.ananops.*.mapper")
 public class AnanopsImcApp {
     public static void main(String[] args) {
