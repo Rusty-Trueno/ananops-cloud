@@ -1,5 +1,9 @@
 ## 安安运维平台简介
-![](./doc/ruoyi-cloud.png)
+![架构图](./doc/ruoyi-cloud.png)
+
+## 快速开始
+
+数据库文件放在了阿里云服务器上: /home/ananops-sql
 
 依次绑定host：
 
@@ -66,3 +70,6 @@ ananops-cloud
 |  ├──ananops-monitor --监控中心
 
 ```
+
+## 文档
+[代码生成器使用](./doc/ananops-gen.md)
