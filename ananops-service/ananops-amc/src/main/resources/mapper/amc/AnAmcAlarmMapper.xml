@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ananops.amc.mapper.AnAmcAlarmMapper">
+    
+    <resultMap type="AnAmcAlarm" id="AnAmcAlarmResult">
+        <result property="alarmId"    column="alarm_id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="version"    column="version"    />
+        <result property="alarmName"    column="alarm_name"    />
+        <result property="alarmType"    column="alarm_type"    />
+        <result property="alarmLevel"    column="alarm_level"    />
+        <result property="alarmAsset"    column="alarm_asset"    />
+        <result property="assetType"    column="asset_type"    />
+        <result property="alarmStatus"    column="alarm_status"    />
+        <result property="alarmLocation"    column="alarm_location"    />
+        <result property="alarmLongitude"    column="alarm_longitude"    />
+        <result property="alarmLatitude"    column="alarm_latitude"    />
+        <result property="alarmPhoto"    column="alarm_photo"    />
+        <result property="lastOccurTime"    column="last_occur_time"    />
+        <result property="description"    column="description"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectAnAmcAlarmVo">
+        select alarm_id, dept_id, dept_name, user_id, user_name, version, alarm_name, alarm_type, alarm_level, alarm_asset, asset_type, alarm_status, alarm_location, alarm_longitude, alarm_latitude, alarm_photo, last_occur_time, description, create_by, create_time, update_by, update_time, remark from an_amc_alarm
+    </sql>
+
+    <select id="selectAnAmcAlarmList" parameterType="AnAmcAlarm" resultMap="AnAmcAlarmResult">
+        <include refid="selectAnAmcAlarmVo"/>
+        <where>  
+            <if test="deptName != null  and deptName != ''"> and dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="alarmName != null  and alarmName != ''"> and alarm_name like concat('%', #{alarmName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectAnAmcAlarmById" parameterType="Long" resultMap="AnAmcAlarmResult">
+        <include refid="selectAnAmcAlarmVo"/>
+        where alarm_id = #{alarmId}
+    </select>
+        
+    <insert id="insertAnAmcAlarm" parameterType="AnAmcAlarm" useGeneratedKeys="true" keyProperty="alarmId">
+        insert into an_amc_alarm
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptId != null ">dept_id,</if>
+            <if test="deptName != null  and deptName != ''">dept_name,</if>
+            <if test="userId != null ">user_id,</if>
+            <if test="userName != null  and userName != ''">user_name,</if>
+            <if test="version != null ">version,</if>
+            <if test="alarmName != null  and alarmName != ''">alarm_name,</if>
+            <if test="alarmType != null  and alarmType != ''">alarm_type,</if>
+            <if test="alarmLevel != null ">alarm_level,</if>
+            <if test="alarmAsset != null  and alarmAsset != ''">alarm_asset,</if>
+            <if test="assetType != null  and assetType != ''">asset_type,</if>
+            <if test="alarmStatus != null ">alarm_status,</if>
+            <if test="alarmLocation != null  and alarmLocation != ''">alarm_location,</if>
+            <if test="alarmLongitude != null ">alarm_longitude,</if>
+            <if test="alarmLatitude != null ">alarm_latitude,</if>
+            <if test="alarmPhoto != null  and alarmPhoto != ''">alarm_photo,</if>
+            <if test="lastOccurTime != null ">last_occur_time,</if>
+            <if test="description != null  and description != ''">description,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptId != null ">#{deptId},</if>
+            <if test="deptName != null  and deptName != ''">#{deptName},</if>
+            <if test="userId != null ">#{userId},</if>
+            <if test="userName != null  and userName != ''">#{userName},</if>
+            <if test="version != null ">#{version},</if>
+            <if test="alarmName != null  and alarmName != ''">#{alarmName},</if>
+            <if test="alarmType != null  and alarmType != ''">#{alarmType},</if>
+            <if test="alarmLevel != null ">#{alarmLevel},</if>
+            <if test="alarmAsset != null  and alarmAsset != ''">#{alarmAsset},</if>
+            <if test="assetType != null  and assetType != ''">#{assetType},</if>
+            <if test="alarmStatus != null ">#{alarmStatus},</if>
+            <if test="alarmLocation != null  and alarmLocation != ''">#{alarmLocation},</if>
+            <if test="alarmLongitude != null ">#{alarmLongitude},</if>
+            <if test="alarmLatitude != null ">#{alarmLatitude},</if>
+            <if test="alarmPhoto != null  and alarmPhoto != ''">#{alarmPhoto},</if>
+            <if test="lastOccurTime != null ">#{lastOccurTime},</if>
+            <if test="description != null  and description != ''">#{description},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnAmcAlarm" parameterType="AnAmcAlarm">
+        update an_amc_alarm
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null ">dept_id = #{deptId},</if>
+            <if test="deptName != null  and deptName != ''">dept_name = #{deptName},</if>
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="userName != null  and userName != ''">user_name = #{userName},</if>
+            <if test="version != null ">version = #{version},</if>
+            <if test="alarmName != null  and alarmName != ''">alarm_name = #{alarmName},</if>
+            <if test="alarmType != null  and alarmType != ''">alarm_type = #{alarmType},</if>
+            <if test="alarmLevel != null ">alarm_level = #{alarmLevel},</if>
+            <if test="alarmAsset != null  and alarmAsset != ''">alarm_asset = #{alarmAsset},</if>
+            <if test="assetType != null  and assetType != ''">asset_type = #{assetType},</if>
+            <if test="alarmStatus != null ">alarm_status = #{alarmStatus},</if>
+            <if test="alarmLocation != null  and alarmLocation != ''">alarm_location = #{alarmLocation},</if>
+            <if test="alarmLongitude != null ">alarm_longitude = #{alarmLongitude},</if>
+            <if test="alarmLatitude != null ">alarm_latitude = #{alarmLatitude},</if>
+            <if test="alarmPhoto != null  and alarmPhoto != ''">alarm_photo = #{alarmPhoto},</if>
+            <if test="lastOccurTime != null ">last_occur_time = #{lastOccurTime},</if>
+            <if test="description != null  and description != ''">description = #{description},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where alarm_id = #{alarmId}
+    </update>
+
+    <delete id="deleteAnAmcAlarmById" parameterType="Long">
+        delete from an_amc_alarm where alarm_id = #{alarmId}
+    </delete>
+
+    <delete id="deleteAnAmcAlarmByIds" parameterType="String">
+        delete from an_amc_alarm where alarm_id in 
+        <foreach item="alarmId" collection="array" open="(" separator="," close=")">
+            #{alarmId}
+        </foreach>
+    </delete>
+    
+</mapper>

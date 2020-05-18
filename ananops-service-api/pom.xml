@@ -12,6 +12,7 @@
     <modules>
         <module>ananops-system-api</module>
         <module>ananops-imc-api</module>
+        <module>ananops-amc-api</module>
     </modules>
     <dependencies>
         <dependency>

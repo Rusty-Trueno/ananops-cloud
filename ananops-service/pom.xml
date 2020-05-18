@@ -17,5 +17,6 @@
         <module>ananops-dfs</module>
         <module>ananops-activiti</module>
         <module>ananops-imc</module>
+        <module>ananops-amc</module>
     </modules>
 </project>
