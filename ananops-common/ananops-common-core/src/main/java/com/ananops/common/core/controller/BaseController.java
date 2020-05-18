@@ -10,9 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ananops.common.core.dto.LoginAuthDto;
+import com.ananops.common.redis.util.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
@@ -35,6 +38,9 @@ import com.ananops.common.utils.sql.SqlUtil;
 public class BaseController
 {
     protected final Logger logger = LoggerFactory.getLogger(BaseController.class);
+
+    @Autowired
+    RedisUtils redis;
 
     /**
      * 将前台传递过来的日期格式的字符串，自动转化为Date类型
@@ -151,5 +157,16 @@ public class BaseController
     protected R toAjax(boolean result)
     {
         return result ? R.ok() : R.error();
+    }
+
+    /**
+     * 获取当前用户信息
+     * @return
+     */
+    protected LoginAuthDto getLoginAuthDto(){
+        // 获取当前的用户
+        HttpServletRequest request = ServletUtils.getRequest();
+        String token = request.getHeader("token");
+        return redis.get(Constants.ACCESS_TOKEN + token,LoginAuthDto.class);
     }
 }

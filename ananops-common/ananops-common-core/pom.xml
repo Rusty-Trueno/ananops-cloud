@@ -16,6 +16,12 @@
 
 	<dependencies>
 
+		<!--引入redis工具类-->
+		<dependency>
+			<groupId>com.ananops</groupId>
+			<artifactId>ananops-common-redis</artifactId>
+			<version>1.0</version>
+		</dependency>
 		<!-- Spring框架基本的核心工具 -->
 		<dependency>
 			<groupId>org.springframework</groupId>
