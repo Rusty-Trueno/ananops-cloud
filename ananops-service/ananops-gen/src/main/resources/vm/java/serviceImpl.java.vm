@@ -68,7 +68,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
         ${className}.setCreateTime(DateUtils.getNowDate());
 #end
 #end
-        return ${className}Mapper.insert${ClassName}(${className});
+        return ${className}Mapper.insert(${className});
     }
 
     /**

@@ -1,5 +1,6 @@
 package ${packageName}.mapper;
 
+import com.ananops.common.core.dao.BaseMapper;
 import ${packageName}.domain.${ClassName};
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * @author ${author}
  * @date ${datetime}
  */
-public interface ${ClassName}Mapper 
+public interface ${ClassName}Mapper extends BaseMapper<${ClassName}>
 {
     /**
      * 查询${functionName}
