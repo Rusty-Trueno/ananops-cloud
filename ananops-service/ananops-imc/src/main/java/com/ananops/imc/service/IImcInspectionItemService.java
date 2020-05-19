@@ -1,5 +1,6 @@
 package com.ananops.imc.service;
 
+import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.imc.domain.ImcInspectionItem;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public interface IImcInspectionItemService
      * @param imcInspectionItem 巡检任务子项
      * @return 结果
      */
-    public int insertImcInspectionItem(ImcInspectionItem imcInspectionItem);
+    public int insertImcInspectionItem(ImcInspectionItem imcInspectionItem, LoginAuthDto user);
 
     /**
      * 修改巡检任务子项

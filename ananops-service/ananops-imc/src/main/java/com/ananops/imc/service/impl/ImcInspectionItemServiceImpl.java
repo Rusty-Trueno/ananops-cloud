@@ -1,7 +1,10 @@
 package com.ananops.imc.service.impl;
 
 import java.util.List;
+
+import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.common.utils.DateUtils;
+import com.ananops.common.utils.bean.UpdateInfoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ananops.imc.mapper.ImcInspectionItemMapper;
@@ -52,9 +55,11 @@ public class ImcInspectionItemServiceImpl implements IImcInspectionItemService
      * @return 结果
      */
     @Override
-    public int insertImcInspectionItem(ImcInspectionItem imcInspectionItem)
+    public int insertImcInspectionItem(ImcInspectionItem imcInspectionItem, LoginAuthDto user)
     {
+        boolean isNew = null == imcInspectionItem.getId();
         imcInspectionItem.setCreateTime(DateUtils.getNowDate());
+        UpdateInfoUtil.setUpdateInfo(imcInspectionItem,isNew,user);
         return imcInspectionItemMapper.insert(imcInspectionItem);
     }
 
