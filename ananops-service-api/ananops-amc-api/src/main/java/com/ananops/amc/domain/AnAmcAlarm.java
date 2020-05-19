@@ -4,6 +4,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ananops.common.annotation.Excel;
 import com.ananops.common.core.domain.BaseEntity;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
 
 /**
@@ -17,6 +21,8 @@ public class AnAmcAlarm extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** ID，主键 */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long alarmId;
 
     /** 部门ID */

@@ -9,6 +9,8 @@ import com.ananops.amc.domain.AnAmcAlarm;
 import com.ananops.amc.service.IAnAmcAlarmService;
 import com.ananops.common.core.text.Convert;
 
+import javax.annotation.Resource;
+
 /**
  * 告警Service业务层处理
  * 
@@ -18,7 +20,7 @@ import com.ananops.common.core.text.Convert;
 @Service
 public class AnAmcAlarmServiceImpl implements IAnAmcAlarmService 
 {
-    @Autowired
+    @Resource
     private AnAmcAlarmMapper anAmcAlarmMapper;
 
     /**

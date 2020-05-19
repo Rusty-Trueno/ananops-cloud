@@ -1,0 +1,10 @@
+server:
+  port: 9300
+spring:
+  application:
+    name: ananops-amc
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true

@@ -40,6 +40,10 @@ public class RouterFunctionConfiguration
 
     private final ImgCodeHandler         imgCodeHandler;
 
+    /**
+     * 添加服务降级的路由、获取验证码的路由
+     * @return
+     */
     @Bean
     public RouterFunction<?> routerFunction()
     {
