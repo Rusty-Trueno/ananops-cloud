@@ -16,6 +16,7 @@ import com.ananops.system.config.DruidProperties;
 
 /**
  * 多数据源处理
+ * 支持根据方法名区分读写分离
  */
 @Aspect
 @Order(1)

@@ -46,7 +46,7 @@ public class DruidConfig
     }
 
     @Bean(name = "dynamicDataSource")
-    @Primary
+    @Primary  //使用注解 Primary 优先从动态数据源中获取
     public DynamicDataSource dataSource()
     {
         Map<Object, Object> targetDataSources = new HashMap<>();

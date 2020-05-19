@@ -72,4 +72,5 @@ ananops-cloud
 ```
 
 ## 文档
-[代码生成器使用](./doc/ananops-gen.md)
+- [代码生成器使用](./doc/ananops-gen.md)
+- [多数据源实现参考文章](https://mianshenglee.github.io/2020/01/16/multi-datasource-2.html)
