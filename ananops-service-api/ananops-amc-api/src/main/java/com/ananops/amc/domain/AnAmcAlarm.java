@@ -14,7 +14,7 @@ import java.util.Date;
  * 告警对象 an_amc_alarm
  * 
  * @author ananops
- * @date 2020-05-18
+ * @date 2020-05-20
  */
 public class AnAmcAlarm extends BaseEntity
 {
@@ -23,7 +23,11 @@ public class AnAmcAlarm extends BaseEntity
     /** ID，主键 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long alarmId;
+    private Long id;
+
+    /** 版本号 */
+    @Excel(name = "版本号")
+    private Long version;
 
     /** 部门ID */
     @Excel(name = "部门ID")
@@ -32,18 +36,6 @@ public class AnAmcAlarm extends BaseEntity
     /** 部门名称 */
     @Excel(name = "部门名称")
     private String deptName;
-
-    /** 用户ID */
-    @Excel(name = "用户ID")
-    private Long userId;
-
-    /** 用户昵称 */
-    @Excel(name = "用户昵称")
-    private String userName;
-
-    /** 版本号 */
-    @Excel(name = "版本号")
-    private Long version;
 
     /** 告警名称 */
     @Excel(name = "告警名称")
@@ -93,14 +85,31 @@ public class AnAmcAlarm extends BaseEntity
     @Excel(name = "描述")
     private String description;
 
-    public void setAlarmId(Long alarmId) 
+    /** 创建者ID */
+    @Excel(name = "创建者ID")
+    private Long creatorId;
+
+    /** 最近操作者ID */
+    @Excel(name = "最近操作者ID")
+    private Long lastOperatorId;
+
+    public void setId(Long id) 
     {
-        this.alarmId = alarmId;
+        this.id = id;
     }
 
-    public Long getAlarmId() 
+    public Long getId() 
     {
-        return alarmId;
+        return id;
+    }
+    public void setVersion(Long version) 
+    {
+        this.version = version;
+    }
+
+    public Long getVersion() 
+    {
+        return version;
     }
     public void setDeptId(Long deptId) 
     {
@@ -119,33 +128,6 @@ public class AnAmcAlarm extends BaseEntity
     public String getDeptName() 
     {
         return deptName;
-    }
-    public void setUserId(Long userId) 
-    {
-        this.userId = userId;
-    }
-
-    public Long getUserId() 
-    {
-        return userId;
-    }
-    public void setUserName(String userName) 
-    {
-        this.userName = userName;
-    }
-
-    public String getUserName() 
-    {
-        return userName;
-    }
-    public void setVersion(Long version) 
-    {
-        this.version = version;
-    }
-
-    public Long getVersion() 
-    {
-        return version;
     }
     public void setAlarmName(String alarmName) 
     {
@@ -255,16 +237,32 @@ public class AnAmcAlarm extends BaseEntity
     {
         return description;
     }
+    public void setCreatorId(Long creatorId) 
+    {
+        this.creatorId = creatorId;
+    }
+
+    public Long getCreatorId() 
+    {
+        return creatorId;
+    }
+    public void setLastOperatorId(Long lastOperatorId) 
+    {
+        this.lastOperatorId = lastOperatorId;
+    }
+
+    public Long getLastOperatorId() 
+    {
+        return lastOperatorId;
+    }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("alarmId", getAlarmId())
+            .append("id", getId())
+            .append("version", getVersion())
             .append("deptId", getDeptId())
             .append("deptName", getDeptName())
-            .append("userId", getUserId())
-            .append("userName", getUserName())
-            .append("version", getVersion())
             .append("alarmName", getAlarmName())
             .append("alarmType", getAlarmType())
             .append("alarmLevel", getAlarmLevel())
@@ -277,8 +275,10 @@ public class AnAmcAlarm extends BaseEntity
             .append("alarmPhoto", getAlarmPhoto())
             .append("lastOccurTime", getLastOccurTime())
             .append("description", getDescription())
+            .append("creatorId", getCreatorId())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
+            .append("lastOperatorId", getLastOperatorId())
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
