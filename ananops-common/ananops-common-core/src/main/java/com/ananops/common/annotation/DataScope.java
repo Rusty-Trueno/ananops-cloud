@@ -17,12 +17,18 @@ import java.lang.annotation.Target;
 public @interface DataScope
 {
     /**
-     * 部门表的别名
+     * 部门表的别名 （如果当前表中有 dept_id 字段，则可以设置成该表的别名）
      */
-    public String deptAlias() default "";
+    String deptAlias() default "";
 
     /**
      * 用户表的别名
      */
-    public String userAlias() default "";
+    String userAlias() default "";
+
+    /**
+     * 是否c, (0-false,1-true)
+     */
+    String hasCreatorId() default "0";
+
 }
