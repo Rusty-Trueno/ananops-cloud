@@ -13,26 +13,41 @@ import java.util.Date;
  */
 public class UpdateInfoUtil {
     public static void setUpdateInfo(Object pojo, boolean isNew, LoginAuthDto user) {
+        if (isNew) {
+            setInsertInfo(pojo, user);
+        } else {
+            setModifyInfo(pojo, user);
+        }
+
+    }
+
+    public static void setInsertInfo(Object pojo, LoginAuthDto user) {
         UpdateInfo updateInfo = new UpdateInfo();
         Date nowTime = DateUtils.getNowDate();
         try {
-            if(isNew){
-                updateInfo.setCreateBy(user.getUserName());
-                updateInfo.setCreatorId(user.getUserId());
-                updateInfo.setCreateTime(nowTime);
-                updateInfo.setUpdateBy(user.getUserName());
-                updateInfo.setLastOperatorId(user.getUserId());
-                updateInfo.setUpdateTime(nowTime);
-                BeanUtils.copyBeanProp(pojo,updateInfo);
-            }else {
-                updateInfo.setUpdateBy(user.getUserName());
-                updateInfo.setLastOperatorId(user.getUserId());
-                updateInfo.setUpdateTime(nowTime);
-                BeanUtils.copyBeanProp(pojo,updateInfo);
-            }
-        }catch (Exception e){
+            updateInfo.setCreateBy(user.getUserName());
+            updateInfo.setCreatorId(user.getUserId());
+            updateInfo.setCreateTime(nowTime);
+            updateInfo.setUpdateBy(user.getUserName());
+            updateInfo.setLastOperatorId(user.getUserId());
+            updateInfo.setUpdateTime(nowTime);
+            BeanUtils.copyBeanProp(pojo, updateInfo);
+        } catch (Exception e) {
             throw new BusinessException("Bean拷贝异常");
         }
+    }
 
+    public static void setModifyInfo(Object pojo, LoginAuthDto user) {
+        UpdateInfo updateInfo = new UpdateInfo();
+        Date nowTime = DateUtils.getNowDate();
+        try {
+            updateInfo.setUpdateBy(user.getUserName());
+            updateInfo.setLastOperatorId(user.getUserId());
+            updateInfo.setUpdateTime(nowTime);
+            BeanUtils.copyBeanProp(pojo, updateInfo);
+
+        } catch (Exception e) {
+            throw new BusinessException("Bean拷贝异常");
+        }
     }
 }
