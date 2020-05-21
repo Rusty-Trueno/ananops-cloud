@@ -41,6 +41,9 @@ public class ${ClassName} extends ${Entity}
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
 #elseif($column.javaType == 'Date')
     @Excel(name = "${comment}", width = 30, dateFormat = "yyyy-MM-dd")
+#elseif($column.isPk == 1)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 #else
     @Excel(name = "${comment}")
 #end
