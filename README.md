@@ -75,3 +75,4 @@ ananops-cloud
 - [代码生成器使用](./doc/ananops-gen.md)
 - [多数据源实现参考文章](https://mianshenglee.github.io/2020/01/16/multi-datasource-2.html)
 - [如何嵌入业务模块](./doc/ananops-xxx.md)
+- [数据权限实现](./doc/data-permission.md)

@@ -101,6 +101,7 @@ public class DataScopeAspect {
      * @param user      用户
      * @param deptAlias 部门表别名
      * @param userAlias 用户表别名
+     * @param hasCreatorId 是否启用creator_id字段,默认值为0 (0-false,1-true)
      */
     public static void dataScopeFilter(JoinPoint joinPoint, SysUser user, String deptAlias, String userAlias, String hasCreatorId) {
         StringBuilder sqlString = new StringBuilder();
