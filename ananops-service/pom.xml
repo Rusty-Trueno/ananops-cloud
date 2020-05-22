@@ -18,5 +18,6 @@
         <module>ananops-activiti</module>
         <module>ananops-imc</module>
         <module>ananops-amc</module>
+        <module>ananops-mdmc</module>
     </modules>
 </project>

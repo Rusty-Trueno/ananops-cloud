@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ananops.mdmc.mapper.AnMdmcTaskMapper">
+
+    <resultMap type="AnMdmcTask" id="AnMdmcTaskResult">
+        <result property="id"    column="id"    />
+        <result property="version"    column="version"    />
+        <result property="creator"    column="creator"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="lastOperator"    column="last_operator"    />
+        <result property="lastOperatorId"    column="last_operator_id"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="objectType"    column="object_type"    />
+        <result property="objectId"    column="object_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="principalId"    column="principal_id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="facilitatorId"    column="facilitator_id"    />
+        <result property="maintainerId"    column="maintainer_id"    />
+        <result property="scheduledFinishTime"    column="scheduled_finish_time"    />
+        <result property="actualFinishTime"    column="actual_finish_time"    />
+        <result property="scheduledStartTime"    column="scheduled_start_time"    />
+        <result property="actualStartTime"    column="actual_start_time"    />
+        <result property="deadline"    column="deadline"    />
+        <result property="delayReason"    column="delay_reason"    />
+        <result property="requestLatitude"    column="request_latitude"    />
+        <result property="requestLongitude"    column="request_longitude"    />
+        <result property="status"    column="status"    />
+        <result property="totalCost"    column="total_cost"    />
+        <result property="clearingForm"    column="clearing_form"    />
+        <result property="title"    column="title"    />
+        <result property="contractId"    column="contract_id"    />
+        <result property="addressName"    column="address_name"    />
+        <result property="creatorCall"    column="creator_call"    />
+        <result property="troubleReason"    column="trouble_reason"    />
+        <result property="level"    column="level"    />
+        <result property="appointTime"    column="appoint_time"    />
+        <result property="suggestion"    column="suggestion"    />
+        <result property="result"    column="result"    />
+        <result property="note"    column="note"    />
+    </resultMap>
+
+    <sql id="selectAnMdmcTaskVo">
+        select id, version, creator, creator_id, created_time, last_operator, last_operator_id, update_time, object_type, object_id, user_id, principal_id, project_id, facilitator_id, maintainer_id, scheduled_finish_time, actual_finish_time, scheduled_start_time, actual_start_time, deadline, delay_reason, request_latitude, request_longitude, status, total_cost, clearing_form, title, contract_id, address_name, creator_call, trouble_reason, level, appoint_time, suggestion, result, note from an_mdmc_task
+    </sql>
+
+    <select id="selectAnMdmcTaskList" parameterType="AnMdmcTask" resultMap="AnMdmcTaskResult">
+        <include refid="selectAnMdmcTaskVo"/>
+        <where>
+            <if test="addressName != null  and addressName != ''"> and address_name like concat('%', #{addressName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectAnMdmcTaskById" parameterType="Long" resultMap="AnMdmcTaskResult">
+        <include refid="selectAnMdmcTaskVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAnMdmcTask" parameterType="AnMdmcTask">
+        insert into an_mdmc_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="version != null ">version,</if>
+            <if test="creator != null  and creator != ''">creator,</if>
+            <if test="creatorId != null ">creator_id,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="lastOperator != null  and lastOperator != ''">last_operator,</if>
+            <if test="lastOperatorId != null ">last_operator_id,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="objectType != null ">object_type,</if>
+            <if test="objectId != null ">object_id,</if>
+            <if test="userId != null ">user_id,</if>
+            <if test="principalId != null ">principal_id,</if>
+            <if test="projectId != null ">project_id,</if>
+            <if test="facilitatorId != null ">facilitator_id,</if>
+            <if test="maintainerId != null ">maintainer_id,</if>
+            <if test="scheduledFinishTime != null ">scheduled_finish_time,</if>
+            <if test="actualFinishTime != null ">actual_finish_time,</if>
+            <if test="scheduledStartTime != null ">scheduled_start_time,</if>
+            <if test="actualStartTime != null ">actual_start_time,</if>
+            <if test="deadline != null ">deadline,</if>
+            <if test="delayReason != null  and delayReason != ''">delay_reason,</if>
+            <if test="requestLatitude != null ">request_latitude,</if>
+            <if test="requestLongitude != null ">request_longitude,</if>
+            <if test="status != null ">status,</if>
+            <if test="totalCost != null ">total_cost,</if>
+            <if test="clearingForm != null ">clearing_form,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="contractId != null ">contract_id,</if>
+            <if test="addressName != null  and addressName != ''">address_name,</if>
+            <if test="creatorCall != null  and creatorCall != ''">creator_call,</if>
+            <if test="troubleReason != null  and troubleReason != ''">trouble_reason,</if>
+            <if test="level != null ">level,</if>
+            <if test="appointTime != null ">appoint_time,</if>
+            <if test="suggestion != null  and suggestion != ''">suggestion,</if>
+            <if test="result != null  and result != ''">result,</if>
+            <if test="note != null  and note != ''">note,</if>
+        </trim>
+    </insert>
+
+    <update id="updateAnMdmcTask" parameterType="AnMdmcTask">
+        update an_mdmc_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="version != null ">version = #{version},</if>
+            <if test="creator != null  and creator != ''">creator = #{creator},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="lastOperator != null  and lastOperator != ''">last_operator = #{lastOperator},</if>
+            <if test="lastOperatorId != null ">last_operator_id = #{lastOperatorId},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="objectType != null ">object_type = #{objectType},</if>
+            <if test="objectId != null ">object_id = #{objectId},</if>
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="principalId != null ">principal_id = #{principalId},</if>
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="facilitatorId != null ">facilitator_id = #{facilitatorId},</if>
+            <if test="maintainerId != null ">maintainer_id = #{maintainerId},</if>
+            <if test="scheduledFinishTime != null ">scheduled_finish_time = #{scheduledFinishTime},</if>
+            <if test="actualFinishTime != null ">actual_finish_time = #{actualFinishTime},</if>
+            <if test="scheduledStartTime != null ">scheduled_start_time = #{scheduledStartTime},</if>
+            <if test="actualStartTime != null ">actual_start_time = #{actualStartTime},</if>
+            <if test="deadline != null ">deadline = #{deadline},</if>
+            <if test="delayReason != null  and delayReason != ''">delay_reason = #{delayReason},</if>
+            <if test="requestLatitude != null ">request_latitude = #{requestLatitude},</if>
+            <if test="requestLongitude != null ">request_longitude = #{requestLongitude},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="totalCost != null ">total_cost = #{totalCost},</if>
+            <if test="clearingForm != null ">clearing_form = #{clearingForm},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="contractId != null ">contract_id = #{contractId},</if>
+            <if test="addressName != null  and addressName != ''">address_name = #{addressName},</if>
+            <if test="creatorCall != null  and creatorCall != ''">creator_call = #{creatorCall},</if>
+            <if test="troubleReason != null  and troubleReason != ''">trouble_reason = #{troubleReason},</if>
+            <if test="level != null ">level = #{level},</if>
+            <if test="appointTime != null ">appoint_time = #{appointTime},</if>
+            <if test="suggestion != null  and suggestion != ''">suggestion = #{suggestion},</if>
+            <if test="result != null  and result != ''">result = #{result},</if>
+            <if test="note != null  and note != ''">note = #{note},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnMdmcTaskById" parameterType="Long">
+        delete from an_mdmc_task where id = #{id}
+    </delete>
+
+    <delete id="deleteAnMdmcTaskByIds" parameterType="String">
+        delete from an_mdmc_task where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

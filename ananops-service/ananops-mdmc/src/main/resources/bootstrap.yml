@@ -26,14 +26,6 @@ spring:
 feign:
   hystrix:
     enabled: true
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 20000
-
 
 eureka:
   client: #客户端注册进eureka服务列表内

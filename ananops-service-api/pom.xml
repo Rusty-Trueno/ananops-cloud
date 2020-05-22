@@ -13,6 +13,7 @@
         <module>ananops-system-api</module>
         <module>ananops-imc-api</module>
         <module>ananops-amc-api</module>
+        <module>ananops-mdmc-api</module>
     </modules>
     <dependencies>
         <dependency>

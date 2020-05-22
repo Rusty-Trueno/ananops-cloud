@@ -1,0 +1,10 @@
+server:
+  port: 9450
+spring:
+  application:
+    name: ananops-mdmc
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true
