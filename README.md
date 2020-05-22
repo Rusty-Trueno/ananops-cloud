@@ -9,9 +9,9 @@
 
 127.0.0.1 ananops-eureka
 
-127.0.0.1 ananops-geteway
+127.0.0.1 ananops-cloud-geteway
 
-127.0.0.1 ananops-discovery
+127.0.0.1 ananops-cloud-discovery
 
 127.0.0.1 ananops-db-mysql
 
