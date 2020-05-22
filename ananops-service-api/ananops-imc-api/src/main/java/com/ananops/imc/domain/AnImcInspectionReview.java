@@ -52,6 +52,10 @@ public class AnImcInspectionReview extends BaseEntity
     @Excel(name = "服务评论")
     private String contents;
 
+    /** 验收内容 */
+    @Excel(name = "验收内容")
+    private String checkContens;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -124,6 +128,15 @@ public class AnImcInspectionReview extends BaseEntity
     {
         return contents;
     }
+    public void setCheckContens(String checkContens) 
+    {
+        this.checkContens = checkContens;
+    }
+
+    public String getCheckContens() 
+    {
+        return checkContens;
+    }
 
     @Override
     public String toString() {
@@ -141,6 +154,7 @@ public class AnImcInspectionReview extends BaseEntity
             .append("score", getScore())
             .append("contents", getContents())
             .append("remark", getRemark())
+            .append("checkContens", getCheckContens())
             .toString();
     }
 }
