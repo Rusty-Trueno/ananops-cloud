@@ -4,10 +4,10 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.ananops</groupId>
-        <artifactId>ananops-master</artifactId>
+        <artifactId>ananops-cloud</artifactId>
         <version>1.0</version>
     </parent>
-    <artifactId>ananops-gateway</artifactId>
+    <artifactId>ananops-cloud-gateway</artifactId>
     <dependencies>
         <!--配置中心客户端 -->
         <dependency>

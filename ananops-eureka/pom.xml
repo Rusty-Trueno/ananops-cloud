@@ -4,10 +4,10 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.ananops</groupId>
-        <artifactId>ananops-master</artifactId>
+        <artifactId>ananops-cloud</artifactId>
         <version>1.0</version>
     </parent>
-    <artifactId>ananops-eureka</artifactId>
+    <artifactId>ananops-cloud-eureka</artifactId>
     <dependencies>
         <!--服务中心 -->
         <dependency>

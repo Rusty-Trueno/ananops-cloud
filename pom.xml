@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ananops</groupId>
-    <artifactId>ananops-master</artifactId>
+    <artifactId>ananops-cloud</artifactId>
     <version>1.0</version>
 
     <name>ananops</name>
