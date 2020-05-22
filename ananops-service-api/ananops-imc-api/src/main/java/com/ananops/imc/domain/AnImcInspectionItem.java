@@ -14,9 +14,9 @@ import java.util.Date;
  * 巡检任务子项对象 an_imc_inspection_item
  * 
  * @author ananops
- * @date 2020-05-19
+ * @date 2020-05-22
  */
-public class ImcInspectionItem extends BaseEntity
+public class AnImcInspectionItem extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 

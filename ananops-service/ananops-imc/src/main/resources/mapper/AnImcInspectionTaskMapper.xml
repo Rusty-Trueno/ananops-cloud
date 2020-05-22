@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ananops.imc.mapper.AnImcInspectionTaskMapper">
-
+    
     <resultMap type="AnImcInspectionTask" id="AnImcInspectionTaskResult">
         <result property="id"    column="id"    />
         <result property="version"    column="version"    />
-        <result property="creator"    column="creator"    />
+        <result property="createBy"    column="create_by"    />
         <result property="creatorId"    column="creator_id"    />
-        <result property="createdTime"    column="created_time"    />
-        <result property="lastOperator"    column="last_operator"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
         <result property="lastOperatorId"    column="last_operator_id"    />
         <result property="updateTime"    column="update_time"    />
         <result property="principalId"    column="principal_id"    />
@@ -30,29 +30,29 @@
     </resultMap>
 
     <sql id="selectAnImcInspectionTaskVo">
-        select id, version, creator, creator_id, created_time, last_operator, last_operator_id, update_time, principal_id, facilitator_id, project_id, location, status, total_cost, maintenance_cost, scheduled_start_time, actual_finish_time, days, inspection_type, remark, task_name, frequency from an_imc_inspection_task
+        select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, principal_id, facilitator_id, project_id, location, status, total_cost, maintenance_cost, scheduled_start_time, actual_finish_time, days, inspection_type, remark, task_name, frequency from an_imc_inspection_task
     </sql>
 
     <select id="selectAnImcInspectionTaskList" parameterType="AnImcInspectionTask" resultMap="AnImcInspectionTaskResult">
         <include refid="selectAnImcInspectionTaskVo"/>
-        <where>
+        <where>  
             <if test="taskName != null  and taskName != ''"> and task_name like concat('%', #{taskName}, '%')</if>
         </where>
     </select>
-
+    
     <select id="selectAnImcInspectionTaskById" parameterType="Long" resultMap="AnImcInspectionTaskResult">
         <include refid="selectAnImcInspectionTaskVo"/>
         where id = #{id}
     </select>
-
+        
     <insert id="insertAnImcInspectionTask" parameterType="AnImcInspectionTask" useGeneratedKeys="true" keyProperty="id">
         insert into an_imc_inspection_task
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="version != null ">version,</if>
-            <if test="creator != null  and creator != ''">creator,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
             <if test="creatorId != null ">creator_id,</if>
-            <if test="createdTime != null ">created_time,</if>
-            <if test="lastOperator != null  and lastOperator != ''">last_operator,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
             <if test="lastOperatorId != null ">last_operator_id,</if>
             <if test="updateTime != null ">update_time,</if>
             <if test="principalId != null ">principal_id,</if>
@@ -69,40 +69,17 @@
             <if test="remark != null  and remark != ''">remark,</if>
             <if test="taskName != null  and taskName != ''">task_name,</if>
             <if test="frequency != null ">frequency,</if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="version != null ">#{version},</if>
-            <if test="creator != null  and creator != ''">#{creator},</if>
-            <if test="creatorId != null ">#{creatorId},</if>
-            <if test="createdTime != null ">#{createdTime},</if>
-            <if test="lastOperator != null  and lastOperator != ''">#{lastOperator},</if>
-            <if test="lastOperatorId != null ">#{lastOperatorId},</if>
-            <if test="updateTime != null ">#{updateTime},</if>
-            <if test="principalId != null ">#{principalId},</if>
-            <if test="facilitatorId != null ">#{facilitatorId},</if>
-            <if test="projectId != null ">#{projectId},</if>
-            <if test="location != null  and location != ''">#{location},</if>
-            <if test="status != null ">#{status},</if>
-            <if test="totalCost != null ">#{totalCost},</if>
-            <if test="maintenanceCost != null ">#{maintenanceCost},</if>
-            <if test="scheduledStartTime != null ">#{scheduledStartTime},</if>
-            <if test="actualFinishTime != null ">#{actualFinishTime},</if>
-            <if test="days != null ">#{days},</if>
-            <if test="inspectionType != null ">#{inspectionType},</if>
-            <if test="remark != null  and remark != ''">#{remark},</if>
-            <if test="taskName != null  and taskName != ''">#{taskName},</if>
-            <if test="frequency != null ">#{frequency},</if>
-        </trim>
+         </trim>
     </insert>
 
     <update id="updateAnImcInspectionTask" parameterType="AnImcInspectionTask">
         update an_imc_inspection_task
         <trim prefix="SET" suffixOverrides=",">
             <if test="version != null ">version = #{version},</if>
-            <if test="creator != null  and creator != ''">creator = #{creator},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
             <if test="creatorId != null ">creator_id = #{creatorId},</if>
-            <if test="createdTime != null ">created_time = #{createdTime},</if>
-            <if test="lastOperator != null  and lastOperator != ''">last_operator = #{lastOperator},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
             <if test="lastOperatorId != null ">last_operator_id = #{lastOperatorId},</if>
             <if test="updateTime != null ">update_time = #{updateTime},</if>
             <if test="principalId != null ">principal_id = #{principalId},</if>
@@ -128,10 +105,10 @@
     </delete>
 
     <delete id="deleteAnImcInspectionTaskByIds" parameterType="String">
-        delete from an_imc_inspection_task where id in
+        delete from an_imc_inspection_task where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-
+    
 </mapper>

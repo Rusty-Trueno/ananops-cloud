@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ananops.imc.mapper.ImcInspectionItemMapper">
+<mapper namespace="com.ananops.imc.mapper.AnImcInspectionItemMapper">
     
-    <resultMap type="ImcInspectionItem" id="ImcInspectionItemResult">
+    <resultMap type="AnImcInspectionItem" id="AnImcInspectionItemResult">
         <result property="id"    column="id"    />
         <result property="version"    column="version"    />
         <result property="createBy"    column="create_by"    />
@@ -31,23 +31,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
     </resultMap>
 
-    <sql id="selectImcInspectionItemVo">
+    <sql id="selectAnImcInspectionItemVo">
         select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, inspection_task_id, scheduled_start_time, actual_start_time, actual_finish_time, days, frequency, description, status, item_latitude, item_longitude, result, item_name, maintainer_id, count, location, remark from an_imc_inspection_item
     </sql>
 
-    <select id="selectImcInspectionItemList" parameterType="ImcInspectionItem" resultMap="ImcInspectionItemResult">
-        <include refid="selectImcInspectionItemVo"/>
+    <select id="selectAnImcInspectionItemList" parameterType="AnImcInspectionItem" resultMap="AnImcInspectionItemResult">
+        <include refid="selectAnImcInspectionItemVo"/>
         <where>  
             <if test="itemName != null  and itemName != ''"> and item_name like concat('%', #{itemName}, '%')</if>
         </where>
     </select>
     
-    <select id="selectImcInspectionItemById" parameterType="Long" resultMap="ImcInspectionItemResult">
-        <include refid="selectImcInspectionItemVo"/>
+    <select id="selectAnImcInspectionItemById" parameterType="Long" resultMap="AnImcInspectionItemResult">
+        <include refid="selectAnImcInspectionItemVo"/>
         where id = #{id}
     </select>
         
-    <insert id="insertImcInspectionItem" parameterType="ImcInspectionItem" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertAnImcInspectionItem" parameterType="AnImcInspectionItem" useGeneratedKeys="true" keyProperty="id">
         insert into an_imc_inspection_item
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="version != null ">version,</if>
@@ -74,34 +74,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="location != null  and location != ''">location,</if>
             <if test="remark != null  and remark != ''">remark,</if>
          </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="version != null ">#{version},</if>
-            <if test="createBy != null  and createBy != ''">#{createBy},</if>
-            <if test="creatorId != null ">#{creatorId},</if>
-            <if test="createTime != null ">#{createTime},</if>
-            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
-            <if test="lastOperatorId != null ">#{lastOperatorId},</if>
-            <if test="updateTime != null ">#{updateTime},</if>
-            <if test="inspectionTaskId != null ">#{inspectionTaskId},</if>
-            <if test="scheduledStartTime != null ">#{scheduledStartTime},</if>
-            <if test="actualStartTime != null ">#{actualStartTime},</if>
-            <if test="actualFinishTime != null ">#{actualFinishTime},</if>
-            <if test="days != null ">#{days},</if>
-            <if test="frequency != null ">#{frequency},</if>
-            <if test="description != null  and description != ''">#{description},</if>
-            <if test="status != null ">#{status},</if>
-            <if test="itemLatitude != null ">#{itemLatitude},</if>
-            <if test="itemLongitude != null ">#{itemLongitude},</if>
-            <if test="result != null  and result != ''">#{result},</if>
-            <if test="itemName != null  and itemName != ''">#{itemName},</if>
-            <if test="maintainerId != null ">#{maintainerId},</if>
-            <if test="count != null ">#{count},</if>
-            <if test="location != null  and location != ''">#{location},</if>
-            <if test="remark != null  and remark != ''">#{remark},</if>
-         </trim>
     </insert>
 
-    <update id="updateImcInspectionItem" parameterType="ImcInspectionItem">
+    <update id="updateAnImcInspectionItem" parameterType="AnImcInspectionItem">
         update an_imc_inspection_item
         <trim prefix="SET" suffixOverrides=",">
             <if test="version != null ">version = #{version},</if>
@@ -131,11 +106,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteImcInspectionItemById" parameterType="Long">
+    <delete id="deleteAnImcInspectionItemById" parameterType="Long">
         delete from an_imc_inspection_item where id = #{id}
     </delete>
 
-    <delete id="deleteImcInspectionItemByIds" parameterType="String">
+    <delete id="deleteAnImcInspectionItemByIds" parameterType="String">
         delete from an_imc_inspection_item where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}

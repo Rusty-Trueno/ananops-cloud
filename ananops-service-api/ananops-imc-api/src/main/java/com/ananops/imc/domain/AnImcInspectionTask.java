@@ -1,44 +1,37 @@
 package com.ananops.imc.domain;
 
-import com.ananops.common.annotation.Excel;
-import com.ananops.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import com.ananops.common.annotation.Excel;
+import com.ananops.common.core.domain.BaseEntity;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
 
 /**
- * 巡检任务对象 an_imc_inspection_task
- *
- * @author rongshuai
- * @date 2020-05-18
+ * 巡检任务表对象 an_imc_inspection_task
+ * 
+ * @author ananops
+ * @date 2020-05-22
  */
 public class AnImcInspectionTask extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** ID */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /** 版本号 */
     @Excel(name = "版本号")
     private Long version;
 
-    /** 创建人 */
-    @Excel(name = "创建人")
-    private String creator;
-
     /** 创建人ID */
     @Excel(name = "创建人ID")
     private Long creatorId;
-
-    /** 创建时间 */
-    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date createdTime;
-
-    /** 最近操作人 */
-    @Excel(name = "最近操作人")
-    private String lastOperator;
 
     /** 最后操作人ID */
     @Excel(name = "最后操作人ID")
@@ -96,212 +89,185 @@ public class AnImcInspectionTask extends BaseEntity
     @Excel(name = "巡检周期", readConverterExp = "月=")
     private Long frequency;
 
-    public void setId(Long id)
+    public void setId(Long id) 
     {
         this.id = id;
     }
 
-    public Long getId()
+    public Long getId() 
     {
         return id;
     }
-    public void setVersion(Long version)
+    public void setVersion(Long version) 
     {
         this.version = version;
     }
 
-    public Long getVersion()
+    public Long getVersion() 
     {
         return version;
     }
-    public void setCreator(String creator)
-    {
-        this.creator = creator;
-    }
-
-    public String getCreator()
-    {
-        return creator;
-    }
-    public void setCreatorId(Long creatorId)
+    public void setCreatorId(Long creatorId) 
     {
         this.creatorId = creatorId;
     }
 
-    public Long getCreatorId()
+    public Long getCreatorId() 
     {
         return creatorId;
     }
-    public void setCreatedTime(Date createdTime)
-    {
-        this.createdTime = createdTime;
-    }
-
-    public Date getCreatedTime()
-    {
-        return createdTime;
-    }
-    public void setLastOperator(String lastOperator)
-    {
-        this.lastOperator = lastOperator;
-    }
-
-    public String getLastOperator()
-    {
-        return lastOperator;
-    }
-    public void setLastOperatorId(Long lastOperatorId)
+    public void setLastOperatorId(Long lastOperatorId) 
     {
         this.lastOperatorId = lastOperatorId;
     }
 
-    public Long getLastOperatorId()
+    public Long getLastOperatorId() 
     {
         return lastOperatorId;
     }
-    public void setPrincipalId(Long principalId)
+    public void setPrincipalId(Long principalId) 
     {
         this.principalId = principalId;
     }
 
-    public Long getPrincipalId()
+    public Long getPrincipalId() 
     {
         return principalId;
     }
-    public void setFacilitatorId(Long facilitatorId)
+    public void setFacilitatorId(Long facilitatorId) 
     {
         this.facilitatorId = facilitatorId;
     }
 
-    public Long getFacilitatorId()
+    public Long getFacilitatorId() 
     {
         return facilitatorId;
     }
-    public void setProjectId(Long projectId)
+    public void setProjectId(Long projectId) 
     {
         this.projectId = projectId;
     }
 
-    public Long getProjectId()
+    public Long getProjectId() 
     {
         return projectId;
     }
-    public void setLocation(String location)
+    public void setLocation(String location) 
     {
         this.location = location;
     }
 
-    public String getLocation()
+    public String getLocation() 
     {
         return location;
     }
-    public void setStatus(Integer status)
+    public void setStatus(Integer status) 
     {
         this.status = status;
     }
 
-    public Integer getStatus()
+    public Integer getStatus() 
     {
         return status;
     }
-    public void setTotalCost(Double totalCost)
+    public void setTotalCost(Double totalCost) 
     {
         this.totalCost = totalCost;
     }
 
-    public Double getTotalCost()
+    public Double getTotalCost() 
     {
         return totalCost;
     }
-    public void setMaintenanceCost(Double maintenanceCost)
+    public void setMaintenanceCost(Double maintenanceCost) 
     {
         this.maintenanceCost = maintenanceCost;
     }
 
-    public Double getMaintenanceCost()
+    public Double getMaintenanceCost() 
     {
         return maintenanceCost;
     }
-    public void setScheduledStartTime(Date scheduledStartTime)
+    public void setScheduledStartTime(Date scheduledStartTime) 
     {
         this.scheduledStartTime = scheduledStartTime;
     }
 
-    public Date getScheduledStartTime()
+    public Date getScheduledStartTime() 
     {
         return scheduledStartTime;
     }
-    public void setActualFinishTime(Date actualFinishTime)
+    public void setActualFinishTime(Date actualFinishTime) 
     {
         this.actualFinishTime = actualFinishTime;
     }
 
-    public Date getActualFinishTime()
+    public Date getActualFinishTime() 
     {
         return actualFinishTime;
     }
-    public void setDays(Long days)
+    public void setDays(Long days) 
     {
         this.days = days;
     }
 
-    public Long getDays()
+    public Long getDays() 
     {
         return days;
     }
-    public void setInspectionType(Integer inspectionType)
+    public void setInspectionType(Integer inspectionType) 
     {
         this.inspectionType = inspectionType;
     }
 
-    public Integer getInspectionType()
+    public Integer getInspectionType() 
     {
         return inspectionType;
     }
-    public void setTaskName(String taskName)
+    public void setTaskName(String taskName) 
     {
         this.taskName = taskName;
     }
 
-    public String getTaskName()
+    public String getTaskName() 
     {
         return taskName;
     }
-    public void setFrequency(Long frequency)
+    public void setFrequency(Long frequency) 
     {
         this.frequency = frequency;
     }
 
-    public Long getFrequency()
+    public Long getFrequency() 
     {
         return frequency;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("id", getId())
-                .append("version", getVersion())
-                .append("creator", getCreator())
-                .append("creatorId", getCreatorId())
-                .append("createdTime", getCreatedTime())
-                .append("lastOperator", getLastOperator())
-                .append("lastOperatorId", getLastOperatorId())
-                .append("updateTime", getUpdateTime())
-                .append("principalId", getPrincipalId())
-                .append("facilitatorId", getFacilitatorId())
-                .append("projectId", getProjectId())
-                .append("location", getLocation())
-                .append("status", getStatus())
-                .append("totalCost", getTotalCost())
-                .append("maintenanceCost", getMaintenanceCost())
-                .append("scheduledStartTime", getScheduledStartTime())
-                .append("actualFinishTime", getActualFinishTime())
-                .append("days", getDays())
-                .append("inspectionType", getInspectionType())
-                .append("remark", getRemark())
-                .append("taskName", getTaskName())
-                .append("frequency", getFrequency())
-                .toString();
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+            .append("id", getId())
+            .append("version", getVersion())
+            .append("createBy", getCreateBy())
+            .append("creatorId", getCreatorId())
+            .append("createTime", getCreateTime())
+            .append("updateBy", getUpdateBy())
+            .append("lastOperatorId", getLastOperatorId())
+            .append("updateTime", getUpdateTime())
+            .append("principalId", getPrincipalId())
+            .append("facilitatorId", getFacilitatorId())
+            .append("projectId", getProjectId())
+            .append("location", getLocation())
+            .append("status", getStatus())
+            .append("totalCost", getTotalCost())
+            .append("maintenanceCost", getMaintenanceCost())
+            .append("scheduledStartTime", getScheduledStartTime())
+            .append("actualFinishTime", getActualFinishTime())
+            .append("days", getDays())
+            .append("inspectionType", getInspectionType())
+            .append("remark", getRemark())
+            .append("taskName", getTaskName())
+            .append("frequency", getFrequency())
+            .toString();
     }
 }

@@ -1,16 +1,16 @@
 package com.ananops.imc.mapper;
 
 import com.ananops.common.core.dao.BaseMapper;
-import com.ananops.imc.domain.ImcInspectionItem;
+import com.ananops.imc.domain.AnImcInspectionItem;
 import java.util.List;
 
 /**
  * 巡检任务子项Mapper接口
  * 
  * @author ananops
- * @date 2020-05-19
+ * @date 2020-05-22
  */
-public interface ImcInspectionItemMapper extends BaseMapper<ImcInspectionItem>
+public interface AnImcInspectionItemMapper extends BaseMapper<AnImcInspectionItem>
 {
     /**
      * 查询巡检任务子项
@@ -18,31 +18,31 @@ public interface ImcInspectionItemMapper extends BaseMapper<ImcInspectionItem>
      * @param id 巡检任务子项ID
      * @return 巡检任务子项
      */
-    public ImcInspectionItem selectImcInspectionItemById(Long id);
+    public AnImcInspectionItem selectAnImcInspectionItemById(Long id);
 
     /**
      * 查询巡检任务子项列表
      * 
-     * @param imcInspectionItem 巡检任务子项
+     * @param anImcInspectionItem 巡检任务子项
      * @return 巡检任务子项集合
      */
-    public List<ImcInspectionItem> selectImcInspectionItemList(ImcInspectionItem imcInspectionItem);
+    public List<AnImcInspectionItem> selectAnImcInspectionItemList(AnImcInspectionItem anImcInspectionItem);
 
     /**
      * 新增巡检任务子项
      * 
-     * @param imcInspectionItem 巡检任务子项
+     * @param anImcInspectionItem 巡检任务子项
      * @return 结果
      */
-    public int insertImcInspectionItem(ImcInspectionItem imcInspectionItem);
+    public int insertAnImcInspectionItem(AnImcInspectionItem anImcInspectionItem);
 
     /**
      * 修改巡检任务子项
      * 
-     * @param imcInspectionItem 巡检任务子项
+     * @param anImcInspectionItem 巡检任务子项
      * @return 结果
      */
-    public int updateImcInspectionItem(ImcInspectionItem imcInspectionItem);
+    public int updateAnImcInspectionItem(AnImcInspectionItem anImcInspectionItem);
 
     /**
      * 删除巡检任务子项
@@ -50,7 +50,7 @@ public interface ImcInspectionItemMapper extends BaseMapper<ImcInspectionItem>
      * @param id 巡检任务子项ID
      * @return 结果
      */
-    public int deleteImcInspectionItemById(Long id);
+    public int deleteAnImcInspectionItemById(Long id);
 
     /**
      * 批量删除巡检任务子项
@@ -58,5 +58,5 @@ public interface ImcInspectionItemMapper extends BaseMapper<ImcInspectionItem>
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-    public int deleteImcInspectionItemByIds(String[] ids);
+    public int deleteAnImcInspectionItemByIds(String[] ids);
 }
