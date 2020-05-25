@@ -1,5 +1,6 @@
 package com.ananops.imc.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ananops.common.core.dto.LoginAuthDto;
@@ -10,8 +11,12 @@ import com.ananops.common.utils.bean.BeanUtils;
 import com.ananops.common.utils.bean.UpdateInfoUtil;
 import com.ananops.imc.domain.AnImcInspectionTask;
 import com.ananops.imc.dto.ImcAddInspectionItemDto;
+import com.ananops.imc.dto.ImcItemChangeStatusDto;
+import com.ananops.imc.dto.ImcTaskChangeStatusDto;
 import com.ananops.imc.enums.ItemStatusEnum;
+import com.ananops.imc.enums.TaskStatusEnum;
 import com.ananops.imc.mapper.AnImcInspectionTaskMapper;
+import com.ananops.imc.service.IAnImcInspectionTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ananops.imc.mapper.AnImcInspectionItemMapper;
@@ -33,6 +38,9 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
 
     @Autowired
     private AnImcInspectionTaskMapper anImcInspectionTaskMapper;
+
+    @Autowired
+    private IAnImcInspectionTaskService anImcInspectionTaskService;
 
     /**
      * 查询巡检任务子项
@@ -129,8 +137,65 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
      * @param id 巡检任务子项ID
      * @return 结果
      */
+    @Override
     public int deleteAnImcInspectionItemById(Long id)
     {
         return anImcInspectionItemMapper.deleteAnImcInspectionItemById(id);
+    }
+
+    /**
+     * 修改巡检任务子项的状态
+     * @param imcItemChangeStatusDto
+     * @param user
+     * @return
+     */
+    @Override
+    public ImcItemChangeStatusDto modifyImcItemStatus(ImcItemChangeStatusDto imcItemChangeStatusDto, LoginAuthDto user){
+        imcItemChangeStatusDto.setStatusMsg(ItemStatusEnum.getStatusMsg(imcItemChangeStatusDto.getStatus()));
+        Long itemId = imcItemChangeStatusDto.getItemId();
+        int status = imcItemChangeStatusDto.getStatus();
+        AnImcInspectionItem anImcInspectionItem = new AnImcInspectionItem();
+        anImcInspectionItem.setId(itemId);
+        anImcInspectionItem.setStatus(status);
+        UpdateInfoUtil.setModifyInfo(anImcInspectionItem,user);
+        ItemStatusEnum itemStatusEnum = ItemStatusEnum.getEnum(status);
+        switch (itemStatusEnum){
+            case IN_THE_INSPECTION:
+                anImcInspectionItem.setActualStartTime(new Date(System.currentTimeMillis()));
+                if(anImcInspectionItemMapper.modifyItemStatus(anImcInspectionItem)>0){
+                    logger.info("巡检任务子项状态更新为巡检中");
+                }else {
+                    throw new BusinessException("巡检任务子项状态更新失败");
+                }
+                break;
+            case INSPECTION_OVER:
+                anImcInspectionItem.setActualFinishTime(new Date(System.currentTimeMillis()));
+                if(anImcInspectionItemMapper.modifyItemStatus(anImcInspectionItem)>0){
+                    logger.info("巡检任务子项状态更新为巡检结束");
+                    //建立附件与子项的关系
+                    //TODO
+                    //检查巡检任务是否已经完成
+                    Long taskId = this.selectAnImcInspectionItemById(anImcInspectionItem.getId()).getInspectionTaskId();
+                    if(anImcInspectionTaskService.isTaskFinish(taskId)){
+                        //如果该巡检子项对应的巡检任务中全部的任务子项均已完成
+                        //则修改对应的巡检任务状态为已完成
+                        ImcTaskChangeStatusDto imcTaskChangeStatusDto = new ImcTaskChangeStatusDto();
+                        imcTaskChangeStatusDto.setTaskId(taskId);
+                        imcTaskChangeStatusDto.setStatus(TaskStatusEnum.WAITING_FOR_CONFIRM.getStatusNum());
+                        anImcInspectionTaskService.modifyTaskStatus(imcTaskChangeStatusDto,user);
+                    }
+                }else {
+                    throw new BusinessException("巡检任务子项状态更新失败");
+                }
+                break;
+            default:
+                if(anImcInspectionItemMapper.modifyItemStatus(anImcInspectionItem)>0){
+                    logger.info("巡检任务子项状态更新");
+                }else {
+                    throw new BusinessException("巡检任务子项状态更新失败");
+                }
+                break;
+        }
+        return imcItemChangeStatusDto;
     }
 }

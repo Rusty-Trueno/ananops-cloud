@@ -16,6 +16,7 @@ import com.ananops.imc.dto.ImcTaskChangeStatusDto;
 import com.ananops.imc.enums.ItemStatusEnum;
 import com.ananops.imc.enums.TaskStatusEnum;
 import com.ananops.imc.enums.TaskTypeEnum;
+import com.ananops.imc.mapper.AnImcInspectionItemMapper;
 import com.ananops.imc.service.IAnImcInspectionItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import com.ananops.imc.mapper.AnImcInspectionTaskMapper;
 import com.ananops.imc.domain.AnImcInspectionTask;
 import com.ananops.imc.service.IAnImcInspectionTaskService;
 import com.ananops.common.core.text.Convert;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * 巡检任务表Service业务层处理
@@ -36,6 +38,9 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
 
     @Autowired
     private AnImcInspectionTaskMapper anImcInspectionTaskMapper;
+
+    @Autowired
+    private AnImcInspectionItemMapper anImcInspectionItemMapper;
 
     @Autowired
     private IAnImcInspectionItemService iAnImcInspectionItemService;
@@ -158,7 +163,8 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
      * @return
      */
     @Override
-    public AnImcInspectionTask modifyTaskStatus(ImcTaskChangeStatusDto imcTaskChangeStatusDto, LoginAuthDto user){
+    public ImcTaskChangeStatusDto modifyTaskStatus(ImcTaskChangeStatusDto imcTaskChangeStatusDto, LoginAuthDto user){
+        imcTaskChangeStatusDto.setStatusMsg(TaskStatusEnum.getStatusMsg(imcTaskChangeStatusDto.getStatus()));
         Long taskId = imcTaskChangeStatusDto.getTaskId();
         Integer status = imcTaskChangeStatusDto.getStatus();
         AnImcInspectionTask anImcInspectionTask = new AnImcInspectionTask();
@@ -170,11 +176,18 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
                 //如果当前任务状态修改为等待支付，意味着任务已经被确认
                 if(anImcInspectionTaskMapper.modifyTaskStatus(anImcInspectionTask)>0){
                     //获取全部的任务子项
-                    //TODO
-                    //任务已经巡检完毕，将全部任务子项的状态修改为已完成
-                    //TODO
-                    //用户确认完成后需要将巡检单据中的用户确认字段填入
-                    //TODO
+                    Example example = new Example(AnImcInspectionItem.class);
+                    Example.Criteria criteria = example.createCriteria();
+                    criteria.andEqualTo("inspectionTaskId",taskId);
+                    List<AnImcInspectionItem> anImcInspectionItems = anImcInspectionItemMapper.selectByExample(example);
+                    if(null != anImcInspectionItems && anImcInspectionItems.size() > 0){
+                        anImcInspectionItems.forEach(item->{
+                            //任务已经巡检完毕，将全部任务子项的状态修改为已完成
+
+                            //用户确认完成后需要将巡检单据中的用户确认字段填入
+                            //TODO
+                        });
+                    }
                     logger.info("任务状态已修改为待支付");
                 }else{
                     throw new BusinessException("任务状态修改失败");
@@ -211,6 +224,27 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
                 }
                 break;
         }
-        return anImcInspectionTask;
+        return imcTaskChangeStatusDto;
+    }
+
+    /**
+     * 判断巡检任务是否完成
+     * @param taskId
+     * @return
+     */
+    @Override
+    public boolean isTaskFinish(Long taskId){
+        Example example = new Example(AnImcInspectionItem.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("inspectionTaskId",taskId);
+        List<AnImcInspectionItem> imcInspectionItemList = anImcInspectionItemMapper.selectByExample(example);
+        for(int i=0;i<imcInspectionItemList.size();i++){
+            if(imcInspectionItemList.get(i).getStatus()<ItemStatusEnum.INSPECTION_OVER.getStatusNum()){
+                //如果还有巡检任务子项没完成
+                return false;
+            }
+        }
+        //如果巡检任务子项都完成了，则巡检任务也完成了
+        return true;
     }
 }

@@ -70,5 +70,12 @@ public interface IAnImcInspectionTaskService extends IService<AnImcInspectionTas
      * @param user
      * @return
      */
-    public AnImcInspectionTask modifyTaskStatus(ImcTaskChangeStatusDto imcTaskChangeStatusDto,LoginAuthDto user);
+    public ImcTaskChangeStatusDto modifyTaskStatus(ImcTaskChangeStatusDto imcTaskChangeStatusDto,LoginAuthDto user);
+
+    /**
+     * 判断巡检任务是否完成
+     * @param taskId
+     * @return
+     */
+    public boolean isTaskFinish(Long taskId);
 }

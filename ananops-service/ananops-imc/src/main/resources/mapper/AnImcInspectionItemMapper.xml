@@ -116,5 +116,44 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    
+
+    <update id="modifyItemStatus" parameterType="AnImcInspectionItem">
+        update an_imc_inspection_item as item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="version != null ">version = #{version},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="lastOperatorId != null ">last_operator_id = #{lastOperatorId},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="inspectionTaskId != null ">inspection_task_id = #{inspectionTaskId},</if>
+            <if test="scheduledStartTime != null ">scheduled_start_time = #{scheduledStartTime},</if>
+            <if test="actualStartTime != null ">actual_start_time = #{actualStartTime},</if>
+            <if test="actualFinishTime != null ">actual_finish_time = #{actualFinishTime},</if>
+            <if test="days != null ">days = #{days},</if>
+            <if test="frequency != null ">frequency = #{frequency},</if>
+            <if test="description != null  and description != ''">description = #{description},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="itemLatitude != null ">item_latitude = #{itemLatitude},</if>
+            <if test="itemLongitude != null ">item_longitude = #{itemLongitude},</if>
+            <if test="result != null  and result != ''">result = #{result},</if>
+            <if test="itemName != null  and itemName != ''">item_name = #{itemName},</if>
+            <if test="maintainerId != null ">maintainer_id = #{maintainerId},</if>
+            <if test="count != null ">count = #{count},</if>
+            <if test="location != null  and location != ''">location = #{location},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where 1 = 1
+        and(
+        ( #{status} = 2 and item.status = 1 )
+        or
+        ( #{status} = 3 and item.status = 2 )
+        or
+        ( #{status} = 4 and item.status = 3 )
+        or
+        ( #{status} = 5 and item.status = 4 )
+        )
+        and item.id = #{id}
+    </update>
 </mapper>

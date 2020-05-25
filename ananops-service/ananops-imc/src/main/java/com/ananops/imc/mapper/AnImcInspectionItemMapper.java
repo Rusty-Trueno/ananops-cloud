@@ -2,6 +2,8 @@ package com.ananops.imc.mapper;
 
 import com.ananops.common.core.dao.BaseMapper;
 import com.ananops.imc.domain.AnImcInspectionItem;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 /**
@@ -59,4 +61,11 @@ public interface AnImcInspectionItemMapper extends BaseMapper<AnImcInspectionIte
      * @return 结果
      */
     public int deleteAnImcInspectionItemByIds(String[] ids);
+
+    /**
+     * 修改巡检任务子项的状态
+     * @param anImcInspectionItem
+     * @return
+     */
+    public int modifyItemStatus(AnImcInspectionItem anImcInspectionItem);
 }

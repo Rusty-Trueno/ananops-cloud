@@ -1,6 +1,8 @@
 package com.ananops.imc.controller;
 
+import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.imc.dto.ImcAddInspectionItemDto;
+import com.ananops.imc.dto.ImcItemChangeStatusDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -84,5 +86,12 @@ public class AnImcInspectionItemController extends BaseController
 	{		
 		return toAjax(anImcInspectionItemService.deleteAnImcInspectionItemByIds(ids));
 	}
-	
+
+	@ApiOperation(value = "修改巡检任务子项的状态")
+	@PostMapping("modifyItemStatusByItemId")
+	public R modifyItemStatusByItemId(@RequestBody ImcItemChangeStatusDto imcItemChangeStatusDto){
+		LoginAuthDto user = getLoginAuthDto();
+		imcItemChangeStatusDto.setLoginAuthDto(user);
+		return R.data(anImcInspectionItemService.modifyImcItemStatus(imcItemChangeStatusDto,user));
+	}
 }
