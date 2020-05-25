@@ -12,6 +12,7 @@ import com.ananops.common.utils.bean.UpdateInfoUtil;
 import com.ananops.imc.domain.AnImcInspectionItem;
 import com.ananops.imc.dto.ImcAddInspectionItemDto;
 import com.ananops.imc.dto.ImcAddInspectionTaskDto;
+import com.ananops.imc.dto.ImcItemChangeStatusDto;
 import com.ananops.imc.dto.ImcTaskChangeStatusDto;
 import com.ananops.imc.enums.ItemStatusEnum;
 import com.ananops.imc.enums.TaskStatusEnum;
@@ -43,7 +44,7 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
     private AnImcInspectionItemMapper anImcInspectionItemMapper;
 
     @Autowired
-    private IAnImcInspectionItemService iAnImcInspectionItemService;
+    private IAnImcInspectionItemService anImcInspectionItemService;
 
     /**
      * 查询巡检任务表
@@ -109,7 +110,7 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
                 item.setScheduledStartTime(anImcInspectionTask.getScheduledStartTime());//设置巡检任务子项的对应的计划开始时间
                 item.setStatus(ItemStatusEnum.WAITING_FOR_MAINTAINER.getStatusNum());
                 //创建新的巡检任务子项，并更新返回结果
-                BeanUtils.copyProperties(iAnImcInspectionItemService.insertAnImcInspectionItem(item,user),item);
+                BeanUtils.copyProperties(anImcInspectionItemService.insertAnImcInspectionItem(item,user),item);
             });
             BeanUtils.copyProperties(imcAddInspectionItemDtoList,imcAddInspectionTaskDto);
         }
@@ -183,7 +184,11 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
                     if(null != anImcInspectionItems && anImcInspectionItems.size() > 0){
                         anImcInspectionItems.forEach(item->{
                             //任务已经巡检完毕，将全部任务子项的状态修改为已完成
-
+                            ImcItemChangeStatusDto imcItemChangeStatusDto = new ImcItemChangeStatusDto();
+                            imcItemChangeStatusDto.setLoginAuthDto(user);
+                            imcItemChangeStatusDto.setStatus(ItemStatusEnum.VERIFIED.getStatusNum());
+                            imcItemChangeStatusDto.setItemId(item.getId());
+                            anImcInspectionItemService.modifyImcItemStatus(imcItemChangeStatusDto,user);
                             //用户确认完成后需要将巡检单据中的用户确认字段填入
                             //TODO
                         });
@@ -217,7 +222,6 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
                 //如果是其他状态
                 if(anImcInspectionTaskMapper.modifyTaskStatus(anImcInspectionTask)>0){
                     //直接修改任务状态
-                    //TODO
                     logger.info("任务状态已被修改");
                 }else{
                     throw new BusinessException("任务状态修改失败");
