@@ -1,6 +1,7 @@
 package com.ananops.imc.controller;
 
 import com.ananops.imc.dto.ImcAddInspectionTaskDto;
+import com.ananops.imc.dto.ImcInspectionTaskDto;
 import com.ananops.imc.dto.ImcTaskChangeStatusDto;
 import com.ananops.imc.dto.TaskQueryDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class AnImcInspectionTaskController extends BaseController
 	 */
 	@ApiOperation(value = "根据任务的ID，查询巡检任务")
 	@GetMapping("getTaskByTaskId/{id}")
-	public AnImcInspectionTask get(@PathVariable("id") Long id)
+	public ImcInspectionTaskDto get(@PathVariable("id") Long id)
 	{
 		return anImcInspectionTaskService.selectAnImcInspectionTaskById(id);
 		
@@ -102,6 +103,13 @@ public class AnImcInspectionTaskController extends BaseController
 	@PostMapping("getTaskListByProjectId")
 	public R getTaskListByProjectId(@RequestBody TaskQueryDto taskQueryDto){
 		return result(anImcInspectionTaskService.getTaskByProjectId(taskQueryDto));
+	}
+
+	@ApiOperation(value = "根据用户（1：甲方负责人，2：服务商）的id查询对应的巡检任务（可返回总数total）")
+	@PostMapping("getTaskListByUserId")
+	public R getTaskListByUserId(@RequestBody TaskQueryDto taskQueryDto){
+		//TODO
+		return null;
 	}
 
 }
