@@ -2,6 +2,8 @@ package com.ananops.imc.mapper;
 
 import com.ananops.common.core.dao.BaseMapper;
 import com.ananops.imc.domain.AnImcInspectionTask;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 /**

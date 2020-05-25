@@ -108,8 +108,7 @@ public class AnImcInspectionTaskController extends BaseController
 	@ApiOperation(value = "根据用户（1：甲方负责人，2：服务商）的id查询对应的巡检任务（可返回总数total）")
 	@PostMapping("getTaskListByUserId")
 	public R getTaskListByUserId(@RequestBody TaskQueryDto taskQueryDto){
-		//TODO
-		return null;
+		return result(anImcInspectionTaskService.getTaskByUserId(taskQueryDto));
 	}
 
 }

@@ -94,5 +94,5 @@ public interface IAnImcInspectionTaskService extends IService<AnImcInspectionTas
      * @param taskQueryDto
      * @return
      */
-    public List<AnImcInspectionTask> getTaskByUserId(TaskQueryDto taskQueryDto);
+    public PageInfo getTaskByUserId(TaskQueryDto taskQueryDto);
 }

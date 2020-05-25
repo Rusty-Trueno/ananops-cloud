@@ -12,6 +12,7 @@ import com.ananops.common.utils.bean.UpdateInfoUtil;
 import com.ananops.imc.domain.AnImcInspectionItem;
 import com.ananops.imc.dto.*;
 import com.ananops.imc.enums.ItemStatusEnum;
+import com.ananops.imc.enums.RoleEnum;
 import com.ananops.imc.enums.TaskStatusEnum;
 import com.ananops.imc.enums.TaskTypeEnum;
 import com.ananops.imc.mapper.AnImcInspectionItemMapper;
@@ -56,12 +57,13 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
     public ImcInspectionTaskDto selectAnImcInspectionTaskById(Long id)
     {
         AnImcInspectionTask imcInspectionTask = anImcInspectionTaskMapper.selectAnImcInspectionTaskById(id);
+        logger.info("imcInspectionTask = {}",imcInspectionTask);
         if(null == imcInspectionTask){
             return new ImcInspectionTaskDto();
         }
         List<AnImcInspectionTask> imcInspectionTasks = new ArrayList<>();
         imcInspectionTasks.add(imcInspectionTask);
-        return this.transform(imcInspectionTasks).get(0);
+        return transform(imcInspectionTasks).get(0);
     }
 
     /**
@@ -276,7 +278,7 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         criteria.andEqualTo("projectId",projectId);
         example.setOrderByClause("update_time DESC");
         Page page = PageHelper.startPage(taskQueryDto.getPageNum(),taskQueryDto.getPageSize());
-        PageInfo pageInfo = new PageInfo<>(this.transform(anImcInspectionTaskMapper.selectByExample(example)));
+        PageInfo pageInfo = new PageInfo<>(transform(anImcInspectionTaskMapper.selectByExample(example)));
         pageInfo.setTotal(page.getTotal());
         pageInfo.setPages(page.getPages());
         return pageInfo;
@@ -288,11 +290,69 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
      * @return
      */
     @Override
-    public List<AnImcInspectionTask> getTaskByUserId(TaskQueryDto taskQueryDto){
+    public PageInfo getTaskByUserId(TaskQueryDto taskQueryDto){
         Integer role = taskQueryDto.getRole();
-        return null;
+        Page page = PageHelper.startPage(taskQueryDto.getPageNum(),taskQueryDto.getPageSize());
+        PageInfo pageInfo;
+        if(null == role){
+            throw new BusinessException("用户角色为空");
+        }
+        RoleEnum roleEnum = RoleEnum.getEnum(role);
+        switch (roleEnum){
+            case PRINCIPAL:
+                //如果是甲方负责人
+                pageInfo = new PageInfo<>(transform(getTaskByPrincipalId(taskQueryDto)));
+                pageInfo.setTotal(page.getTotal());
+                pageInfo.setPages(page.getPages());
+                return pageInfo;
+            case FACILITATOR:
+                //如果是服务商负责人
+                pageInfo = new PageInfo<>(transform(getTaskByFacilitatorId(taskQueryDto)));
+                pageInfo.setTotal(page.getTotal());
+                pageInfo.setPages(page.getPages());
+                return pageInfo;
+            default:
+                throw new BusinessException("查无此角色");
+        }
     }
 
+    /**
+     * 根据服务商id查询对应的全部巡检任务
+     * @param taskQueryDto
+     * @return
+     */
+    public List<AnImcInspectionTask> getTaskByFacilitatorId(TaskQueryDto taskQueryDto){
+        Long facilitatorId = taskQueryDto.getUserId();
+        Example example = new Example(AnImcInspectionTask.class);
+        Example.Criteria criteria = example.createCriteria();
+        String taskName = taskQueryDto.getTaskName();
+        if(StringUtils.isNotBlank(taskName)){
+            taskName = "%" + taskName + "%";
+            criteria.andLike("taskName",taskName);
+        }
+        criteria.andEqualTo("facilitatorId",facilitatorId);
+        example.setOrderByClause("update_time DESC");
+        return anImcInspectionTaskMapper.selectByExample(example);
+    }
+
+    /**
+     * 根据甲方负责人id查询全部的巡检任务
+     * @param taskQueryDto
+     * @return
+     */
+    public List<AnImcInspectionTask> getTaskByPrincipalId(TaskQueryDto taskQueryDto){
+        Long principalId = taskQueryDto.getUserId();
+        Example example = new Example(AnImcInspectionTask.class);
+        Example.Criteria criteria = example.createCriteria();
+        String taskName = taskQueryDto.getTaskName();
+        if(StringUtils.isNotBlank(taskName)){
+            taskName = "%" + taskName + "%";
+            criteria.andLike("taskName",taskName);
+        }
+        criteria.andEqualTo("principalId",principalId);
+        example.setOrderByClause("update_time DESC");
+        return anImcInspectionTaskMapper.selectByExample(example);
+    }
 
     private List<ImcInspectionTaskDto> transform(List<AnImcInspectionTask> imcInspectionTasks){
         List<ImcInspectionTaskDto> imcInspectionTaskDtos = new ArrayList<>();
@@ -300,6 +360,7 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         for(AnImcInspectionTask imcInspectionTask : imcInspectionTasks){
             ImcInspectionTaskDto imcInspectionTaskDto = new ImcInspectionTaskDto();
             BeanUtils.copyProperties(imcInspectionTask,imcInspectionTaskDto);
+            logger.info("imcInspectionTask = {},imcInspectionTaskDto = {}",imcInspectionTask,imcInspectionTaskDto);
             //装入已安排的点位数
             //TODO
             //转换用户名
