@@ -1,6 +1,8 @@
 package com.ananops.mdmc.controller;
 
 import com.ananops.common.core.dto.LoginAuthDto;
+import com.ananops.mdmc.dto.MdmcAddTaskDto;
+import com.ananops.mdmc.dto.MdmcQueryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,10 +23,10 @@ import com.ananops.mdmc.service.IAnMdmcTaskService;
  * 维修工单 提供者
  *
  * @author ananops
- * @date 2020-05-22
+ * @date 2020-05-25
  */
 @RestController
-@RequestMapping("task")
+@RequestMapping("mdmcTask")
 @Api("维修工单")
 public class AnMdmcTaskController extends BaseController
 {
@@ -33,14 +35,12 @@ public class AnMdmcTaskController extends BaseController
     private IAnMdmcTaskService anMdmcTaskService;
 
     /**
-     * 查询
+     * 查询维修工单表
      */
-    @ApiOperation(value = "根据id查询工单")
+    @ApiOperation(value = "查询维修工单表")
     @GetMapping("get/{id}")
     public AnMdmcTask get(@PathVariable("id") Long id)
     {
-        LoginAuthDto loginAuthDto = getLoginAuthDto();
-        logger.info("currentUser is {}",loginAuthDto);
         return anMdmcTaskService.selectAnMdmcTaskById(id);
 
     }
@@ -49,11 +49,11 @@ public class AnMdmcTaskController extends BaseController
      * 查询维修工单列表
      */
     @ApiOperation(value = "查询维修工单列表")
-    @GetMapping("list")
-    public R list(AnMdmcTask anMdmcTask)
+    @GetMapping("getTaskList")
+    public R list(MdmcQueryDto queryDto)
     {
         startPage();
-        return result(anMdmcTaskService.selectAnMdmcTaskList(anMdmcTask));
+        return result(anMdmcTaskService.selectAnMdmcTaskList(queryDto));
     }
 
 
@@ -62,9 +62,10 @@ public class AnMdmcTaskController extends BaseController
      */
     @ApiOperation(value = "新增保存维修工单")
     @PostMapping("save")
-    public R addSave(@RequestBody AnMdmcTask anMdmcTask)
+    public R addSave(@RequestBody MdmcAddTaskDto mdmcAddTaskDto)
     {
-        return toAjax(anMdmcTaskService.insertAnMdmcTask(anMdmcTask));
+        LoginAuthDto loginAuthDto = getLoginAuthDto();
+        return R.data(anMdmcTaskService.insertAnMdmcTask(mdmcAddTaskDto,loginAuthDto));
     }
 
     /**
@@ -72,19 +73,21 @@ public class AnMdmcTaskController extends BaseController
      */
     @ApiOperation(value = "修改保存维修工单")
     @PostMapping("update")
-    public R editSave(@RequestBody AnMdmcTask anMdmcTask)
+    public R editSave(@RequestBody MdmcAddTaskDto updateTaskDto)
     {
-        return toAjax(anMdmcTaskService.updateAnMdmcTask(anMdmcTask));
+        LoginAuthDto loginAuthDto = getLoginAuthDto();
+        return R.data(anMdmcTaskService.updateAnMdmcTask(updateTaskDto,loginAuthDto));
     }
 
     /**
-     * 删除
+     * 删除维修工单表
      */
-    @ApiOperation(value = "删除工单")
+    @ApiOperation(value = "删除维修工单表")
     @PostMapping("remove")
     public R remove(String ids)
     {
         return toAjax(anMdmcTaskService.deleteAnMdmcTaskByIds(ids));
     }
+
 
 }

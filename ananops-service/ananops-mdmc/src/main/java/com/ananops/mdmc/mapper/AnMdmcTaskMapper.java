@@ -2,13 +2,15 @@ package com.ananops.mdmc.mapper;
 
 import com.ananops.common.core.dao.BaseMapper;
 import com.ananops.mdmc.domain.AnMdmcTask;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 /**
  * 维修工单Mapper接口
  *
  * @author ananops
- * @date 2020-05-22
+ * @date 2020-05-25
  */
 public interface AnMdmcTaskMapper extends BaseMapper<AnMdmcTask>
 {
@@ -59,4 +61,37 @@ public interface AnMdmcTaskMapper extends BaseMapper<AnMdmcTask>
      * @return 结果
      */
     public int deleteAnMdmcTaskByIds(String[] ids);
+
+    /**
+     * 根据用户id查询工单列表
+     *
+     * @param id 用户id
+     * @return 结果
+     */
+    public List<AnMdmcTask> selectAnMdmcTaskListByUserId(Long id);
+
+    /**
+     * 根据用户id和状态查询工单列表
+     *
+     * @param id 用户id
+     * @return 结果
+     */
+    public List<AnMdmcTask> selectBySomeoneIdAndStatus(@Param("status")Integer status,@Param("id")Long id);
+
+    /**
+     * 服务商获取工单列表
+     *
+     * @param id 用户id
+     * @return 结果
+     */
+    public List<AnMdmcTask> selectByFacId(Long id);
+
+    /**
+     * 工程师获取工单列表
+     *
+     * @param id 用户id
+     * @return 结果
+     */
+    public List<AnMdmcTask> selectByMantainerId(Long id);
+
 }

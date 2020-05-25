@@ -161,6 +161,9 @@ public class AnMdmcTask extends BaseEntity
     @Excel(name = "备注信息")
     private String note;
 
+    @Excel(name = "备注")
+    private String remark;
+
     public void setId(Long id)
     {
         this.id = id;

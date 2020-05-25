@@ -7,11 +7,11 @@
     <resultMap type="AnMdmcTask" id="AnMdmcTaskResult">
         <result property="id"    column="id"    />
         <result property="version"    column="version"    />
-        <result property="creator"    column="creator"    />
+        <result property="creator"    column="create_by"    />
         <result property="creatorId"    column="creator_id"    />
-        <result property="createdTime"    column="created_time"    />
+        <result property="createdTime"    column="create_time"    />
         <result property="lastOperator"    column="last_operator"    />
-        <result property="lastOperatorId"    column="last_operator_id"    />
+        <result property="lastOperatorId"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="objectType"    column="object_type"    />
         <result property="objectId"    column="object_id"    />
@@ -41,10 +41,11 @@
         <result property="suggestion"    column="suggestion"    />
         <result property="result"    column="result"    />
         <result property="note"    column="note"    />
+        <result property="remark"    column="remark"    />
     </resultMap>
 
     <sql id="selectAnMdmcTaskVo">
-        select id, version, creator, creator_id, created_time, last_operator, last_operator_id, update_time, object_type, object_id, user_id, principal_id, project_id, facilitator_id, maintainer_id, scheduled_finish_time, actual_finish_time, scheduled_start_time, actual_start_time, deadline, delay_reason, request_latitude, request_longitude, status, total_cost, clearing_form, title, contract_id, address_name, creator_call, trouble_reason, level, appoint_time, suggestion, result, note from an_mdmc_task
+        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, object_type, object_id, user_id, principal_id, project_id, facilitator_id, maintainer_id, scheduled_finish_time, actual_finish_time, scheduled_start_time, actual_start_time, deadline, delay_reason, request_latitude, request_longitude, status, total_cost, clearing_form, title, contract_id, address_name, creator_call, trouble_reason, level, appoint_time, suggestion, result, note,remark from an_mdmc_task
     </sql>
 
     <select id="selectAnMdmcTaskList" parameterType="AnMdmcTask" resultMap="AnMdmcTaskResult">
@@ -54,9 +55,29 @@
         </where>
     </select>
 
+    <select id="selectAnMdmcTaskListByUserId" parameterType="Long" resultMap="AnMdmcTaskResult">
+        <include refid="selectAnMdmcTaskVo"/>
+        where user_id=#{id} or facilitator_id=#{id} or maintainer_id=#{id} or principal_id=#{id}) order by created_time desc
+    </select>
+
     <select id="selectAnMdmcTaskById" parameterType="Long" resultMap="AnMdmcTaskResult">
         <include refid="selectAnMdmcTaskVo"/>
         where id = #{id}
+    </select>
+
+    <select id="selectByMantainerId" parameterType="Long" resultMap="AnMdmcTaskResult">
+    <include refid="selectAnMdmcTaskVo"/>
+    where status>4 and status!=14 and status!=15 and maintainer_id=#{id} order by created_time desc
+    </select>
+
+    <select id="selectByFacId" parameterType="Long" resultMap="AnMdmcTaskResult">
+        <include refid="selectAnMdmcTaskVo"/>
+        where status>2 and status!=14  and facilitator_id=#{id} order by created_time desc
+    </select>
+
+    <select id="selectBySomeoneIdAndStatus"  resultMap="AnMdmcTaskResult">
+        <include refid="selectAnMdmcTaskVo"/>
+        where status=#{status} and (user_id=#{id} or facilitator_id=#{id} or maintainer_id=#{id} or principal_id=#{id}) order by created_time desc
     </select>
 
     <insert id="insertAnMdmcTask" parameterType="AnMdmcTask">

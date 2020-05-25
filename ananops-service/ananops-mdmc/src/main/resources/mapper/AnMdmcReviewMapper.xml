@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ananops.mdmc.mapper.AnMdmcReviewMapper">
+
+    <resultMap type="AnMdmcReview" id="AnMdmcReviewResult">
+        <result property="id"    column="id"    />
+        <result property="version"    column="version"    />
+        <result property="creator"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createdTime"    column="create_time"    />
+        <result property="lastOperator"    column="last_operator"    />
+        <result property="lastOperatorId"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="facilitatorId"    column="facilitator_id"    />
+        <result property="maintainerId"    column="maintainer_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="score"    column="score"    />
+        <result property="contents"    column="contents"    />
+        <result property="principalId"    column="principal_id"    />
+        <result property="checkContents"    column="check_contents"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectAnMdmcReviewVo">
+        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, task_id, facilitator_id, maintainer_id, user_id, score, contents, principal_id, check_contents ,remark from an_mdmc_review
+    </sql>
+
+    <select id="selectAnMdmcReviewList" parameterType="AnMdmcReview" resultMap="AnMdmcReviewResult">
+        <include refid="selectAnMdmcReviewVo"/>
+        <where>
+        </where>
+    </select>
+
+    <select id="selectAnMdmcReviewById" parameterType="Long" resultMap="AnMdmcReviewResult">
+        <include refid="selectAnMdmcReviewVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAnMdmcReview" parameterType="AnMdmcReview">
+        insert into an_mdmc_review
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="version != null ">version,</if>
+            <if test="creator != null  and creator != ''">creator,</if>
+            <if test="creatorId != null ">creator_id,</if>
+            <if test="createdTime != null ">created_time,</if>
+            <if test="lastOperator != null  and lastOperator != ''">last_operator,</if>
+            <if test="lastOperatorId != null ">last_operator_id,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="taskId != null ">task_id,</if>
+            <if test="facilitatorId != null ">facilitator_id,</if>
+            <if test="maintainerId != null ">maintainer_id,</if>
+            <if test="userId != null ">user_id,</if>
+            <if test="score != null ">score,</if>
+            <if test="contents != null  and contents != ''">contents,</if>
+            <if test="principalId != null ">principal_id,</if>
+            <if test="checkContents != null  and checkContents != ''">check_contents,</if>
+        </trim>
+    </insert>
+
+    <update id="updateAnMdmcReview" parameterType="AnMdmcReview">
+        update an_mdmc_review
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="version != null ">version = #{version},</if>
+            <if test="creator != null  and creator != ''">creator = #{creator},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="lastOperator != null  and lastOperator != ''">last_operator = #{lastOperator},</if>
+            <if test="lastOperatorId != null ">last_operator_id = #{lastOperatorId},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="taskId != null ">task_id = #{taskId},</if>
+            <if test="facilitatorId != null ">facilitator_id = #{facilitatorId},</if>
+            <if test="maintainerId != null ">maintainer_id = #{maintainerId},</if>
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="score != null ">score = #{score},</if>
+            <if test="contents != null  and contents != ''">contents = #{contents},</if>
+            <if test="principalId != null ">principal_id = #{principalId},</if>
+            <if test="checkContents != null  and checkContents != ''">check_contents = #{checkContents},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnMdmcReviewById" parameterType="Long">
+        delete from an_mdmc_review where id = #{id}
+    </delete>
+
+    <delete id="deleteAnMdmcReviewByIds" parameterType="String">
+        delete from an_mdmc_review where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
