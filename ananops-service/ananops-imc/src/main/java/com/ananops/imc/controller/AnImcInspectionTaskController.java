@@ -2,6 +2,7 @@ package com.ananops.imc.controller;
 
 import com.ananops.imc.dto.ImcAddInspectionTaskDto;
 import com.ananops.imc.dto.ImcTaskChangeStatusDto;
+import com.ananops.imc.dto.TaskQueryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -95,6 +96,12 @@ public class AnImcInspectionTaskController extends BaseController
 	public ImcTaskChangeStatusDto modifyTaskStatusByTaskId(@RequestBody ImcTaskChangeStatusDto imcTaskChangeStatusDto){
 		anImcInspectionTaskService.modifyTaskStatus(imcTaskChangeStatusDto,getLoginAuthDto());
 		return imcTaskChangeStatusDto;
+	}
+
+	@ApiOperation(value = "根据项目查询对应的所有巡检任务")
+	@PostMapping("getTaskListByProjectId")
+	public R getTaskListByProjectId(@RequestBody TaskQueryDto taskQueryDto){
+		return result(anImcInspectionTaskService.getTaskByProjectId(taskQueryDto));
 	}
 
 }

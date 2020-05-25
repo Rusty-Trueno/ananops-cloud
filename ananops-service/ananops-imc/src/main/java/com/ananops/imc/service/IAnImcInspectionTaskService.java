@@ -5,6 +5,8 @@ import com.ananops.common.core.service.IService;
 import com.ananops.imc.domain.AnImcInspectionTask;
 import com.ananops.imc.dto.ImcAddInspectionTaskDto;
 import com.ananops.imc.dto.ImcTaskChangeStatusDto;
+import com.ananops.imc.dto.TaskQueryDto;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -78,4 +80,11 @@ public interface IAnImcInspectionTaskService extends IService<AnImcInspectionTas
      * @return
      */
     public boolean isTaskFinish(Long taskId);
+
+    /**
+     * 根据项目id查询对应的巡检任务列表
+     * @param taskQueryDto
+     * @return
+     */
+    public List<AnImcInspectionTask> getTaskByProjectId(TaskQueryDto taskQueryDto);
 }

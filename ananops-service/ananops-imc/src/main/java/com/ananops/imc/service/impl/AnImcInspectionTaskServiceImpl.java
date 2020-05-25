@@ -7,18 +7,18 @@ import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.common.core.service.BaseService;
 import com.ananops.common.exception.BusinessException;
 import com.ananops.common.utils.DateUtils;
+import com.ananops.common.utils.StringUtils;
 import com.ananops.common.utils.bean.BeanUtils;
 import com.ananops.common.utils.bean.UpdateInfoUtil;
 import com.ananops.imc.domain.AnImcInspectionItem;
-import com.ananops.imc.dto.ImcAddInspectionItemDto;
-import com.ananops.imc.dto.ImcAddInspectionTaskDto;
-import com.ananops.imc.dto.ImcItemChangeStatusDto;
-import com.ananops.imc.dto.ImcTaskChangeStatusDto;
+import com.ananops.imc.dto.*;
 import com.ananops.imc.enums.ItemStatusEnum;
 import com.ananops.imc.enums.TaskStatusEnum;
 import com.ananops.imc.enums.TaskTypeEnum;
 import com.ananops.imc.mapper.AnImcInspectionItemMapper;
 import com.ananops.imc.service.IAnImcInspectionItemService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ananops.imc.mapper.AnImcInspectionTaskMapper;
@@ -250,5 +250,26 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         }
         //如果巡检任务子项都完成了，则巡检任务也完成了
         return true;
+    }
+
+    /**
+     * 根据项目id查询对应的巡检任务列表
+     * @param taskQueryDto
+     * @return
+     */
+    @Override
+    public List<AnImcInspectionTask> getTaskByProjectId(TaskQueryDto taskQueryDto){
+        Example example = new Example(AnImcInspectionTask.class);
+        Example.Criteria criteria = example.createCriteria();
+        Long projectId = taskQueryDto.getProjectId();
+        String taskName = taskQueryDto.getTaskName();
+        if(StringUtils.isNotBlank(taskName)){
+            taskName = "%" + taskName + "%";
+            criteria.andLike("taskName",taskName);
+        }
+        criteria.andEqualTo("projectId",projectId);
+        example.setOrderByClause("update_time DESC");
+        PageHelper.startPage(taskQueryDto.getPageNum(),taskQueryDto.getPageSize());
+        return anImcInspectionTaskMapper.selectByExample(example);
     }
 }
