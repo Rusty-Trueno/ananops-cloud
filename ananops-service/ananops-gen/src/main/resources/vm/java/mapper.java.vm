@@ -26,7 +26,7 @@ public interface ${ClassName}Mapper extends BaseMapper<${ClassName}>
      * @param ${className} ${functionName}
      * @return ${functionName}集合
      */
-    public List<${ClassName}> select${ClassName}List(${ClassName} ${className});
+     List<${ClassName}> select${ClassName}List(${ClassName} ${className});
 
     /**
      * 新增${functionName}
@@ -34,7 +34,7 @@ public interface ${ClassName}Mapper extends BaseMapper<${ClassName}>
      * @param ${className} ${functionName}
      * @return 结果
      */
-    public int insert${ClassName}(${ClassName} ${className});
+     int insert${ClassName}(${ClassName} ${className});
 
     /**
      * 修改${functionName}
@@ -42,7 +42,7 @@ public interface ${ClassName}Mapper extends BaseMapper<${ClassName}>
      * @param ${className} ${functionName}
      * @return 结果
      */
-    public int update${ClassName}(${ClassName} ${className});
+    int update${ClassName}(${ClassName} ${className});
 
     /**
      * 删除${functionName}
@@ -50,7 +50,7 @@ public interface ${ClassName}Mapper extends BaseMapper<${ClassName}>
      * @param ${pkColumn.javaField} ${functionName}ID
      * @return 结果
      */
-    public int delete${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField});
+    int delete${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField});
 
     /**
      * 批量删除${functionName}
@@ -58,5 +58,5 @@ public interface ${ClassName}Mapper extends BaseMapper<${ClassName}>
      * @param ${pkColumn.javaField}s 需要删除的数据ID
      * @return 结果
      */
-    public int delete${ClassName}ByIds(String[] ${pkColumn.javaField}s);
+    int delete${ClassName}ByIds(String[] ${pkColumn.javaField}s);
 }
