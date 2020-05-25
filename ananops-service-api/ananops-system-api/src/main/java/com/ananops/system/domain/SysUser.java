@@ -1,5 +1,6 @@
 package com.ananops.system.domain;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -80,6 +81,13 @@ public class SysUser extends BaseEntity
     /** 部门对象 */
     @Excel(name = "部门名称", targetAttr = "deptName", type = Type.EXPORT)
     private SysDept           dept;
+
+
+    /** 部门ID */
+    @Excel(name = "公司id", type = Type.IMPORT)
+    private Long companyId;
+
+    private String companyName;
 
     private List<SysRole>     roles;
 
@@ -307,17 +315,47 @@ public class SysUser extends BaseEntity
         this.buttons = buttons;
     }
 
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
     @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("userId", getUserId())
-                .append("deptId", getDeptId()).append("loginName", getLoginName()).append("userName", getUserName())
-                .append("email", getEmail()).append("phonenumber", getPhonenumber()).append("sex", getSex())
-                .append("avatar", getAvatar()).append("password", getPassword()).append("salt", getSalt())
-                .append("status", getStatus()).append("delFlag", getDelFlag()).append("loginIp", getLoginIp())
-                .append("loginDate", getLoginDate()).append("createBy", getCreateBy())
-                .append("createTime", getCreateTime()).append("updateBy", getUpdateBy())
-                .append("updateTime", getUpdateTime()).append("remark", getRemark()).append("dept", getDept())
-                .toString();
+    public String toString() {
+        return "SysUser{" +
+                "userId=" + userId +
+                ", deptId=" + deptId +
+                ", parentId=" + parentId +
+                ", loginName='" + loginName + '\'' +
+                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", phonenumber='" + phonenumber + '\'' +
+                ", sex='" + sex + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", password='" + password + '\'' +
+                ", salt='" + salt + '\'' +
+                ", status='" + status + '\'' +
+                ", delFlag='" + delFlag + '\'' +
+                ", loginIp='" + loginIp + '\'' +
+                ", loginDate=" + loginDate +
+                ", dept=" + dept +
+                ", companyId=" + companyId +
+                ", companyName='" + companyName + '\'' +
+                ", roles=" + roles +
+                ", roleIds=" + roleIds +
+                ", postIds=" + Arrays.toString(postIds) +
+                ", buttons=" + buttons +
+                '}';
     }
 }
