@@ -1,5 +1,6 @@
 package com.ananops.imc.controller;
 
+import com.ananops.imc.dto.ImcAddInspectionItemDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,7 @@ import com.ananops.imc.service.IAnImcInspectionItemService;
  * @date 2020-05-22
  */
 @RestController
-@RequestMapping("item")
+@RequestMapping("inspectionItem")
 @Api("巡检任务子项")
 public class AnImcInspectionItemController extends BaseController
 {
@@ -59,9 +60,9 @@ public class AnImcInspectionItemController extends BaseController
 	 */
 	@ApiOperation(value = "新增保存巡检任务子项")
 	@PostMapping("save")
-	public R addSave(@RequestBody AnImcInspectionItem anImcInspectionItem)
+	public R addSave(@RequestBody ImcAddInspectionItemDto imcAddInspectionItemDto)
 	{		
-		return toAjax(anImcInspectionItemService.insertAnImcInspectionItem(anImcInspectionItem,getLoginAuthDto()));
+		return R.data(anImcInspectionItemService.insertAnImcInspectionItem(imcAddInspectionItemDto,getLoginAuthDto()));
 	}
 
 	/**

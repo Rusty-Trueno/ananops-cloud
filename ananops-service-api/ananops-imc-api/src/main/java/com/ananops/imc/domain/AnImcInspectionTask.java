@@ -75,7 +75,7 @@ public class AnImcInspectionTask extends BaseEntity
 
     /** 计划完成天数 */
     @Excel(name = "计划完成天数")
-    private Long days;
+    private Integer days;
 
     /** 巡检类型（1.按合同产生的巡检，2.甲方负责人主动发出的巡检） */
     @Excel(name = "巡检类型", readConverterExp = "1=.按合同产生的巡检，2.甲方负责人主动发出的巡检")
@@ -87,7 +87,7 @@ public class AnImcInspectionTask extends BaseEntity
 
     /** 巡检周期（月） */
     @Excel(name = "巡检周期", readConverterExp = "月=")
-    private Long frequency;
+    private Integer frequency;
 
     public void setId(Long id) 
     {
@@ -206,12 +206,12 @@ public class AnImcInspectionTask extends BaseEntity
     {
         return actualFinishTime;
     }
-    public void setDays(Long days) 
+    public void setDays(Integer days)
     {
         this.days = days;
     }
 
-    public Long getDays() 
+    public Integer getDays()
     {
         return days;
     }
@@ -233,12 +233,12 @@ public class AnImcInspectionTask extends BaseEntity
     {
         return taskName;
     }
-    public void setFrequency(Long frequency) 
+    public void setFrequency(Integer frequency)
     {
         this.frequency = frequency;
     }
 
-    public Long getFrequency() 
+    public Integer getFrequency()
     {
         return frequency;
     }

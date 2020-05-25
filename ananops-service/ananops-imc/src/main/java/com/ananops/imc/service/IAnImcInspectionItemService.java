@@ -1,7 +1,10 @@
 package com.ananops.imc.service;
 
 import com.ananops.common.core.dto.LoginAuthDto;
+import com.ananops.common.core.service.IService;
 import com.ananops.imc.domain.AnImcInspectionItem;
+import com.ananops.imc.dto.ImcAddInspectionItemDto;
+
 import java.util.List;
 
 /**
@@ -10,7 +13,7 @@ import java.util.List;
  * @author ananops
  * @date 2020-05-22
  */
-public interface IAnImcInspectionItemService 
+public interface IAnImcInspectionItemService extends IService<AnImcInspectionItem>
 {
     /**
      * 查询巡检任务子项
@@ -31,10 +34,10 @@ public interface IAnImcInspectionItemService
     /**
      * 新增巡检任务子项
      * 
-     * @param anImcInspectionItem 巡检任务子项
+     * @param imcAddInspectionItemDto 巡检任务子项
      * @return 结果
      */
-    public int insertAnImcInspectionItem(AnImcInspectionItem anImcInspectionItem, LoginAuthDto user);
+    public ImcAddInspectionItemDto insertAnImcInspectionItem(ImcAddInspectionItemDto imcAddInspectionItemDto, LoginAuthDto user);
 
     /**
      * 修改巡检任务子项
