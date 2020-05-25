@@ -18,10 +18,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="score"    column="score"    />
         <result property="contents"    column="contents"    />
         <result property="remark"    column="remark"    />
+        <result property="checkContens"    column="check_contens"    />
     </resultMap>
 
     <sql id="selectAnImcInspectionReviewVo">
-        select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, inspection_task_id, principal_id, score, contents, remark from an_imc_inspection_review
+        select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, inspection_task_id, principal_id, score, contents, remark, check_contens from an_imc_inspection_review
     </sql>
 
     <select id="selectAnImcInspectionReviewList" parameterType="AnImcInspectionReview" resultMap="AnImcInspectionReviewResult">
@@ -50,6 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="score != null ">score,</if>
             <if test="contents != null  and contents != ''">contents,</if>
             <if test="remark != null  and remark != ''">remark,</if>
+            <if test="checkContens != null  and checkContens != ''">check_contens,</if>
          </trim>
     </insert>
 
@@ -68,6 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="score != null ">score = #{score},</if>
             <if test="contents != null  and contents != ''">contents = #{contents},</if>
             <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="checkContens != null  and checkContens != ''">check_contens = #{checkContens},</if>
         </trim>
         where id = #{id}
     </update>
