@@ -1,7 +1,6 @@
 package com.ananops.imc.service.impl;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.common.core.service.BaseService;
@@ -17,6 +16,7 @@ import com.ananops.imc.enums.TaskStatusEnum;
 import com.ananops.imc.enums.TaskTypeEnum;
 import com.ananops.imc.mapper.AnImcInspectionItemMapper;
 import com.ananops.imc.service.IAnImcInspectionItemService;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,9 +53,15 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
      * @return 巡检任务表
      */
     @Override
-    public AnImcInspectionTask selectAnImcInspectionTaskById(Long id)
+    public ImcInspectionTaskDto selectAnImcInspectionTaskById(Long id)
     {
-        return anImcInspectionTaskMapper.selectAnImcInspectionTaskById(id);
+        AnImcInspectionTask imcInspectionTask = anImcInspectionTaskMapper.selectAnImcInspectionTaskById(id);
+        if(null == imcInspectionTask){
+            return new ImcInspectionTaskDto();
+        }
+        List<AnImcInspectionTask> imcInspectionTasks = new ArrayList<>();
+        imcInspectionTasks.add(imcInspectionTask);
+        return this.transform(imcInspectionTasks).get(0);
     }
 
     /**
@@ -258,7 +264,7 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
      * @return
      */
     @Override
-    public List<AnImcInspectionTask> getTaskByProjectId(TaskQueryDto taskQueryDto){
+    public PageInfo getTaskByProjectId(TaskQueryDto taskQueryDto){
         Example example = new Example(AnImcInspectionTask.class);
         Example.Criteria criteria = example.createCriteria();
         Long projectId = taskQueryDto.getProjectId();
@@ -269,7 +275,41 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         }
         criteria.andEqualTo("projectId",projectId);
         example.setOrderByClause("update_time DESC");
-        PageHelper.startPage(taskQueryDto.getPageNum(),taskQueryDto.getPageSize());
-        return anImcInspectionTaskMapper.selectByExample(example);
+        Page page = PageHelper.startPage(taskQueryDto.getPageNum(),taskQueryDto.getPageSize());
+        PageInfo pageInfo = new PageInfo<>(this.transform(anImcInspectionTaskMapper.selectByExample(example)));
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPages(page.getPages());
+        return pageInfo;
+    }
+
+    /**
+     *根据用户id获取对应的巡检任务（可分页）
+     * @param taskQueryDto
+     * @return
+     */
+    @Override
+    public List<AnImcInspectionTask> getTaskByUserId(TaskQueryDto taskQueryDto){
+        Integer role = taskQueryDto.getRole();
+        return null;
+    }
+
+
+    private List<ImcInspectionTaskDto> transform(List<AnImcInspectionTask> imcInspectionTasks){
+        List<ImcInspectionTaskDto> imcInspectionTaskDtos = new ArrayList<>();
+        Map<Long,String> nameMap = new HashMap<>();
+        for(AnImcInspectionTask imcInspectionTask : imcInspectionTasks){
+            ImcInspectionTaskDto imcInspectionTaskDto = new ImcInspectionTaskDto();
+            BeanUtils.copyProperties(imcInspectionTask,imcInspectionTaskDto);
+            //装入已安排的点位数
+            //TODO
+            //转换用户名
+            //TODO
+            //转换项目名称
+            //TODO
+            //转换服务商名称
+            //TODO
+            imcInspectionTaskDtos.add(imcInspectionTaskDto);
+        }
+        return imcInspectionTaskDtos;
     }
 }

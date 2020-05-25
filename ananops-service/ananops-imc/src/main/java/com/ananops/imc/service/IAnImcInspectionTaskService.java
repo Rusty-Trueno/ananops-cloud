@@ -4,6 +4,7 @@ import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.common.core.service.IService;
 import com.ananops.imc.domain.AnImcInspectionTask;
 import com.ananops.imc.dto.ImcAddInspectionTaskDto;
+import com.ananops.imc.dto.ImcInspectionTaskDto;
 import com.ananops.imc.dto.ImcTaskChangeStatusDto;
 import com.ananops.imc.dto.TaskQueryDto;
 import com.github.pagehelper.PageInfo;
@@ -24,7 +25,7 @@ public interface IAnImcInspectionTaskService extends IService<AnImcInspectionTas
      * @param id 巡检任务表ID
      * @return 巡检任务表
      */
-    public AnImcInspectionTask selectAnImcInspectionTaskById(Long id);
+    public ImcInspectionTaskDto selectAnImcInspectionTaskById(Long id);
 
     /**
      * 查询巡检任务表列表
@@ -86,5 +87,12 @@ public interface IAnImcInspectionTaskService extends IService<AnImcInspectionTas
      * @param taskQueryDto
      * @return
      */
-    public List<AnImcInspectionTask> getTaskByProjectId(TaskQueryDto taskQueryDto);
+    public PageInfo getTaskByProjectId(TaskQueryDto taskQueryDto);
+
+    /**
+     *根据用户id获取对应的巡检任务（可分页）
+     * @param taskQueryDto
+     * @return
+     */
+    public List<AnImcInspectionTask> getTaskByUserId(TaskQueryDto taskQueryDto);
 }

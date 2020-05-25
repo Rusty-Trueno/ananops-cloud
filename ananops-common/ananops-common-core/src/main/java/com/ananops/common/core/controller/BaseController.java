@@ -137,6 +137,15 @@ public class BaseController
         return R.ok(m);
     }
 
+    protected R result(PageInfo pageInfo)
+    {
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("rows", pageInfo.getList());
+        m.put("pageNum", pageInfo.getPageNum());
+        m.put("total", pageInfo.getTotal());
+        return R.ok(m);
+    }
+
     /**
      * 响应返回结果
      * 
