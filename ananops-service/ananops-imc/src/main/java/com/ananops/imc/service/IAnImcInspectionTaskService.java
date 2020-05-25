@@ -4,6 +4,7 @@ import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.common.core.service.IService;
 import com.ananops.imc.domain.AnImcInspectionTask;
 import com.ananops.imc.dto.ImcAddInspectionTaskDto;
+import com.ananops.imc.dto.ImcTaskChangeStatusDto;
 
 import java.util.List;
 
@@ -62,4 +63,12 @@ public interface IAnImcInspectionTaskService extends IService<AnImcInspectionTas
      * @return 结果
      */
     public int deleteAnImcInspectionTaskById(Long id);
+
+    /**
+     * 更改巡检任务状态
+     * @param imcTaskChangeStatusDto
+     * @param user
+     * @return
+     */
+    public AnImcInspectionTask modifyTaskStatus(ImcTaskChangeStatusDto imcTaskChangeStatusDto,LoginAuthDto user);
 }

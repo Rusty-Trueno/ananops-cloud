@@ -110,5 +110,45 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <update id="modifyTaskStatus" parameterType="AnImcInspectionTask">
+        update an_imc_inspection_task as task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="version != null ">version = #{version},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="lastOperatorId != null ">last_operator_id = #{lastOperatorId},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="principalId != null ">principal_id = #{principalId},</if>
+            <if test="facilitatorId != null ">facilitator_id = #{facilitatorId},</if>
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="location != null  and location != ''">location = #{location},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="totalCost != null ">total_cost = #{totalCost},</if>
+            <if test="maintenanceCost != null ">maintenance_cost = #{maintenanceCost},</if>
+            <if test="scheduledStartTime != null ">scheduled_start_time = #{scheduledStartTime},</if>
+            <if test="actualFinishTime != null ">actual_finish_time = #{actualFinishTime},</if>
+            <if test="days != null ">days = #{days},</if>
+            <if test="inspectionType != null ">inspection_type = #{inspectionType},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="taskName != null  and taskName != ''">task_name = #{taskName},</if>
+            <if test="frequency != null ">frequency = #{frequency},</if>
+        </trim>
+        where 1=1
+        and (
+        ( #{status} = 3 and task.status = 2 )
+        or
+        ( #{status} = 4 and task.status = 3 )
+        or
+        ( #{status} = 5 and task.status = 4 )
+        or
+        ( #{status} = 6 and task.status = 5 )
+        or
+        ( #{status} = 7 and task.status = 6 )
+        )
+        and task.id = #{id}
+    </update>
     
 </mapper>

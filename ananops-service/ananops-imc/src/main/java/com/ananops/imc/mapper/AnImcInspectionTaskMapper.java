@@ -59,4 +59,11 @@ public interface AnImcInspectionTaskMapper extends BaseMapper<AnImcInspectionTas
      * @return 结果
      */
     public int deleteAnImcInspectionTaskByIds(String[] ids);
+
+    /**
+     * 修改巡检任务状态
+     * @param anImcInspectionTask
+     * @return
+     */
+    public int modifyTaskStatus(AnImcInspectionTask anImcInspectionTask);
 }
