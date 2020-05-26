@@ -174,6 +174,7 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
     @Override
     public ImcTaskChangeStatusDto modifyTaskStatus(ImcTaskChangeStatusDto imcTaskChangeStatusDto, LoginAuthDto user){
         imcTaskChangeStatusDto.setStatusMsg(TaskStatusEnum.getStatusMsg(imcTaskChangeStatusDto.getStatus()));
+        imcTaskChangeStatusDto.setLoginAuthDto(user);
         Long taskId = imcTaskChangeStatusDto.getTaskId();
         Integer status = imcTaskChangeStatusDto.getStatus();
         AnImcInspectionTask anImcInspectionTask = new AnImcInspectionTask();

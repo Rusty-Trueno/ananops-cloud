@@ -1,28 +1,28 @@
 package com.ananops.imc.service.impl;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.common.core.service.BaseService;
 import com.ananops.common.exception.BusinessException;
-import com.ananops.common.utils.DateUtils;
 import com.ananops.common.utils.bean.BeanUtils;
 import com.ananops.common.utils.bean.UpdateInfoUtil;
 import com.ananops.imc.domain.AnImcInspectionTask;
-import com.ananops.imc.dto.ImcAddInspectionItemDto;
-import com.ananops.imc.dto.ImcItemChangeStatusDto;
-import com.ananops.imc.dto.ImcTaskChangeStatusDto;
+import com.ananops.imc.dto.*;
 import com.ananops.imc.enums.ItemStatusEnum;
 import com.ananops.imc.enums.TaskStatusEnum;
 import com.ananops.imc.mapper.AnImcInspectionTaskMapper;
 import com.ananops.imc.service.IAnImcInspectionTaskService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ananops.imc.mapper.AnImcInspectionItemMapper;
 import com.ananops.imc.domain.AnImcInspectionItem;
 import com.ananops.imc.service.IAnImcInspectionItemService;
 import com.ananops.common.core.text.Convert;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * 巡检任务子项Service业务层处理
@@ -57,13 +57,24 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
     /**
      * 查询巡检任务子项列表
      * 
-     * @param anImcInspectionItem 巡检任务子项
+     * @param itemQueryDto 巡检任务子项
      * @return 巡检任务子项
      */
     @Override
-    public List<AnImcInspectionItem> selectAnImcInspectionItemList(AnImcInspectionItem anImcInspectionItem)
+    public PageInfo selectAnImcInspectionItemList(ItemQueryDto itemQueryDto)
     {
-        return anImcInspectionItemMapper.selectAnImcInspectionItemList(anImcInspectionItem);
+        AnImcInspectionItem imcInspectionItem = new AnImcInspectionItem();
+        imcInspectionItem.setInspectionTaskId(itemQueryDto.getTaskId());
+        imcInspectionItem.setStatus(itemQueryDto.getStatus());
+        imcInspectionItem.setItemName(itemQueryDto.getItemName());
+        imcInspectionItem.setMaintainerId(itemQueryDto.getMaintainerId());
+        Page page = PageHelper.startPage(itemQueryDto.getPageNum(),itemQueryDto.getPageSize());
+        List<AnImcInspectionItem> imcInspectionItems = anImcInspectionItemMapper.selectAnImcInspectionItemList(imcInspectionItem);
+        PageInfo pageInfo = new PageInfo<>(transform(imcInspectionItems));
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPages(page.getPages());
+        pageInfo.setPageNum(page.getPageNum());
+        return pageInfo;
     }
 
     /**
@@ -113,9 +124,9 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
      * @return 结果
      */
     @Override
-    public int updateAnImcInspectionItem(AnImcInspectionItem anImcInspectionItem)
+    public int updateAnImcInspectionItem(AnImcInspectionItem anImcInspectionItem,LoginAuthDto user)
     {
-        anImcInspectionItem.setUpdateTime(DateUtils.getNowDate());
+        UpdateInfoUtil.setModifyInfo(anImcInspectionItem,user);
         return anImcInspectionItemMapper.updateAnImcInspectionItem(anImcInspectionItem);
     }
 
@@ -152,6 +163,7 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
     @Override
     public ImcItemChangeStatusDto modifyImcItemStatus(ImcItemChangeStatusDto imcItemChangeStatusDto, LoginAuthDto user){
         imcItemChangeStatusDto.setStatusMsg(ItemStatusEnum.getStatusMsg(imcItemChangeStatusDto.getStatus()));
+        imcItemChangeStatusDto.setLoginAuthDto(user);
         Long itemId = imcItemChangeStatusDto.getItemId();
         int status = imcItemChangeStatusDto.getStatus();
         AnImcInspectionItem anImcInspectionItem = new AnImcInspectionItem();
@@ -197,5 +209,69 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
                 break;
         }
         return imcItemChangeStatusDto;
+    }
+
+    /**
+     * 提交巡检结果相关信息
+     * @param itemResultDto
+     * @param user
+     * @return
+     */
+    public ImcItemChangeStatusDto putResultByItemId(ItemResultDto itemResultDto, LoginAuthDto user){
+        //增量更新子项实际工作起始时间
+        AnImcInspectionItem imcInspectionItem = new AnImcInspectionItem();
+        imcInspectionItem.setId(itemResultDto.getItemId());
+        imcInspectionItem.setActualStartTime(itemResultDto.getActualStartTime());
+        imcInspectionItem.setActualFinishTime(itemResultDto.getActualFinishTime());
+        anImcInspectionItemMapper.updateByPrimaryKeySelective(imcInspectionItem);
+        //走原接口逻辑
+        ImcItemChangeStatusDto imcItemChangeStatusDto = new ImcItemChangeStatusDto();
+        BeanUtils.copyProperties(itemResultDto,imcItemChangeStatusDto);
+        return this.modifyImcItemStatus(imcItemChangeStatusDto,user);
+    }
+
+    /**
+     * 根据维修工id查全部维修工已完成的任务
+     * @param itemQueryDto
+     * @return
+     */
+    @Override
+    public PageInfo getAllFinishedImcItemByMaintainerId(ItemQueryDto itemQueryDto){
+        Long maintainerId = itemQueryDto.getMaintainerId();
+        if(null != maintainerId){
+            Page page = PageHelper.startPage(itemQueryDto.getPageNum(),itemQueryDto.getPageSize());
+            List<AnImcInspectionItem> imcInspectionItems = anImcInspectionItemMapper.getAllFinishedImcItemByMaintainerId(maintainerId);
+            PageInfo pageInfo = new PageInfo<>(transform(imcInspectionItems));
+            pageInfo.setTotal(page.getTotal());
+            pageInfo.setPages(page.getPages());
+            pageInfo.setPageNum(page.getPageNum());
+            return pageInfo;
+        }else throw new BusinessException("参数异常");
+    }
+
+    /**
+     * 巡检任务子项转换方法
+     * @param imcInspectionItems
+     * @return
+     */
+    private List<ImcInspectionItemDto> transform(List<AnImcInspectionItem> imcInspectionItems){
+        List<ImcInspectionItemDto> imcInspectionItemDtos = new ArrayList<>();
+        Map<Long,String> nameMap = new HashMap<>();
+        for(AnImcInspectionItem imcInspectionItem : imcInspectionItems){
+            ImcInspectionItemDto imcInspectionItemDto = new ImcInspectionItemDto();
+            BeanUtils.copyProperties(imcInspectionItem,imcInspectionItemDto);
+            Long maintainerId = imcInspectionItem.getMaintainerId();
+            //转换工程师名称
+            if(null != maintainerId){
+                if(nameMap.containsKey(maintainerId)){
+                    imcInspectionItemDto.setMaintainerName(nameMap.get(maintainerId));
+                }else{
+                    //调用uac查询用户名
+                    //TODO
+                }
+            }
+            imcInspectionItemDtos.add(imcInspectionItemDto);
+        }
+        return imcInspectionItemDtos;
     }
 }

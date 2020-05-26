@@ -2,6 +2,8 @@ package com.ananops.imc.mapper;
 
 import com.ananops.common.core.dao.BaseMapper;
 import com.ananops.imc.domain.AnImcInspectionItem;
+import com.ananops.imc.dto.ItemQueryDto;
+import com.github.pagehelper.PageInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -68,4 +70,11 @@ public interface AnImcInspectionItemMapper extends BaseMapper<AnImcInspectionIte
      * @return
      */
     public int modifyItemStatus(AnImcInspectionItem anImcInspectionItem);
+
+    /**
+     * 根据维修工id查全部维修工已完成的任务
+     * @param maintainerId
+     * @return
+     */
+    public List<AnImcInspectionItem> getAllFinishedImcItemByMaintainerId(Long maintainerId);
 }

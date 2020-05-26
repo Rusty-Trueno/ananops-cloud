@@ -37,9 +37,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectAnImcInspectionItemList" parameterType="AnImcInspectionItem" resultMap="AnImcInspectionItemResult">
         <include refid="selectAnImcInspectionItemVo"/>
-        <where>  
+        <where>
+            <if test="status != null">status = #{status}</if>
+            <if test="inspectionTaskId != null">and inspection_task_id = #{inspectionTaskId}</if>
+            <if test="maintainerId != null">and maintainer_id = #{maintainerId}</if>
             <if test="itemName != null  and itemName != ''"> and item_name like concat('%', #{itemName}, '%')</if>
         </where>
+        order by update_time desc
     </select>
     
     <select id="selectAnImcInspectionItemById" parameterType="Long" resultMap="AnImcInspectionItemResult">
@@ -156,4 +160,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         )
         and item.id = #{id}
     </update>
+
+    <select id="getAllFinishedImcItemByMaintainerId" parameterType="Long" resultMap="AnImcInspectionItemResult">
+        <include refid="selectAnImcInspectionItemVo"/> as item
+        where 1=1
+        and item.maintainer_id = #{maintainerId}
+        and item.status in (4,5)
+        order by item.update_time desc
+    </select>
 </mapper>

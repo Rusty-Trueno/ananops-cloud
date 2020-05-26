@@ -1,8 +1,12 @@
 package com.ananops.imc.controller;
 
 import com.ananops.common.core.dto.LoginAuthDto;
+import com.ananops.common.exception.BusinessException;
 import com.ananops.imc.dto.ImcAddInspectionItemDto;
 import com.ananops.imc.dto.ImcItemChangeStatusDto;
+import com.ananops.imc.dto.ItemQueryDto;
+import com.ananops.imc.dto.ItemResultDto;
+import com.ananops.imc.enums.ItemStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,18 +50,6 @@ public class AnImcInspectionItemController extends BaseController
 	}
 	
 	/**
-	 * 查询巡检任务子项列表
-	 */
-	@ApiOperation(value = "查询巡检任务子项列表")
-	@GetMapping("list")
-	public R list(AnImcInspectionItem anImcInspectionItem)
-	{
-		startPage();
-        return result(anImcInspectionItemService.selectAnImcInspectionItemList(anImcInspectionItem));
-	}
-	
-	
-	/**
 	 * 新增保存巡检任务子项
 	 */
 	@ApiOperation(value = "新增保存巡检任务子项")
@@ -74,7 +66,7 @@ public class AnImcInspectionItemController extends BaseController
 	@PostMapping("update")
 	public R editSave(@RequestBody AnImcInspectionItem anImcInspectionItem)
 	{		
-		return toAjax(anImcInspectionItemService.updateAnImcInspectionItem(anImcInspectionItem));
+		return toAjax(anImcInspectionItemService.updateAnImcInspectionItem(anImcInspectionItem,getLoginAuthDto()));
 	}
 	
 	/**
@@ -94,4 +86,59 @@ public class AnImcInspectionItemController extends BaseController
 		imcItemChangeStatusDto.setLoginAuthDto(user);
 		return R.data(anImcInspectionItemService.modifyImcItemStatus(imcItemChangeStatusDto,user));
 	}
+
+	@ApiOperation(value = "查询巡检任务子项")
+	@PostMapping(value = "getItemList")
+	public R getItemList(@RequestBody ItemQueryDto itemQueryDto){
+		return result(anImcInspectionItemService.selectAnImcInspectionItemList(itemQueryDto));
+	}
+
+	@ApiOperation(value = "删除指定的巡检任务子项")
+	@PostMapping(value = "deleteItemByItemId/{itemId}")
+	public R deleteItemByItemId(@PathVariable Long itemId){
+		return toAjax(anImcInspectionItemService.deleteAnImcInspectionItemById(itemId));
+	}
+
+	@ApiOperation(value = "提交巡检结果相关信息")
+	@PostMapping(value = "putResultByItemId")
+	public R putResultByItemId(@RequestBody ItemResultDto itemResultDto){
+		return R.data(anImcInspectionItemService.putResultByItemId(itemResultDto,getLoginAuthDto()));
+	}
+
+	@ApiOperation(value = "工程师拒单")
+	@PostMapping(value = "refuseItemByMaintainer/{itemId}")
+	public R refuseItemByMaintainer(@PathVariable Long itemId){
+		ImcItemChangeStatusDto imcItemChangeStatusDto = new ImcItemChangeStatusDto();
+		imcItemChangeStatusDto.setItemId(itemId);
+		imcItemChangeStatusDto.setStatus(ItemStatusEnum.WAITING_FOR_MAINTAINER.getStatusNum());
+		return R.data(anImcInspectionItemService.modifyImcItemStatus(imcItemChangeStatusDto,getLoginAuthDto()));
+	}
+
+	@ApiOperation(value = "工程师接单")
+	@PostMapping(value = "acceptItemByMaintainer/{itemId}")
+	public R acceptItemByMaintainer(@PathVariable Long itemId){
+		ImcItemChangeStatusDto imcItemChangeStatusDto = new ImcItemChangeStatusDto();
+		imcItemChangeStatusDto.setItemId(itemId);
+		imcItemChangeStatusDto.setStatus(ItemStatusEnum.IN_THE_INSPECTION.getStatusNum());
+		return R.data(anImcInspectionItemService.modifyImcItemStatus(imcItemChangeStatusDto,getLoginAuthDto()));
+	}
+
+	@ApiOperation(value = "获取工程师下面的全部已接单但是未完成的巡检任务子项")
+	@PostMapping(value = "getAllAcceptedItemListByMaintainer")
+	public R getAllAcceptedItemByMaintainer(@RequestBody ItemQueryDto itemQueryDto){
+		if(null != itemQueryDto.getMaintainerId()){
+			itemQueryDto.setUserId(null);
+			itemQueryDto.setTaskId(null);
+			itemQueryDto.setStatus(ItemStatusEnum.IN_THE_INSPECTION.getStatusNum());
+			return result(anImcInspectionItemService.selectAnImcInspectionItemList(itemQueryDto));
+		}else throw new BusinessException("参数异常");
+	}
+
+	@ApiOperation(value = "根据维修工id查全部维修工已完成的任务")
+	@PostMapping(value = "getAllFinishedImcItemByMaintainerId")
+	public R getAllFinishedImcItemByMaintainerId(@RequestBody ItemQueryDto itemQueryDto){
+		return result(anImcInspectionItemService.getAllFinishedImcItemByMaintainerId(itemQueryDto));
+	}
+
+
 }

@@ -5,6 +5,9 @@ import com.ananops.common.core.service.IService;
 import com.ananops.imc.domain.AnImcInspectionItem;
 import com.ananops.imc.dto.ImcAddInspectionItemDto;
 import com.ananops.imc.dto.ImcItemChangeStatusDto;
+import com.ananops.imc.dto.ItemQueryDto;
+import com.ananops.imc.dto.ItemResultDto;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -27,10 +30,10 @@ public interface IAnImcInspectionItemService extends IService<AnImcInspectionIte
     /**
      * 查询巡检任务子项列表
      * 
-     * @param anImcInspectionItem 巡检任务子项
+     * @param itemQueryDto 巡检任务子项
      * @return 巡检任务子项集合
      */
-    public List<AnImcInspectionItem> selectAnImcInspectionItemList(AnImcInspectionItem anImcInspectionItem);
+    public PageInfo selectAnImcInspectionItemList(ItemQueryDto itemQueryDto);
 
     /**
      * 新增巡检任务子项
@@ -46,7 +49,7 @@ public interface IAnImcInspectionItemService extends IService<AnImcInspectionIte
      * @param anImcInspectionItem 巡检任务子项
      * @return 结果
      */
-    public int updateAnImcInspectionItem(AnImcInspectionItem anImcInspectionItem);
+    public int updateAnImcInspectionItem(AnImcInspectionItem anImcInspectionItem,LoginAuthDto user);
 
     /**
      * 批量删除巡检任务子项
@@ -71,4 +74,19 @@ public interface IAnImcInspectionItemService extends IService<AnImcInspectionIte
      * @return
      */
     public ImcItemChangeStatusDto modifyImcItemStatus(ImcItemChangeStatusDto imcItemChangeStatusDto,LoginAuthDto user);
+
+    /**
+     * 提交巡检结果相关信息
+     * @param itemResultDto
+     * @param user
+     * @return
+     */
+    public ImcItemChangeStatusDto putResultByItemId(ItemResultDto itemResultDto, LoginAuthDto user);
+
+    /**
+     * 根据维修工id查全部维修工已完成的任务
+     * @param itemQueryDto
+     * @return
+     */
+    public PageInfo getAllFinishedImcItemByMaintainerId(ItemQueryDto itemQueryDto);
 }

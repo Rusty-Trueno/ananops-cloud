@@ -151,19 +151,15 @@ public class AnImcInspectionTaskController extends BaseController
     @ApiOperation(value = "甲方负责人同意执行巡检任务")
     @PostMapping(value = "acceptImcTaskByPrincipal")
     public R acceptImcTaskByPrincipal(@RequestBody ImcTaskChangeStatusDto imcTaskChangeStatusDto){
-        LoginAuthDto user = getLoginAuthDto();
-        imcTaskChangeStatusDto.setLoginAuthDto(user);
         imcTaskChangeStatusDto.setStatus(TaskStatusEnum.WAITING_FOR_FACILITATOR.getStatusNum());
-        return R.data(anImcInspectionTaskService.modifyTaskStatus(imcTaskChangeStatusDto,user));
+        return R.data(anImcInspectionTaskService.modifyTaskStatus(imcTaskChangeStatusDto,getLoginAuthDto()));
     }
 
     @ApiOperation(value = "甲方负责人否决巡检任务")
     @PostMapping(value = "denyImcTaskByPrincipal")
     public R denyImcTaskByPrincipal(@RequestBody ImcTaskChangeStatusDto imcTaskChangeStatusDto){
-        LoginAuthDto user = getLoginAuthDto();
-        imcTaskChangeStatusDto.setLoginAuthDto(user);
         imcTaskChangeStatusDto.setStatus(TaskStatusEnum.NO_SUCH_STATUS.getStatusNum());
-        return R.data(anImcInspectionTaskService.modifyTaskStatus(imcTaskChangeStatusDto,user));
+        return R.data(anImcInspectionTaskService.modifyTaskStatus(imcTaskChangeStatusDto,getLoginAuthDto()));
     }
 
     @ApiOperation(value = "根据用户id和用户角色获取全部的巡检任务数目(1->甲方负责人   2->服务商)")
