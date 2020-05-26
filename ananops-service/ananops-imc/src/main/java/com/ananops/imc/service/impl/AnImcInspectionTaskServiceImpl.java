@@ -281,6 +281,7 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         PageInfo pageInfo = new PageInfo<>(transform(anImcInspectionTaskMapper.selectByExample(example)));
         pageInfo.setTotal(page.getTotal());
         pageInfo.setPages(page.getPages());
+        pageInfo.setPageNum(page.getPageNum());
         return pageInfo;
     }
 
@@ -304,12 +305,14 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
                 pageInfo = new PageInfo<>(transform(getTaskByPrincipalId(taskQueryDto)));
                 pageInfo.setTotal(page.getTotal());
                 pageInfo.setPages(page.getPages());
+                pageInfo.setPageNum(page.getPageNum());
                 return pageInfo;
             case FACILITATOR:
                 //如果是服务商负责人
                 pageInfo = new PageInfo<>(transform(getTaskByFacilitatorId(taskQueryDto)));
                 pageInfo.setTotal(page.getTotal());
                 pageInfo.setPages(page.getPages());
+                pageInfo.setPageNum(page.getPageNum());
                 return pageInfo;
             default:
                 throw new BusinessException("查无此角色");
@@ -326,9 +329,13 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         Example example = new Example(AnImcInspectionTask.class);
         Example.Criteria criteria = example.createCriteria();
         String taskName = taskQueryDto.getTaskName();
+        Integer status = taskQueryDto.getStatus();
         if(StringUtils.isNotBlank(taskName)){
             taskName = "%" + taskName + "%";
             criteria.andLike("taskName",taskName);
+        }
+        if(null != status){
+            criteria.andEqualTo("status",status);
         }
         criteria.andEqualTo("facilitatorId",facilitatorId);
         example.setOrderByClause("update_time DESC");
@@ -345,9 +352,13 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         Example example = new Example(AnImcInspectionTask.class);
         Example.Criteria criteria = example.createCriteria();
         String taskName = taskQueryDto.getTaskName();
+        Integer status = taskQueryDto.getStatus();
         if(StringUtils.isNotBlank(taskName)){
             taskName = "%" + taskName + "%";
             criteria.andLike("taskName",taskName);
+        }
+        if(null != status){
+            criteria.andEqualTo("status",status);
         }
         criteria.andEqualTo("principalId",principalId);
         example.setOrderByClause("update_time DESC");
