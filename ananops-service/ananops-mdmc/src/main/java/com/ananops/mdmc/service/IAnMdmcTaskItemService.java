@@ -4,6 +4,8 @@ import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.mdmc.domain.AnMdmcTaskItem;
 import com.ananops.mdmc.dto.MdmcAddTaskDto;
 import com.ananops.mdmc.dto.MdmcAddTaskItemDto;
+import com.ananops.mdmc.dto.MdmcQueryDto;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -26,10 +28,10 @@ public interface IAnMdmcTaskItemService
     /**
      * 查询维修任务子项列表
      *
-     * @param anMdmcTaskItem 维修任务子项
+     * @param queryDto 维修任务子项
      * @return 维修任务子项集合
      */
-    public List<AnMdmcTaskItem> selectAnMdmcTaskItemList(AnMdmcTaskItem anMdmcTaskItem);
+    public PageInfo selectAnMdmcTaskItemList(MdmcQueryDto queryDto);
 
     /**
      * 新增维修任务子项
@@ -42,10 +44,10 @@ public interface IAnMdmcTaskItemService
     /**
      * 修改维修任务子项
      *
-     * @param anMdmcTaskItem 维修任务子项
+     * @param itemDto 维修任务子项
      * @return 结果
      */
-    public int updateAnMdmcTaskItem(AnMdmcTaskItem anMdmcTaskItem);
+    public AnMdmcTaskItem updateAnMdmcTaskItem(MdmcAddTaskItemDto itemDto,LoginAuthDto loginAuthDto);
 
     /**
      * 批量删除维修任务子项

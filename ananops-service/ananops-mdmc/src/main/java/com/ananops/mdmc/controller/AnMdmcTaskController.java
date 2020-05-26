@@ -53,10 +53,9 @@ public class AnMdmcTaskController extends BaseController
      */
     @ApiOperation(value = "查询维修工单列表")
     @GetMapping("getTaskList")
-    public R list(MdmcQueryDto queryDto)
+    public R list(@RequestBody MdmcQueryDto queryDto)
     {
-        startPage();
-        return result(anMdmcTaskService.selectAnMdmcTaskList(queryDto));
+        return R.data(anMdmcTaskService.selectAnMdmcTaskList(queryDto));
     }
 
 
@@ -85,11 +84,11 @@ public class AnMdmcTaskController extends BaseController
     /**
      * 删除维修工单表
      */
-    @ApiOperation(value = "删除维修工单表")
-    @PostMapping("remove")
-    public R remove(String ids)
+    @ApiOperation(value = "根据id删除维修工单及其所属任务子项")
+    @PostMapping("remove/{id}")
+    public R remove(@PathVariable("id") Long id)
     {
-        return toAjax(anMdmcTaskService.deleteAnMdmcTaskByIds(ids));
+        return toAjax(anMdmcTaskService.deleteAnMdmcTaskById(id));
     }
 
     /**

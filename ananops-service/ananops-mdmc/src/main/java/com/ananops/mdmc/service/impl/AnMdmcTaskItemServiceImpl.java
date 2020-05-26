@@ -4,19 +4,22 @@ import java.util.List;
 
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.common.exception.BusinessException;
-import com.ananops.common.utils.DateUtils;
 import com.ananops.common.utils.bean.UpdateInfoUtil;
 import com.ananops.mdmc.domain.AnMdmcTask;
 import com.ananops.mdmc.dto.MdmcAddTaskItemDto;
+import com.ananops.mdmc.dto.MdmcQueryDto;
 import com.ananops.mdmc.mapper.AnMdmcTaskMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ananops.mdmc.mapper.AnMdmcTaskItemMapper;
 import com.ananops.mdmc.domain.AnMdmcTaskItem;
 import com.ananops.mdmc.service.IAnMdmcTaskItemService;
 import com.ananops.common.core.text.Convert;
 import tk.mybatis.mapper.entity.Example;
+
+import javax.annotation.Resource;
 
 /**
  * 维修任务子项Service业务层处理
@@ -27,10 +30,10 @@ import tk.mybatis.mapper.entity.Example;
 @Service
 public class AnMdmcTaskItemServiceImpl implements IAnMdmcTaskItemService
 {
-    @Autowired
+    @Resource
     private AnMdmcTaskItemMapper anMdmcTaskItemMapper;
 
-    @Autowired
+    @Resource
     private AnMdmcTaskMapper anMdmcTaskMapper;
 
     /**
@@ -42,19 +45,28 @@ public class AnMdmcTaskItemServiceImpl implements IAnMdmcTaskItemService
     @Override
     public AnMdmcTaskItem selectAnMdmcTaskItemById(Long id)
     {
-        return anMdmcTaskItemMapper.selectAnMdmcTaskItemById(id);
+        return anMdmcTaskItemMapper.selectByPrimaryKey(id);
     }
 
     /**
      * 查询维修任务子项列表
      *
-     * @param anMdmcTaskItem 维修任务子项
+     * @param queryDto 维修任务子项
      * @return 维修任务子项
      */
     @Override
-    public List<AnMdmcTaskItem> selectAnMdmcTaskItemList(AnMdmcTaskItem anMdmcTaskItem)
+    public PageInfo selectAnMdmcTaskItemList(MdmcQueryDto queryDto)
     {
-        return anMdmcTaskItemMapper.selectAnMdmcTaskItemList(anMdmcTaskItem);
+        Example example=new Example(AnMdmcTaskItem.class);
+        Example.Criteria criteria=example.createCriteria();
+        Long taskId=queryDto.getTaskId();
+        criteria.andEqualTo("taskId",taskId);
+        if(anMdmcTaskMapper.selectByPrimaryKey(taskId)==null){
+            throw new BusinessException("查无此工单");
+        }
+        PageHelper.startPage(queryDto.getPageNum(),queryDto.getPageSize());
+        List<AnMdmcTaskItem> itemList=anMdmcTaskItemMapper.selectByExample(example);
+        return new PageInfo<>(itemList);
     }
 
     /**
@@ -77,7 +89,7 @@ public class AnMdmcTaskItemServiceImpl implements IAnMdmcTaskItemService
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("id",taskId);
         List<AnMdmcTask> taskList =anMdmcTaskMapper.selectByExample(example);
-        if(taskList.size()==0){//如果没有此任务
+        if(taskList.size()==0){
             throw new BusinessException("当前工单不存在");
         }
 
@@ -88,13 +100,20 @@ public class AnMdmcTaskItemServiceImpl implements IAnMdmcTaskItemService
     /**
      * 修改维修任务子项
      *
-     * @param anMdmcTaskItem 维修任务子项
+     * @param itemDto 维修任务子项
      * @return 结果
      */
     @Override
-    public int updateAnMdmcTaskItem(AnMdmcTaskItem anMdmcTaskItem)
+    public AnMdmcTaskItem updateAnMdmcTaskItem(MdmcAddTaskItemDto itemDto,LoginAuthDto loginAuthDto)
     {
-        return anMdmcTaskItemMapper.updateAnMdmcTaskItem(anMdmcTaskItem);
+        Long itemId=itemDto.getId();
+        if(anMdmcTaskItemMapper.selectByPrimaryKey(itemId)==null){
+            throw new BusinessException("查无此任务子项");
+        }
+       AnMdmcTaskItem item=new AnMdmcTaskItem();
+        BeanUtils.copyProperties(itemDto,item);
+        UpdateInfoUtil.setModifyInfo(item,loginAuthDto);
+        return item;
     }
 
     /**
@@ -115,8 +134,9 @@ public class AnMdmcTaskItemServiceImpl implements IAnMdmcTaskItemService
      * @param id 维修任务子项ID
      * @return 结果
      */
+    @Override
     public int deleteAnMdmcTaskItemById(Long id)
     {
-        return anMdmcTaskItemMapper.deleteAnMdmcTaskItemById(id);
+        return anMdmcTaskItemMapper.deleteByPrimaryKey(id);
     }
 }

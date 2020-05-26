@@ -1,5 +1,6 @@
 package com.ananops.mdmc.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ananops.common.core.dto.LoginAuthDto;
@@ -9,12 +10,16 @@ import com.ananops.common.utils.bean.UpdateInfoUtil;
 import com.ananops.mdmc.domain.AnMdmcTaskItem;
 import com.ananops.mdmc.dto.*;
 import com.ananops.mdmc.enums.MdmcTaskStatusEnum;
+import com.ananops.mdmc.mapper.AnMdmcTaskItemMapper;
 import com.ananops.mdmc.service.IAnMdmcTaskItemService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 import com.ananops.mdmc.mapper.AnMdmcTaskMapper;
 import com.ananops.mdmc.domain.AnMdmcTask;
 import com.ananops.mdmc.service.IAnMdmcTaskService;
 import com.ananops.common.core.text.Convert;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 
@@ -29,6 +34,9 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
 {
     @Resource
     private AnMdmcTaskMapper anMdmcTaskMapper;
+
+    @Resource
+    private AnMdmcTaskItemMapper anMdmcTaskItemMapper;
 
     @Resource
     private IAnMdmcTaskItemService itemService;
@@ -60,32 +68,39 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
      * @return 维修工单
      */
     @Override
-    public List<AnMdmcTask> selectAnMdmcTaskList(MdmcQueryDto queryDto)
+    public PageInfo selectAnMdmcTaskList(MdmcQueryDto queryDto)
     {
         String roleCode="";
         Long id=queryDto.getId();
         Integer status=queryDto.getStatus();
+        List<AnMdmcTask> taskList=new ArrayList<>();
         //todo 调用uac查角色
         //todo 分页
         if(status==null){
             if(roleCode!=null){
                 if(roleCode.equals("fac_service")||roleCode.equals("fac_manager")||roleCode.equals("fac_leader")){
-                    return anMdmcTaskMapper.selectByFacId(id);
+                    PageHelper.startPage(queryDto.getPageNum(),queryDto.getPageSize());
+                    taskList=anMdmcTaskMapper.selectByFacId(id);
                 }
-                if(roleCode.equals("engineer")){
-                    return anMdmcTaskMapper.selectByMantainerId(id);
+                else if(roleCode.equals("engineer")){
+                    PageHelper.startPage(queryDto.getPageNum(),queryDto.getPageSize());
+                    taskList=anMdmcTaskMapper.selectByMantainerId(id);
                 }
                 else {
-                    return  anMdmcTaskMapper.selectAnMdmcTaskListByUserId(id);
+                    PageHelper.startPage(queryDto.getPageNum(),queryDto.getPageSize());
+                    taskList=anMdmcTaskMapper.selectAnMdmcTaskListByUserId(id);
                 }
             }
             else {
-                return anMdmcTaskMapper.selectAnMdmcTaskListByUserId(id);
+                PageHelper.startPage(queryDto.getPageNum(),queryDto.getPageSize());
+                taskList=anMdmcTaskMapper.selectAnMdmcTaskListByUserId(id);
             }
         }
         else {
-            return anMdmcTaskMapper.selectBySomeoneIdAndStatus(status,id);
+            PageHelper.startPage(queryDto.getPageNum(),queryDto.getPageSize());
+            taskList=anMdmcTaskMapper.selectBySomeoneIdAndStatus(status,id);
         }
+        return new PageInfo<>(taskList);
 
     }
 
@@ -177,9 +192,18 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
      * @param id 维修工单ID
      * @return 结果
      */
+    @Override
     public int deleteAnMdmcTaskById(Long id)
     {
-        return anMdmcTaskMapper.deleteAnMdmcTaskById(id);
+        Example example=new Example(AnMdmcTaskItem.class);
+        Example.Criteria criteria=example.createCriteria();
+        criteria.andEqualTo("taskId",id);
+        List<AnMdmcTaskItem> itemList=anMdmcTaskItemMapper.selectByExample(example);
+        for (AnMdmcTaskItem item:itemList){
+            Long itemId=item.getId();
+            anMdmcTaskItemMapper.deleteByPrimaryKey(itemId);
+        }
+        return anMdmcTaskMapper.deleteByPrimaryKey(id);
     }
 
     @Override

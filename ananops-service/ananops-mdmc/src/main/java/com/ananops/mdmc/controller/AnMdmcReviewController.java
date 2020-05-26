@@ -27,7 +27,7 @@ import javax.annotation.Resource;
  * @date 2020-05-25
  */
 @RestController
-@RequestMapping("评价工单")
+@RequestMapping("mdmcReview")
 @Api("评价工单")
 public class AnMdmcReviewController extends BaseController
 {
@@ -44,17 +44,6 @@ public class AnMdmcReviewController extends BaseController
     {
         return anMdmcReviewService.selectAnMdmcReviewById(id);
 
-    }
-
-    /**
-     * 查询评价工单列表
-     */
-    @ApiOperation(value = "查询评价工单列表")
-    @GetMapping("list")
-    public R list(AnMdmcReview anMdmcReview)
-    {
-        startPage();
-        return result(anMdmcReviewService.selectAnMdmcReviewList(anMdmcReview));
     }
 
 

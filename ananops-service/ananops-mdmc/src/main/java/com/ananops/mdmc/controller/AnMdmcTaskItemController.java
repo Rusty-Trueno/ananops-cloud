@@ -2,6 +2,7 @@ package com.ananops.mdmc.controller;
 
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.mdmc.dto.MdmcAddTaskItemDto;
+import com.ananops.mdmc.dto.MdmcQueryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,7 @@ import com.ananops.mdmc.service.IAnMdmcTaskItemService;
  * @date 2020-05-25
  */
 @RestController
-@RequestMapping("维修任务子项")
+@RequestMapping("mdmcTaskItem")
 @Api("维修任务子项")
 public class AnMdmcTaskItemController extends BaseController
 {
@@ -36,7 +37,7 @@ public class AnMdmcTaskItemController extends BaseController
     /**
      * 查询维修任务子项
      */
-    @ApiOperation(value = "查询维修任务子项")
+    @ApiOperation(value = "根据子项id查看维修任务子项详情")
     @GetMapping("get/{id}")
     public AnMdmcTaskItem get(@PathVariable("id") Long id)
     {
@@ -47,12 +48,11 @@ public class AnMdmcTaskItemController extends BaseController
     /**
      * 查询维修任务子项列表
      */
-    @ApiOperation(value = "查询维修任务子项列表")
-    @GetMapping("list")
-    public R list(AnMdmcTaskItem anMdmcTaskItem)
+    @ApiOperation(value = "根据工单id查询维修任务子项列表")
+    @GetMapping("getItemList")
+    public R list(@RequestBody MdmcQueryDto queryDto)
     {
-        startPage();
-        return result(anMdmcTaskItemService.selectAnMdmcTaskItemList(anMdmcTaskItem));
+        return R.data(anMdmcTaskItemService.selectAnMdmcTaskItemList(queryDto));
     }
 
 
@@ -72,19 +72,21 @@ public class AnMdmcTaskItemController extends BaseController
      */
     @ApiOperation(value = "修改保存维修任务子项")
     @PostMapping("update")
-    public R editSave(@RequestBody AnMdmcTaskItem anMdmcTaskItem)
+    public R editSave(@RequestBody MdmcAddTaskItemDto itemDto)
     {
-        return toAjax(anMdmcTaskItemService.updateAnMdmcTaskItem(anMdmcTaskItem));
+        LoginAuthDto loginAuthDto=getLoginAuthDto();
+        return R.data(anMdmcTaskItemService.updateAnMdmcTaskItem(itemDto,loginAuthDto));
     }
 
     /**
      * 删除维修任务子项
      */
     @ApiOperation(value = "删除维修任务子项")
-    @PostMapping("remove")
-    public R remove(String ids)
+    @PostMapping("remove/{id}")
+    public R remove(@PathVariable("id") Long id)
     {
-        return toAjax(anMdmcTaskItemService.deleteAnMdmcTaskItemByIds(ids));
+
+        return toAjax(anMdmcTaskItemService.deleteAnMdmcTaskItemById(id));
     }
 
 }

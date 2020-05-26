@@ -6,6 +6,7 @@ import com.ananops.mdmc.dto.MdmcAddTaskDto;
 import com.ananops.mdmc.dto.MdmcChangeStatusDto;
 import com.ananops.mdmc.dto.MdmcQueryDto;
 import com.ananops.mdmc.dto.MdmcTaskDetailDto;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public interface IAnMdmcTaskService
      * @param queryDto 维修工单
      * @return 维修工单集合
      */
-    public List<AnMdmcTask> selectAnMdmcTaskList(MdmcQueryDto queryDto);
+    public PageInfo selectAnMdmcTaskList(MdmcQueryDto queryDto);
 
     /**
      * 新增维修工单
