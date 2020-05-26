@@ -324,6 +324,7 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
      * @param taskQueryDto
      * @return
      */
+    @Override
     public List<AnImcInspectionTask> getTaskByFacilitatorId(TaskQueryDto taskQueryDto){
         Long facilitatorId = taskQueryDto.getUserId();
         Example example = new Example(AnImcInspectionTask.class);
@@ -347,6 +348,7 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
      * @param taskQueryDto
      * @return
      */
+    @Override
     public List<AnImcInspectionTask> getTaskByPrincipalId(TaskQueryDto taskQueryDto){
         Long principalId = taskQueryDto.getUserId();
         Example example = new Example(AnImcInspectionTask.class);
@@ -364,6 +366,74 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         example.setOrderByClause("update_time DESC");
         return anImcInspectionTaskMapper.selectByExample(example);
     }
+
+    /**
+     * 根据用户id和角色获取全部的巡检任务数目
+     * @param taskQueryDto
+     * @return
+     */
+    @Override
+    public int getImcTaskNumberByUserIdAndRole(TaskQueryDto taskQueryDto){
+        Integer role = taskQueryDto.getRole();
+        Long userId = taskQueryDto.getUserId();
+        int count = 0;
+        Example example;
+        if(null != role && null != userId){
+            if(role == RoleEnum.PRINCIPAL.getStatusNum()){
+                //如果是用户负责人
+                example = new Example(AnImcInspectionTask.class);
+                Example.Criteria criteria = example.createCriteria();
+                criteria.andEqualTo("principalId",userId);
+                count = anImcInspectionTaskMapper.selectCountByExample(example);
+            }else if(role == RoleEnum.FACILITATOR.getStatusNum()){
+                //如果是服务商负责人
+                example = new Example(AnImcInspectionTask.class);
+                Example.Criteria criteria = example.createCriteria();
+                criteria.andEqualTo("facilitatorId",userId);
+                count = anImcInspectionTaskMapper.selectCountByExample(example);
+            }
+        }else throw new BusinessException("参数异常");
+        return count;
+    }
+
+    /**
+     * 查询全部未分配工程师的巡检任务
+     * @param  taskQueryDto
+     * @return
+     */
+    @Override
+    public PageInfo getAllUnDistributedTask(TaskQueryDto taskQueryDto){
+        Long facilitatorId = taskQueryDto.getUserId();
+        if(null != facilitatorId){
+            Page page = PageHelper.startPage(taskQueryDto.getPageNum(),taskQueryDto.getPageSize());
+            List<AnImcInspectionTask> imcInspectionTasks = anImcInspectionTaskMapper.getAllUnDistributedTask(facilitatorId);
+            PageInfo pageInfo = new PageInfo<>(transform(imcInspectionTasks));
+            pageInfo.setTotal(page.getTotal());
+            pageInfo.setPages(page.getPages());
+            pageInfo.setPageNum(page.getPageNum());
+            return pageInfo;
+        }else throw new BusinessException("参数异常");
+    }
+
+    /**
+     * 获取全部当前服务商已完成的巡检任务
+     * @param taskQueryDto
+     * @return
+     */
+    @Override
+    public PageInfo getAllFinishedTaskByFacilitatorId(TaskQueryDto taskQueryDto){
+        Long facilitatorId = taskQueryDto.getUserId();
+        if(null != facilitatorId){
+            Page page = PageHelper.startPage(taskQueryDto.getPageNum(),taskQueryDto.getPageSize());
+            List<AnImcInspectionTask> imcInspectionTasks = anImcInspectionTaskMapper.getAllFinishedTaskByFacilitatorId(facilitatorId);
+            PageInfo pageInfo = new PageInfo<>(transform(imcInspectionTasks));
+            pageInfo.setTotal(page.getTotal());
+            pageInfo.setPages(page.getPages());
+            pageInfo.setPageNum(page.getPageNum());
+            return pageInfo;
+        }else throw new BusinessException("参数异常");
+    }
+
 
     private List<ImcInspectionTaskDto> transform(List<AnImcInspectionTask> imcInspectionTasks){
         List<ImcInspectionTaskDto> imcInspectionTaskDtos = new ArrayList<>();

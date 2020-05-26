@@ -68,4 +68,18 @@ public interface AnImcInspectionTaskMapper extends BaseMapper<AnImcInspectionTas
      * @return
      */
     public int modifyTaskStatus(AnImcInspectionTask anImcInspectionTask);
+
+    /**
+     * 查询全部服务商下未分配工程师的巡检任务
+     * @param facilitatorId
+     * @return
+     */
+    public List<AnImcInspectionTask> getAllUnDistributedTask(Long facilitatorId);
+
+    /**
+     * 获取全部当前服务商已完成的巡检任务
+     * @param facilitatorId
+     * @return
+     */
+    public List<AnImcInspectionTask> getAllFinishedTaskByFacilitatorId(Long facilitatorId);
 }

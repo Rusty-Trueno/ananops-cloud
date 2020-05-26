@@ -95,4 +95,39 @@ public interface IAnImcInspectionTaskService extends IService<AnImcInspectionTas
      * @return
      */
     public PageInfo getTaskByUserId(TaskQueryDto taskQueryDto);
+
+    /**
+     * 根据服务商id查询对应的全部巡检任务
+     * @param taskQueryDto
+     * @return
+     */
+    public List<AnImcInspectionTask> getTaskByFacilitatorId(TaskQueryDto taskQueryDto);
+
+    /**
+     * 根据甲方负责人id查询全部的巡检任务
+     * @param taskQueryDto
+     * @return
+     */
+    public List<AnImcInspectionTask> getTaskByPrincipalId(TaskQueryDto taskQueryDto);
+
+    /**
+     * 根据用户id和角色获取全部的巡检任务数目
+     * @param taskQueryDto
+     * @return
+     */
+    public int getImcTaskNumberByUserIdAndRole(TaskQueryDto taskQueryDto);
+
+    /**
+     * 查询全部未分配工程师的巡检任务
+     * @param taskQueryDto
+     * @return
+     */
+    public PageInfo getAllUnDistributedTask(TaskQueryDto taskQueryDto);
+
+    /**
+     * 获取全部当前服务商已完成的巡检任务
+     * @param taskQueryDto
+     * @return
+     */
+    public PageInfo getAllFinishedTaskByFacilitatorId(TaskQueryDto taskQueryDto);
 }

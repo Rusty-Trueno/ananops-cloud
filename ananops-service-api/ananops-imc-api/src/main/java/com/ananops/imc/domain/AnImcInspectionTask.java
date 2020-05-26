@@ -89,6 +89,14 @@ public class AnImcInspectionTask extends BaseEntity
     @Excel(name = "巡检周期", readConverterExp = "月=")
     private Integer frequency;
 
+    /** 巡检任务内容 */
+    @Excel(name = "巡检任务内容")
+    private String content;
+
+    /** 本次巡检所需巡检的总点位数 */
+    @Excel(name = "本次巡检所需巡检的总点位数")
+    private Integer pointSum;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -243,6 +251,22 @@ public class AnImcInspectionTask extends BaseEntity
         return frequency;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Integer getPointSum() {
+        return pointSum;
+    }
+
+    public void setPointSum(Integer pointSum) {
+        this.pointSum = pointSum;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -268,6 +292,8 @@ public class AnImcInspectionTask extends BaseEntity
             .append("remark", getRemark())
             .append("taskName", getTaskName())
             .append("frequency", getFrequency())
+            .append("content",getContent())
+            .append("pointSum",getPointSum())
             .toString();
     }
 }

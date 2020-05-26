@@ -1,5 +1,6 @@
 package com.ananops.imc.controller;
 
+import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.imc.dto.ImcAddInspectionTaskDto;
 import com.ananops.imc.dto.ImcInspectionTaskDto;
 import com.ananops.imc.dto.ImcTaskChangeStatusDto;
@@ -147,4 +148,61 @@ public class AnImcInspectionTaskController extends BaseController
 	    return result(anImcInspectionTaskService.getTaskByUserId(taskQueryDto));
     }
 
+    @ApiOperation(value = "甲方负责人同意执行巡检任务")
+    @PostMapping(value = "acceptImcTaskByPrincipal")
+    public R acceptImcTaskByPrincipal(@RequestBody ImcTaskChangeStatusDto imcTaskChangeStatusDto){
+        LoginAuthDto user = getLoginAuthDto();
+        imcTaskChangeStatusDto.setLoginAuthDto(user);
+        imcTaskChangeStatusDto.setStatus(TaskStatusEnum.WAITING_FOR_FACILITATOR.getStatusNum());
+        return R.data(anImcInspectionTaskService.modifyTaskStatus(imcTaskChangeStatusDto,user));
+    }
+
+    @ApiOperation(value = "甲方负责人否决巡检任务")
+    @PostMapping(value = "denyImcTaskByPrincipal")
+    public R denyImcTaskByPrincipal(@RequestBody ImcTaskChangeStatusDto imcTaskChangeStatusDto){
+        LoginAuthDto user = getLoginAuthDto();
+        imcTaskChangeStatusDto.setLoginAuthDto(user);
+        imcTaskChangeStatusDto.setStatus(TaskStatusEnum.NO_SUCH_STATUS.getStatusNum());
+        return R.data(anImcInspectionTaskService.modifyTaskStatus(imcTaskChangeStatusDto,user));
+    }
+
+    @ApiOperation(value = "根据用户id和用户角色获取全部的巡检任务数目(1->甲方负责人   2->服务商)")
+    @PostMapping(value = "getImcTaskNumberByUserIdAndRole")
+    public R getImcTaskNumberByUserIdAndRole(@RequestBody TaskQueryDto taskQueryDto){
+	    return R.data(anImcInspectionTaskService.getImcTaskNumberByUserIdAndRole(taskQueryDto));
+    }
+
+    @ApiOperation(value = "获取全部当前服务商未分配工程师的巡检任务")
+    @PostMapping(value = "getAllUnDistributedTask")
+    public R getAllUnDistributedTask(@RequestBody TaskQueryDto taskQueryDto){
+        return result(anImcInspectionTaskService.getAllUnDistributedTask(taskQueryDto));
+    }
+
+    @ApiOperation(value = "获取全部当前服务商未接单的巡检任务")
+	@PostMapping(value = "getAllUnConfirmedTask")
+	public R getAllUnConfirmedTask(@RequestBody TaskQueryDto taskQueryDto){
+		taskQueryDto.setRole(RoleEnum.FACILITATOR.getStatusNum());
+		taskQueryDto.setStatus(TaskStatusEnum.WAITING_FOR_ACCEPT.getStatusNum());
+		return result(anImcInspectionTaskService.getTaskByUserId(taskQueryDto));
+	}
+
+	@ApiOperation(value = "获取全部当前服务商已完成的巡检任务")
+	@PostMapping(value = "getAllFinishedTaskByFacilitatorId")
+	public R getAllFinishedTaskByFacilitatorId(@RequestBody TaskQueryDto taskQueryDto){
+		return result(anImcInspectionTaskService.getAllFinishedTaskByFacilitatorId(taskQueryDto));
+	}
+
+	@ApiOperation(value = "获取全部当前服务商的巡检任务")
+	@PostMapping(value = "getAllTaskByFacilitatorId")
+	public R getAllTaskByFacilitatorId(@RequestBody TaskQueryDto taskQueryDto){
+		taskQueryDto.setRole(RoleEnum.FACILITATOR.getStatusNum());
+		return result(anImcInspectionTaskService.getTaskByUserId(taskQueryDto));
+	}
+
+	@ApiOperation(value = "获取甲方负责人下的全部巡检任务")
+	@PostMapping(value = "getAllTaskByPrincipalId")
+	public R getAllTaskByPrincipalId(@RequestBody TaskQueryDto taskQueryDto){
+		taskQueryDto.setRole(RoleEnum.PRINCIPAL.getStatusNum());
+		return result(anImcInspectionTaskService.getTaskByUserId(taskQueryDto));
+	}
 }
