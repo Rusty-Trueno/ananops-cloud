@@ -1,13 +1,27 @@
 package com.ananops.mdmc.service.impl;
 
 import java.util.List;
+
+import com.ananops.common.core.domain.UpdateInfo;
+import com.ananops.common.core.dto.LoginAuthDto;
+import com.ananops.common.exception.BusinessException;
 import com.ananops.common.utils.DateUtils;
+import com.ananops.common.utils.StringUtils;
+import com.ananops.common.utils.bean.UpdateInfoUtil;
+import com.ananops.mdmc.domain.AnMdmcTask;
+import com.ananops.mdmc.dto.MdmcAddReviewDto;
+import com.ananops.mdmc.enums.MdmcTaskStatusEnum;
+import com.ananops.mdmc.mapper.AnMdmcTaskMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ananops.mdmc.mapper.AnMdmcReviewMapper;
 import com.ananops.mdmc.domain.AnMdmcReview;
 import com.ananops.mdmc.service.IAnMdmcReviewService;
 import com.ananops.common.core.text.Convert;
+import tk.mybatis.mapper.entity.Example;
+
+import javax.annotation.Resource;
 
 /**
  * 评价工单Service业务层处理
@@ -18,8 +32,11 @@ import com.ananops.common.core.text.Convert;
 @Service
 public class AnMdmcReviewServiceImpl implements IAnMdmcReviewService
 {
-    @Autowired
+    @Resource
     private AnMdmcReviewMapper anMdmcReviewMapper;
+
+    @Resource
+    private AnMdmcTaskMapper taskMapper;
 
     /**
      * 查询评价工单
@@ -30,7 +47,13 @@ public class AnMdmcReviewServiceImpl implements IAnMdmcReviewService
     @Override
     public AnMdmcReview selectAnMdmcReviewById(Long id)
     {
-        return anMdmcReviewMapper.selectAnMdmcReviewById(id);
+        if (taskMapper.selectByPrimaryKey(id)==null){
+            throw new BusinessException("查无此工单");
+        }
+        Example example=new Example(AnMdmcReview.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("taskId",id);
+        return anMdmcReviewMapper.selectByExample(example).get(0);
     }
 
     /**
@@ -48,13 +71,38 @@ public class AnMdmcReviewServiceImpl implements IAnMdmcReviewService
     /**
      * 新增评价工单
      *
-     * @param anMdmcReview 评价工单
+     * @param reviewDto 评价工单
      * @return 结果
      */
     @Override
-    public int insertAnMdmcReview(AnMdmcReview anMdmcReview)
+    public AnMdmcReview insertAnMdmcReview(MdmcAddReviewDto reviewDto, LoginAuthDto loginAuthDto)
     {
-        return anMdmcReviewMapper.insert(anMdmcReview);
+        AnMdmcReview review=new AnMdmcReview();
+        BeanUtils.copyProperties(reviewDto,review);
+        UpdateInfoUtil.setInsertInfo(review,loginAuthDto);
+
+        Long taskId = review.getTaskId();
+        Long userId=review.getUserId();
+        if (userId==null){
+            throw new BusinessException("用户id不能是空");
+        }
+
+        if(taskMapper.selectByPrimaryKey(taskId)==null){
+            throw new BusinessException("当前被评价工单不存在");
+        }
+        Example example=new Example(AnMdmcReview.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("taskId",taskId);
+        if(anMdmcReviewMapper.selectByExample(example)!=null&&anMdmcReviewMapper.selectByExample(example).size()>0){
+            throw new BusinessException("该工单已经被评价过");
+        }
+        AnMdmcTask task=taskMapper.selectByPrimaryKey(taskId);
+        task.setStatus(MdmcTaskStatusEnum.WanCheng.getStatusNum());
+        if(taskMapper.updateTaskStatus(task)<=0){
+            throw new BusinessException("工单状态更改失败");
+        }
+        anMdmcReviewMapper.insertSelective(review);
+        return review;
     }
 
     /**

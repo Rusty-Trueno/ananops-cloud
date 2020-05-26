@@ -94,4 +94,12 @@ public interface AnMdmcTaskMapper extends BaseMapper<AnMdmcTask>
      */
     public List<AnMdmcTask> selectByMantainerId(Long id);
 
+    /**
+     * 更改工单状态
+     *
+     * @param task 工单
+     * @return 结果
+     */
+    public int updateTaskStatus(AnMdmcTask task);
+
 }

@@ -57,27 +57,37 @@
 
     <select id="selectAnMdmcTaskListByUserId" parameterType="Long" resultMap="AnMdmcTaskResult">
         <include refid="selectAnMdmcTaskVo"/>
-        where user_id=#{id} or facilitator_id=#{id} or maintainer_id=#{id} or principal_id=#{id}) order by created_time desc
+        where
+        user_id=#{id} or facilitator_id=#{id} or maintainer_id=#{id} or principal_id=#{id}) order by created_time desc
+
     </select>
 
     <select id="selectAnMdmcTaskById" parameterType="Long" resultMap="AnMdmcTaskResult">
         <include refid="selectAnMdmcTaskVo"/>
-        where id = #{id}
+        where
+        id = #{id}
+
     </select>
 
     <select id="selectByMantainerId" parameterType="Long" resultMap="AnMdmcTaskResult">
     <include refid="selectAnMdmcTaskVo"/>
-    where status>4 and status!=14 and status!=15 and maintainer_id=#{id} order by created_time desc
+        where
+         status>4 and status!=14 and status!=15 and maintainer_id=#{id} order by created_time desc
+
     </select>
 
     <select id="selectByFacId" parameterType="Long" resultMap="AnMdmcTaskResult">
         <include refid="selectAnMdmcTaskVo"/>
-        where status>2 and status!=14  and facilitator_id=#{id} order by created_time desc
+        where
+         status>2 and status!=14  and facilitator_id=#{id} order by created_time desc
+
     </select>
 
     <select id="selectBySomeoneIdAndStatus"  resultMap="AnMdmcTaskResult">
         <include refid="selectAnMdmcTaskVo"/>
-        where status=#{status} and (user_id=#{id} or facilitator_id=#{id} or maintainer_id=#{id} or principal_id=#{id}) order by created_time desc
+        where
+         status=#{status} and (user_id=#{id} or facilitator_id=#{id} or maintainer_id=#{id} or principal_id=#{id}) order by created_time desc
+
     </select>
 
     <insert id="insertAnMdmcTask" parameterType="AnMdmcTask">
@@ -126,11 +136,11 @@
         update an_mdmc_task
         <trim prefix="SET" suffixOverrides=",">
             <if test="version != null ">version = #{version},</if>
-            <if test="creator != null  and creator != ''">creator = #{creator},</if>
+            <if test="creator != null  and creator != ''">create_by = #{creator},</if>
             <if test="creatorId != null ">creator_id = #{creatorId},</if>
-            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="createdTime != null ">create_time = #{createdTime},</if>
             <if test="lastOperator != null  and lastOperator != ''">last_operator = #{lastOperator},</if>
-            <if test="lastOperatorId != null ">last_operator_id = #{lastOperatorId},</if>
+            <if test="lastOperatorId != null ">update_by = #{lastOperatorId},</if>
             <if test="updateTime != null ">update_time = #{updateTime},</if>
             <if test="objectType != null ">object_type = #{objectType},</if>
             <if test="objectId != null ">object_id = #{objectId},</if>
@@ -160,9 +170,65 @@
             <if test="suggestion != null  and suggestion != ''">suggestion = #{suggestion},</if>
             <if test="result != null  and result != ''">result = #{result},</if>
             <if test="note != null  and note != ''">note = #{note},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
         </trim>
         where id = #{id}
     </update>
+
+    <update id="updateTaskStatus" parameterType="AnMdmcTask">
+            update an_mdmc_task as task
+    <trim prefix="SET" suffixOverrides=",">
+        <if test="version != null ">version = #{version},</if>
+        <if test="creator != null  and creator != ''">create_by = #{creator},</if>
+        <if test="creatorId != null ">creator_id = #{creatorId},</if>
+        <if test="createdTime != null ">create_time = #{createdTime},</if>
+        <if test="lastOperator != null  and lastOperator != ''">last_operator = #{lastOperator},</if>
+        <if test="lastOperatorId != null ">update_by = #{lastOperatorId},</if>
+        <if test="updateTime != null ">update_time = #{updateTime},</if>
+        <if test="objectType != null ">object_type = #{objectType},</if>
+        <if test="objectId != null ">object_id = #{objectId},</if>
+        <if test="userId != null ">user_id = #{userId},</if>
+        <if test="principalId != null ">principal_id = #{principalId},</if>
+        <if test="projectId != null ">project_id = #{projectId},</if>
+        <if test="facilitatorId != null ">facilitator_id = #{facilitatorId},</if>
+        <if test="maintainerId != null ">maintainer_id = #{maintainerId},</if>
+        <if test="scheduledFinishTime != null ">scheduled_finish_time = #{scheduledFinishTime},</if>
+        <if test="actualFinishTime != null ">actual_finish_time = #{actualFinishTime},</if>
+        <if test="scheduledStartTime != null ">scheduled_start_time = #{scheduledStartTime},</if>
+        <if test="actualStartTime != null ">actual_start_time = #{actualStartTime},</if>
+        <if test="deadline != null ">deadline = #{deadline},</if>
+        <if test="delayReason != null  and delayReason != ''">delay_reason = #{delayReason},</if>
+        <if test="requestLatitude != null ">request_latitude = #{requestLatitude},</if>
+        <if test="requestLongitude != null ">request_longitude = #{requestLongitude},</if>
+        <if test="status != null ">status = #{status},</if>
+        <if test="totalCost != null ">total_cost = #{totalCost},</if>
+        <if test="clearingForm != null ">clearing_form = #{clearingForm},</if>
+        <if test="title != null  and title != ''">title = #{title},</if>
+        <if test="contractId != null ">contract_id = #{contractId},</if>
+        <if test="addressName != null  and addressName != ''">address_name = #{addressName},</if>
+        <if test="creatorCall != null  and creatorCall != ''">creator_call = #{creatorCall},</if>
+        <if test="troubleReason != null  and troubleReason != ''">trouble_reason = #{troubleReason},</if>
+        <if test="level != null ">level = #{level},</if>
+        <if test="appointTime != null ">appoint_time = #{appointTime},</if>
+        <if test="suggestion != null  and suggestion != ''">suggestion = #{suggestion},</if>
+        <if test="result != null  and result != ''">result = #{result},</if>
+        <if test="note != null  and note != ''">note = #{note},</if>
+        <if test="remark != null  and remark != ''">remark = #{remark},</if>
+    </trim>
+    where
+    (<if test="status == 3">task.status = 2 or task.status=14</if>
+    <if test="status == 1">task.status = 2</if>
+    <if test="status == 4">task.status = 3 or task.status = 15</if>
+    <if test="status == 14">task.status = 3 </if>
+    <if test="status == 5">task.status = 4</if>
+    <if test="status == 6">task.status = 5</if>
+    <if test="status == 15">task.status = 5</if>
+    <if test="status == 11">task.status = 10</if>
+    <if test="status == 13">task.status = 12</if>)
+    and task.id = #{id}
+    </update>
+
+
 
     <delete id="deleteAnMdmcTaskById" parameterType="Long">
         delete from an_mdmc_task where id = #{id}

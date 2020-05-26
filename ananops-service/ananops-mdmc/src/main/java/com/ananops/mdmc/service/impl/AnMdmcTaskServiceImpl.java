@@ -7,17 +7,16 @@ import com.ananops.common.exception.BusinessException;
 import com.ananops.common.utils.bean.BeanUtils;
 import com.ananops.common.utils.bean.UpdateInfoUtil;
 import com.ananops.mdmc.domain.AnMdmcTaskItem;
-import com.ananops.mdmc.dto.MdmcAddTaskDto;
-import com.ananops.mdmc.dto.MdmcAddTaskItemDto;
-import com.ananops.mdmc.dto.MdmcQueryDto;
+import com.ananops.mdmc.dto.*;
 import com.ananops.mdmc.enums.MdmcTaskStatusEnum;
 import com.ananops.mdmc.service.IAnMdmcTaskItemService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ananops.mdmc.mapper.AnMdmcTaskMapper;
 import com.ananops.mdmc.domain.AnMdmcTask;
 import com.ananops.mdmc.service.IAnMdmcTaskService;
 import com.ananops.common.core.text.Convert;
+
+import javax.annotation.Resource;
 
 /**
  * 维修工单Service业务层处理
@@ -28,10 +27,10 @@ import com.ananops.common.core.text.Convert;
 @Service
 public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
 {
-    @Autowired
+    @Resource
     private AnMdmcTaskMapper anMdmcTaskMapper;
 
-    @Autowired
+    @Resource
     private IAnMdmcTaskItemService itemService;
 
     /**
@@ -41,9 +40,17 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
      * @return 维修工单
      */
     @Override
-    public AnMdmcTask selectAnMdmcTaskById(Long id)
+    public MdmcTaskDetailDto selectAnMdmcTaskById(Long id)
     {
-        return anMdmcTaskMapper.selectAnMdmcTaskById(id);
+        MdmcTaskDetailDto taskDetailDto=new MdmcTaskDetailDto();
+        AnMdmcTask mdmcTask=anMdmcTaskMapper.selectByPrimaryKey(id);
+        if(mdmcTask==null){
+            throw new BusinessException("查无此工单");
+        }
+        taskDetailDto.setMdmcTask(mdmcTask);
+        //todo 调用uac和pmc获取其他信息
+
+        return taskDetailDto;
     }
 
     /**
@@ -137,7 +144,10 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
         if(anMdmcTaskMapper.selectByPrimaryKey(taskId)==null){
             throw new BusinessException("当前工单不存在");
         }
-
+        Integer status=updateTaskDto.getStatus();
+        if(anMdmcTaskMapper.updateTaskStatus(task)<=0){
+            throw new BusinessException("工单更改状态失败");
+        }
         anMdmcTaskMapper.updateByPrimaryKeySelective(task);
 
         AnMdmcTask task1=anMdmcTaskMapper.selectByPrimaryKey(taskId);
@@ -170,5 +180,28 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
     public int deleteAnMdmcTaskById(Long id)
     {
         return anMdmcTaskMapper.deleteAnMdmcTaskById(id);
+    }
+
+    @Override
+    public MdmcChangeStatusDto modifyTaskStatus(MdmcChangeStatusDto changeStatusDto, LoginAuthDto loginAuthDto) {
+        Integer status=changeStatusDto.getStatus();
+        if(status==null){
+            throw new BusinessException("状态不能是空");
+        }
+        changeStatusDto.setStatusMsg(MdmcTaskStatusEnum.getStatusMsg(status));
+        Long taskId=changeStatusDto.getTaskId();
+        if(anMdmcTaskMapper.selectByPrimaryKey(taskId)==null){
+            throw new BusinessException("查无此工单");
+        }
+        AnMdmcTask task=new AnMdmcTask();
+        BeanUtils.copyProperties(changeStatusDto,task);
+        UpdateInfoUtil.setModifyInfo(task,loginAuthDto);
+        if(anMdmcTaskMapper.updateTaskStatus(task)<=0){
+            throw new BusinessException("工单更改状态失败");
+        }
+        changeStatusDto.setTask(anMdmcTaskMapper.selectByPrimaryKey(taskId));
+        //todo 巡检引起工单状态改变
+        //todo 消息
+        return changeStatusDto;
     }
 }

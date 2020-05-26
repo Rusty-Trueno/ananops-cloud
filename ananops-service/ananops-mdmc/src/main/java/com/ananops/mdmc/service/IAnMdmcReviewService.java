@@ -1,6 +1,9 @@
 package com.ananops.mdmc.service;
 
+import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.mdmc.domain.AnMdmcReview;
+import com.ananops.mdmc.dto.MdmcAddReviewDto;
+
 import java.util.List;
 
 /**
@@ -30,10 +33,10 @@ public interface IAnMdmcReviewService
     /**
      * 新增评价工单
      *
-     * @param anMdmcReview 评价工单
+     * @param reviewDto 评价工单
      * @return 结果
      */
-    public int insertAnMdmcReview(AnMdmcReview anMdmcReview);
+    public AnMdmcReview insertAnMdmcReview(MdmcAddReviewDto reviewDto, LoginAuthDto loginAuthDto);
 
     /**
      * 修改评价工单

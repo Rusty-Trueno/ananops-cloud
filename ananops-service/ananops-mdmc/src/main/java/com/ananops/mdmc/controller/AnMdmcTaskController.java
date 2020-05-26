@@ -2,6 +2,7 @@ package com.ananops.mdmc.controller;
 
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.mdmc.dto.MdmcAddTaskDto;
+import com.ananops.mdmc.dto.MdmcChangeStatusDto;
 import com.ananops.mdmc.dto.MdmcQueryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,8 @@ import com.ananops.common.core.controller.BaseController;
 import com.ananops.mdmc.domain.AnMdmcTask;
 import com.ananops.mdmc.service.IAnMdmcTaskService;
 
+import javax.annotation.Resource;
+
 /**
  * 维修工单 提供者
  *
@@ -31,17 +34,17 @@ import com.ananops.mdmc.service.IAnMdmcTaskService;
 public class AnMdmcTaskController extends BaseController
 {
 
-    @Autowired
+    @Resource
     private IAnMdmcTaskService anMdmcTaskService;
 
     /**
      * 查询维修工单表
      */
-    @ApiOperation(value = "查询维修工单表")
-    @GetMapping("get/{id}")
-    public AnMdmcTask get(@PathVariable("id") Long id)
+    @ApiOperation(value = "查询维修工单详情")
+    @GetMapping("getTaskDetailByTaskId/{id}")
+    public R get(@PathVariable("id") Long id)
     {
-        return anMdmcTaskService.selectAnMdmcTaskById(id);
+        return R.data(anMdmcTaskService.selectAnMdmcTaskById(id));
 
     }
 
@@ -89,5 +92,15 @@ public class AnMdmcTaskController extends BaseController
         return toAjax(anMdmcTaskService.deleteAnMdmcTaskByIds(ids));
     }
 
+    /**
+     * 修改工单状态
+     */
+    @ApiOperation(value = "更改工单状态")
+    @PostMapping("modifyTaskStatusByTaskId")
+    public R modifyStatus(@RequestBody MdmcChangeStatusDto changeStatusDto)
+    {
+        LoginAuthDto loginAuthDto = getLoginAuthDto();
+        return R.data(anMdmcTaskService.modifyTaskStatus(changeStatusDto,loginAuthDto));
+    }
 
 }

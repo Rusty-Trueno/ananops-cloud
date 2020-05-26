@@ -3,7 +3,9 @@ package com.ananops.mdmc.service;
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.mdmc.domain.AnMdmcTask;
 import com.ananops.mdmc.dto.MdmcAddTaskDto;
+import com.ananops.mdmc.dto.MdmcChangeStatusDto;
 import com.ananops.mdmc.dto.MdmcQueryDto;
+import com.ananops.mdmc.dto.MdmcTaskDetailDto;
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ public interface IAnMdmcTaskService
      * @param id 维修工单ID
      * @return 维修工单
      */
-    public AnMdmcTask selectAnMdmcTaskById(Long id);
+    public MdmcTaskDetailDto selectAnMdmcTaskById(Long id);
 
     /**
      * 查询维修工单列表
@@ -62,4 +64,12 @@ public interface IAnMdmcTaskService
      * @return 结果
      */
     public int deleteAnMdmcTaskById(Long id);
+
+    /**
+     * 更改工单状态
+     *
+     * @param changeStatusDto 更改工单状态dto
+     * @return 结果
+     */
+    public MdmcChangeStatusDto modifyTaskStatus(MdmcChangeStatusDto changeStatusDto,LoginAuthDto loginAuthDto);
 }
