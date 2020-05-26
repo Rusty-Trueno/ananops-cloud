@@ -4,6 +4,8 @@ import com.ananops.imc.dto.ImcAddInspectionTaskDto;
 import com.ananops.imc.dto.ImcInspectionTaskDto;
 import com.ananops.imc.dto.ImcTaskChangeStatusDto;
 import com.ananops.imc.dto.TaskQueryDto;
+import com.ananops.imc.enums.RoleEnum;
+import com.ananops.imc.enums.TaskStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,10 +84,10 @@ public class AnImcInspectionTaskController extends BaseController
 	 * 删除巡检任务
 	 */
 	@ApiOperation(value = "删除巡检任务")
-	@PostMapping("remove")
-	public R remove(String ids)
+	@PostMapping("deleteTaskByTaskId/{taskId}")
+	public R remove(@PathVariable Long taskId)
 	{		
-		return toAjax(anImcInspectionTaskService.deleteAnImcInspectionTaskByIds(ids));
+		return toAjax(anImcInspectionTaskService.deleteAnImcInspectionTaskById(taskId));
 	}
 
 
@@ -110,5 +112,39 @@ public class AnImcInspectionTaskController extends BaseController
 	public R getTaskListByUserId(@RequestBody TaskQueryDto taskQueryDto){
 		return result(anImcInspectionTaskService.getTaskByUserId(taskQueryDto));
 	}
+
+	@ApiOperation(value = "服务商拒单")
+    @PostMapping("refuseTaskByFacilitator/{taskId}")
+    public R refuseTaskByFacilitator(@PathVariable Long taskId){
+	    ImcTaskChangeStatusDto imcTaskChangeStatusDto = new ImcTaskChangeStatusDto();
+	    imcTaskChangeStatusDto.setStatus(TaskStatusEnum.WAITING_FOR_FACILITATOR.getStatusNum());
+	    imcTaskChangeStatusDto.setTaskId(taskId);
+	    return R.data(anImcInspectionTaskService.modifyTaskStatus(imcTaskChangeStatusDto,getLoginAuthDto()));
+    }
+
+    @ApiOperation(value = "服务商接单")
+	@PostMapping("acceptTaskByFacilitator/{taskId}")
+	public R acceptTaskByFacilitator(@PathVariable Long taskId){
+		ImcTaskChangeStatusDto imcTaskChangeStatusDto = new ImcTaskChangeStatusDto();
+		imcTaskChangeStatusDto.setTaskId(taskId);
+		imcTaskChangeStatusDto.setStatus(TaskStatusEnum.EXECUTING.getStatusNum());
+		return R.data(anImcInspectionTaskService.modifyTaskStatus(imcTaskChangeStatusDto,getLoginAuthDto()));
+	}
+
+	@ApiOperation(value = "查询当前甲方负责人下面的全部未授权的任务（可返回总数total）")
+    @PostMapping(value = "getAllUnauthorizedTaskList")
+    public R getAllUnauthorizedTaskList(@RequestBody TaskQueryDto taskQueryDto){
+        taskQueryDto.setStatus(TaskStatusEnum.WAITING_FOR_PRINCIPAL.getStatusNum());
+        taskQueryDto.setRole(RoleEnum.PRINCIPAL.getStatusNum());
+        return result(anImcInspectionTaskService.getTaskByUserId(taskQueryDto));
+    }
+
+    @ApiOperation(value = "查询当前甲方负责人下面的全部被否决的任务（可返回总数total")
+    @PostMapping(value = "getAllDeniedTaskList")
+    public R getAllDeniedTaskList(@RequestBody TaskQueryDto taskQueryDto){
+	    taskQueryDto.setRole(RoleEnum.PRINCIPAL.getStatusNum());
+	    taskQueryDto.setStatus(TaskStatusEnum.NO_SUCH_STATUS.getStatusNum());
+	    return result(anImcInspectionTaskService.getTaskByUserId(taskQueryDto));
+    }
 
 }
