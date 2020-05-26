@@ -29,25 +29,16 @@ public class AnMdmcTaskItem extends BaseEntity
     @Excel(name = "版本号")
     private Long version;
 
-    /** 创建人 */
-    @Excel(name = "创建人")
-    private String creator;
 
     /** 创建人ID */
     @Excel(name = "创建人ID")
     private Long creatorId;
 
-    /** 创建时间 */
-    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date createdTime;
 
     /** 最近操作人 */
     @Excel(name = "最近操作人")
     private String lastOperator;
 
-    /** 最后操作人ID */
-    @Excel(name = "最后操作人ID")
-    private Long lastOperatorId;
 
     /** 任务ID */
     @Excel(name = "任务ID")
@@ -113,8 +104,6 @@ public class AnMdmcTaskItem extends BaseEntity
     @Excel(name = "维修结果", readConverterExp = "$column.readConverterExp()")
     private String troubleAddress;
 
-    @Excel(name = "备注")
-    private String remark;
 
     public void setId(Long id)
     {
@@ -134,15 +123,7 @@ public class AnMdmcTaskItem extends BaseEntity
     {
         return version;
     }
-    public void setCreator(String creator)
-    {
-        this.creator = creator;
-    }
 
-    public String getCreator()
-    {
-        return creator;
-    }
     public void setCreatorId(Long creatorId)
     {
         this.creatorId = creatorId;
@@ -152,15 +133,7 @@ public class AnMdmcTaskItem extends BaseEntity
     {
         return creatorId;
     }
-    public void setCreatedTime(Date createdTime)
-    {
-        this.createdTime = createdTime;
-    }
 
-    public Date getCreatedTime()
-    {
-        return createdTime;
-    }
     public void setLastOperator(String lastOperator)
     {
         this.lastOperator = lastOperator;
@@ -170,15 +143,7 @@ public class AnMdmcTaskItem extends BaseEntity
     {
         return lastOperator;
     }
-    public void setLastOperatorId(Long lastOperatorId)
-    {
-        this.lastOperatorId = lastOperatorId;
-    }
 
-    public Long getLastOperatorId()
-    {
-        return lastOperatorId;
-    }
     public void setTaskId(Long taskId)
     {
         this.taskId = taskId;
@@ -329,11 +294,8 @@ public class AnMdmcTaskItem extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
                 .append("version", getVersion())
-                .append("creator", getCreator())
                 .append("creatorId", getCreatorId())
-                .append("createdTime", getCreatedTime())
                 .append("lastOperator", getLastOperator())
-                .append("lastOperatorId", getLastOperatorId())
                 .append("updateTime", getUpdateTime())
                 .append("taskId", getTaskId())
                 .append("deviceId", getDeviceId())

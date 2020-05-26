@@ -7,11 +7,11 @@
     <resultMap type="AnMdmcTask" id="AnMdmcTaskResult">
         <result property="id"    column="id"    />
         <result property="version"    column="version"    />
-        <result property="creator"    column="create_by"    />
+        <result property="createBy"    column="create_by"    />
         <result property="creatorId"    column="creator_id"    />
-        <result property="createdTime"    column="create_time"    />
+        <result property="createTime"    column="create_time"    />
         <result property="lastOperator"    column="last_operator"    />
-        <result property="lastOperatorId"    column="update_by"    />
+        <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="objectType"    column="object_type"    />
         <result property="objectId"    column="object_id"    />
@@ -45,7 +45,7 @@
     </resultMap>
 
     <sql id="selectAnMdmcTaskVo">
-        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, object_type, object_id, user_id, principal_id, project_id, facilitator_id, maintainer_id, scheduled_finish_time, actual_finish_time, scheduled_start_time, actual_start_time, deadline, delay_reason, request_latitude, request_longitude, status, total_cost, clearing_form, title, contract_id, address_name, creator_call, trouble_reason, level, appoint_time, suggestion, result, note,remark from an_mdmc_task
+        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, object_type, object_id, user_id, principal_id, project_id, facilitator_id, maintainer_id, scheduled_finish_time, actual_finish_time, scheduled_start_time, actual_start_time, deadline, delay_reason, request_latitude, request_longitude, status, total_cost, clearing_form, title, contract_id, address_name, creator_call, trouble_reason, `level`, appoint_time, suggestion, result, note,remark from an_mdmc_task
     </sql>
 
     <select id="selectAnMdmcTaskList" parameterType="AnMdmcTask" resultMap="AnMdmcTaskResult">
@@ -59,47 +59,42 @@
         <include refid="selectAnMdmcTaskVo"/>
         where
         user_id=#{id} or facilitator_id=#{id} or maintainer_id=#{id} or principal_id=#{id}) order by created_time desc
-
     </select>
 
     <select id="selectAnMdmcTaskById" parameterType="Long" resultMap="AnMdmcTaskResult">
         <include refid="selectAnMdmcTaskVo"/>
         where
         id = #{id}
-
     </select>
 
     <select id="selectByMantainerId" parameterType="Long" resultMap="AnMdmcTaskResult">
     <include refid="selectAnMdmcTaskVo"/>
         where
          status>4 and status!=14 and status!=15 and maintainer_id=#{id} order by created_time desc
-
     </select>
 
     <select id="selectByFacId" parameterType="Long" resultMap="AnMdmcTaskResult">
         <include refid="selectAnMdmcTaskVo"/>
         where
          status>2 and status!=14  and facilitator_id=#{id} order by created_time desc
-
     </select>
 
     <select id="selectBySomeoneIdAndStatus"  resultMap="AnMdmcTaskResult">
         <include refid="selectAnMdmcTaskVo"/>
         where
          status=#{status} and (user_id=#{id} or facilitator_id=#{id} or maintainer_id=#{id} or principal_id=#{id}) order by created_time desc
-
     </select>
 
-    <insert id="insertAnMdmcTask" parameterType="AnMdmcTask">
+    <insert id="insertAnMdmcTask" parameterType="AnMdmcTask" useGeneratedKeys="true" keyProperty="id">
         insert into an_mdmc_task
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null ">id,</if>
             <if test="version != null ">version,</if>
-            <if test="creator != null  and creator != ''">creator,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
             <if test="creatorId != null ">creator_id,</if>
-            <if test="createdTime != null ">created_time,</if>
+            <if test="createTime != null ">create_time,</if>
             <if test="lastOperator != null  and lastOperator != ''">last_operator,</if>
-            <if test="lastOperatorId != null ">last_operator_id,</if>
+            <if test="updateBy != null ">update_by,</if>
             <if test="updateTime != null ">update_time,</if>
             <if test="objectType != null ">object_type,</if>
             <if test="objectId != null ">object_id,</if>
@@ -124,11 +119,12 @@
             <if test="addressName != null  and addressName != ''">address_name,</if>
             <if test="creatorCall != null  and creatorCall != ''">creator_call,</if>
             <if test="troubleReason != null  and troubleReason != ''">trouble_reason,</if>
-            <if test="level != null ">level,</if>
+            <if test="level != null ">`level`,</if>
             <if test="appointTime != null ">appoint_time,</if>
             <if test="suggestion != null  and suggestion != ''">suggestion,</if>
             <if test="result != null  and result != ''">result,</if>
             <if test="note != null  and note != ''">note,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
         </trim>
     </insert>
 
@@ -136,11 +132,11 @@
         update an_mdmc_task
         <trim prefix="SET" suffixOverrides=",">
             <if test="version != null ">version = #{version},</if>
-            <if test="creator != null  and creator != ''">create_by = #{creator},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
             <if test="creatorId != null ">creator_id = #{creatorId},</if>
-            <if test="createdTime != null ">create_time = #{createdTime},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
             <if test="lastOperator != null  and lastOperator != ''">last_operator = #{lastOperator},</if>
-            <if test="lastOperatorId != null ">update_by = #{lastOperatorId},</if>
+            <if test="updateBy != null ">update_by = #{updateBy},</if>
             <if test="updateTime != null ">update_time = #{updateTime},</if>
             <if test="objectType != null ">object_type = #{objectType},</if>
             <if test="objectId != null ">object_id = #{objectId},</if>
@@ -165,7 +161,7 @@
             <if test="addressName != null  and addressName != ''">address_name = #{addressName},</if>
             <if test="creatorCall != null  and creatorCall != ''">creator_call = #{creatorCall},</if>
             <if test="troubleReason != null  and troubleReason != ''">trouble_reason = #{troubleReason},</if>
-            <if test="level != null ">level = #{level},</if>
+            <if test="level != null ">`level` = #{level},</if>
             <if test="appointTime != null ">appoint_time = #{appointTime},</if>
             <if test="suggestion != null  and suggestion != ''">suggestion = #{suggestion},</if>
             <if test="result != null  and result != ''">result = #{result},</if>
@@ -179,11 +175,11 @@
             update an_mdmc_task as task
     <trim prefix="SET" suffixOverrides=",">
         <if test="version != null ">version = #{version},</if>
-        <if test="creator != null  and creator != ''">create_by = #{creator},</if>
+        <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
         <if test="creatorId != null ">creator_id = #{creatorId},</if>
-        <if test="createdTime != null ">create_time = #{createdTime},</if>
+        <if test="createTime != null ">create_time = #{createTime},</if>
         <if test="lastOperator != null  and lastOperator != ''">last_operator = #{lastOperator},</if>
-        <if test="lastOperatorId != null ">update_by = #{lastOperatorId},</if>
+        <if test="updateBy != null ">update_by = #{updateBy},</if>
         <if test="updateTime != null ">update_time = #{updateTime},</if>
         <if test="objectType != null ">object_type = #{objectType},</if>
         <if test="objectId != null ">object_id = #{objectId},</if>
@@ -208,7 +204,7 @@
         <if test="addressName != null  and addressName != ''">address_name = #{addressName},</if>
         <if test="creatorCall != null  and creatorCall != ''">creator_call = #{creatorCall},</if>
         <if test="troubleReason != null  and troubleReason != ''">trouble_reason = #{troubleReason},</if>
-        <if test="level != null ">level = #{level},</if>
+        <if test="level != null ">`level` = #{level},</if>
         <if test="appointTime != null ">appoint_time = #{appointTime},</if>
         <if test="suggestion != null  and suggestion != ''">suggestion = #{suggestion},</if>
         <if test="result != null  and result != ''">result = #{result},</if>

@@ -29,25 +29,16 @@ public class AnMdmcTask extends BaseEntity
     @Excel(name = "版本号")
     private Long version;
 
-    /** 创建人 */
-    @Excel(name = "创建人")
-    private String creator;
 
     /** 创建人ID */
     @Excel(name = "创建人ID")
     private Long creatorId;
 
-    /** 创建时间 */
-    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date createdTime;
 
     /** 最近操作人 */
     @Excel(name = "最近操作人")
     private String lastOperator;
 
-    /** 最后操作人ID */
-    @Excel(name = "最后操作人ID")
-    private Long lastOperatorId;
 
     /** 维修任务（绑定）类型 */
     @Excel(name = "维修任务", readConverterExp = "绑=定")
@@ -161,8 +152,6 @@ public class AnMdmcTask extends BaseEntity
     @Excel(name = "备注信息")
     private String note;
 
-    @Excel(name = "备注")
-    private String remark;
 
     public void setId(Long id)
     {
@@ -182,15 +171,7 @@ public class AnMdmcTask extends BaseEntity
     {
         return version;
     }
-    public void setCreator(String creator)
-    {
-        this.creator = creator;
-    }
 
-    public String getCreator()
-    {
-        return creator;
-    }
     public void setCreatorId(Long creatorId)
     {
         this.creatorId = creatorId;
@@ -200,15 +181,7 @@ public class AnMdmcTask extends BaseEntity
     {
         return creatorId;
     }
-    public void setCreatedTime(Date createdTime)
-    {
-        this.createdTime = createdTime;
-    }
 
-    public Date getCreatedTime()
-    {
-        return createdTime;
-    }
     public void setLastOperator(String lastOperator)
     {
         this.lastOperator = lastOperator;
@@ -218,15 +191,7 @@ public class AnMdmcTask extends BaseEntity
     {
         return lastOperator;
     }
-    public void setLastOperatorId(Long lastOperatorId)
-    {
-        this.lastOperatorId = lastOperatorId;
-    }
 
-    public Long getLastOperatorId()
-    {
-        return lastOperatorId;
-    }
     public void setObjectType(Integer objectType)
     {
         this.objectType = objectType;
@@ -485,11 +450,8 @@ public class AnMdmcTask extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
                 .append("version", getVersion())
-                .append("creator", getCreator())
                 .append("creatorId", getCreatorId())
-                .append("createdTime", getCreatedTime())
                 .append("lastOperator", getLastOperator())
-                .append("lastOperatorId", getLastOperatorId())
                 .append("updateTime", getUpdateTime())
                 .append("objectType", getObjectType())
                 .append("objectId", getObjectId())

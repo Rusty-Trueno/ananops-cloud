@@ -29,25 +29,16 @@ public class AnMdmcFileTaskStatus extends BaseEntity
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
     private Long version;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private String creator;
 
     /** $column.columnComment */
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
     private Long creatorId;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private Date createdTime;
 
     /** $column.columnComment */
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
     private String lastOperator;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private Long lastOperatorId;
 
     /** $column.columnComment */
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
@@ -60,8 +51,6 @@ public class AnMdmcFileTaskStatus extends BaseEntity
     /** $column.columnComment */
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
     private Long taskId;
-    @Excel(name = "备注")
-    private String remark;
 
     public void setId(Long id)
     {
@@ -81,15 +70,7 @@ public class AnMdmcFileTaskStatus extends BaseEntity
     {
         return version;
     }
-    public void setCreator(String creator)
-    {
-        this.creator = creator;
-    }
 
-    public String getCreator()
-    {
-        return creator;
-    }
     public void setCreatorId(Long creatorId)
     {
         this.creatorId = creatorId;
@@ -99,15 +80,7 @@ public class AnMdmcFileTaskStatus extends BaseEntity
     {
         return creatorId;
     }
-    public void setCreatedTime(Date createdTime)
-    {
-        this.createdTime = createdTime;
-    }
 
-    public Date getCreatedTime()
-    {
-        return createdTime;
-    }
     public void setLastOperator(String lastOperator)
     {
         this.lastOperator = lastOperator;
@@ -117,15 +90,7 @@ public class AnMdmcFileTaskStatus extends BaseEntity
     {
         return lastOperator;
     }
-    public void setLastOperatorId(Long lastOperatorId)
-    {
-        this.lastOperatorId = lastOperatorId;
-    }
 
-    public Long getLastOperatorId()
-    {
-        return lastOperatorId;
-    }
     public void setStatus(Long status)
     {
         this.status = status;
@@ -159,11 +124,8 @@ public class AnMdmcFileTaskStatus extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
                 .append("version", getVersion())
-                .append("creator", getCreator())
                 .append("creatorId", getCreatorId())
-                .append("createdTime", getCreatedTime())
                 .append("lastOperator", getLastOperator())
-                .append("lastOperatorId", getLastOperatorId())
                 .append("updateTime", getUpdateTime())
                 .append("status", getStatus())
                 .append("attachmentId", getAttachmentId())

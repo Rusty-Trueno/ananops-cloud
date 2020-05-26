@@ -7,11 +7,11 @@
     <resultMap type="AnMdmcTaskItem" id="AnMdmcTaskItemResult">
         <result property="id"    column="id"    />
         <result property="version"    column="version"    />
-        <result property="creator"    column="create_by"    />
+        <result property="createBy"    column="create_by"    />
         <result property="creatorId"    column="creator_id"    />
-        <result property="createdTime"    column="create_time"    />
+        <result property="createTime"    column="create_time"    />
         <result property="lastOperator"    column="last_operator"    />
-        <result property="lastOperatorId"    column="update_by"    />
+        <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="taskId"    column="task_id"    />
         <result property="deviceId"    column="device_id"    />
@@ -33,7 +33,7 @@
     </resultMap>
 
     <sql id="selectAnMdmcTaskItemVo">
-        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, task_id, device_id, device_name, actual_finish_time, actual_start_time, description, level, device_latitude, device_longitude, maintainer_id, status, suggestion, result, device_type, trouble_type, trouble_address ,remark from an_mdmc_task_item
+        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, task_id, device_id, device_name, actual_finish_time, actual_start_time, description, `level`, device_latitude, device_longitude, maintainer_id, status, suggestion, result, device_type, trouble_type, trouble_address ,remark from an_mdmc_task_item
     </sql>
 
     <select id="selectAnMdmcTaskItemList" parameterType="AnMdmcTaskItem" resultMap="AnMdmcTaskItemResult">
@@ -53,11 +53,11 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null ">id,</if>
             <if test="version != null ">version,</if>
-            <if test="creator != null  and creator != ''">creator,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
             <if test="creatorId != null ">creator_id,</if>
-            <if test="createdTime != null ">created_time,</if>
+            <if test="createTime != null ">create_time,</if>
             <if test="lastOperator != null  and lastOperator != ''">last_operator,</if>
-            <if test="lastOperatorId != null ">last_operator_id,</if>
+            <if test="updateBy != null ">update_by,</if>
             <if test="updateTime != null ">update_time,</if>
             <if test="taskId != null ">task_id,</if>
             <if test="deviceId != null ">device_id,</if>
@@ -65,7 +65,7 @@
             <if test="actualFinishTime != null ">actual_finish_time,</if>
             <if test="actualStartTime != null ">actual_start_time,</if>
             <if test="description != null  and description != ''">description,</if>
-            <if test="level != null ">level,</if>
+            <if test="level != null ">`level`,</if>
             <if test="deviceLatitude != null ">device_latitude,</if>
             <if test="deviceLongitude != null ">device_longitude,</if>
             <if test="maintainerId != null ">maintainer_id,</if>
@@ -75,6 +75,7 @@
             <if test="deviceType != null  and deviceType != ''">device_type,</if>
             <if test="troubleType != null  and troubleType != ''">trouble_type,</if>
             <if test="troubleAddress != null  and troubleAddress != ''">trouble_address,</if>
+            <if test="remark != null  and remark != ''">device_type,</if>
         </trim>
     </insert>
 
@@ -82,11 +83,11 @@
         update an_mdmc_task_item
         <trim prefix="SET" suffixOverrides=",">
             <if test="version != null ">version = #{version},</if>
-            <if test="creator != null  and creator != ''">creator = #{creator},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
             <if test="creatorId != null ">creator_id = #{creatorId},</if>
-            <if test="createdTime != null ">created_time = #{createdTime},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
             <if test="lastOperator != null  and lastOperator != ''">last_operator = #{lastOperator},</if>
-            <if test="lastOperatorId != null ">last_operator_id = #{lastOperatorId},</if>
+            <if test="updateBy != null ">update_by = #{updateBy},</if>
             <if test="updateTime != null ">update_time = #{updateTime},</if>
             <if test="taskId != null ">task_id = #{taskId},</if>
             <if test="deviceId != null ">device_id = #{deviceId},</if>
@@ -94,7 +95,7 @@
             <if test="actualFinishTime != null ">actual_finish_time = #{actualFinishTime},</if>
             <if test="actualStartTime != null ">actual_start_time = #{actualStartTime},</if>
             <if test="description != null  and description != ''">description = #{description},</if>
-            <if test="level != null ">level = #{level},</if>
+            <if test="level != null ">`level` = #{level},</if>
             <if test="deviceLatitude != null ">device_latitude = #{deviceLatitude},</if>
             <if test="deviceLongitude != null ">device_longitude = #{deviceLongitude},</if>
             <if test="maintainerId != null ">maintainer_id = #{maintainerId},</if>
@@ -104,6 +105,7 @@
             <if test="deviceType != null  and deviceType != ''">device_type = #{deviceType},</if>
             <if test="troubleType != null  and troubleType != ''">trouble_type = #{troubleType},</if>
             <if test="troubleAddress != null  and troubleAddress != ''">trouble_address = #{troubleAddress},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
         </trim>
         where id = #{id}
     </update>
