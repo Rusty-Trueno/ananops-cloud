@@ -12,6 +12,7 @@ import com.ananops.mdmc.dto.*;
 import com.ananops.mdmc.enums.MdmcTaskStatusEnum;
 import com.ananops.mdmc.mapper.AnMdmcTaskItemMapper;
 import com.ananops.mdmc.service.IAnMdmcTaskItemService;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
@@ -70,38 +71,59 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
     @Override
     public PageInfo selectAnMdmcTaskList(MdmcQueryDto queryDto)
     {
-        String roleCode="";
+        String roleCode="x";
         Long id=queryDto.getId();
         Integer status=queryDto.getStatus();
         List<AnMdmcTask> taskList=new ArrayList<>();
+        Integer pageNum=queryDto.getPageNum();
+        Integer pageSize=queryDto.getPageSize();
         //todo 调用uac查角色
-        //todo 分页
-        if(status==null){
-            if(roleCode!=null){
-                if(roleCode.equals("fac_service")||roleCode.equals("fac_manager")||roleCode.equals("fac_leader")){
-                    PageHelper.startPage(queryDto.getPageNum(),queryDto.getPageSize());
-                    taskList=anMdmcTaskMapper.selectByFacId(id);
-                }
-                else if(roleCode.equals("engineer")){
-                    PageHelper.startPage(queryDto.getPageNum(),queryDto.getPageSize());
-                    taskList=anMdmcTaskMapper.selectByMantainerId(id);
-                }
-                else {
-                    PageHelper.startPage(queryDto.getPageNum(),queryDto.getPageSize());
-                    taskList=anMdmcTaskMapper.selectAnMdmcTaskListByUserId(id);
-                }
-            }
-            else {
-                PageHelper.startPage(queryDto.getPageNum(),queryDto.getPageSize());
-                taskList=anMdmcTaskMapper.selectAnMdmcTaskListByUserId(id);
-            }
-        }
-        else {
-            PageHelper.startPage(queryDto.getPageNum(),queryDto.getPageSize());
-            taskList=anMdmcTaskMapper.selectBySomeoneIdAndStatus(status,id);
-        }
-        return new PageInfo<>(taskList);
+        return status==null ? getListByRole(roleCode,pageNum,pageSize,id):getListByRoleAndStatus(roleCode,pageNum,pageSize,id,status);
+    }
 
+    private PageInfo getListByRole(String role,Integer pageNum,Integer pageSize,Long id){
+        List<AnMdmcTask> taskList=new ArrayList<>();
+        Page page=PageHelper.startPage(pageNum,pageSize);
+        switch (role){
+            case "fac_manager":taskList=anMdmcTaskMapper.selectByFacId(id);break;
+            case "engineer": taskList=anMdmcTaskMapper.selectByMantainerId(id);break;
+            case "user_watcher":taskList=anMdmcTaskMapper.selectByUserId(id);break;
+            case "user_leader":taskList=anMdmcTaskMapper.selectByBossId(id);break;
+            default:taskList=anMdmcTaskMapper.selectByUserId(id);
+        }
+        PageInfo pageInfo = new PageInfo<>(transform(taskList,id));
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPages(page.getPages());
+        pageInfo.setPageNum(page.getPageNum());
+        return pageInfo;
+    }
+
+    private PageInfo getListByRoleAndStatus(String role,Integer pageNum,Integer pageSize,Long id,Integer status){
+        List<AnMdmcTask> taskList=new ArrayList<>();
+        Page page=PageHelper.startPage(pageNum,pageSize);
+        switch (role){
+            case "fac_manager":taskList=anMdmcTaskMapper.selectByFacIdAndStatus(status,id);break;
+            case "engineer": taskList=anMdmcTaskMapper.selectByMaintainerIdAndStatus(status,id);break;
+            case "user_watcher":taskList=anMdmcTaskMapper.selectByUserIdAndStatus(status,id);break;
+            case "user_leader":taskList=anMdmcTaskMapper.selectByBossIdAndStatus(status,id);break;
+            default:taskList=anMdmcTaskMapper.selectByUserIdAndStatus(status,id);
+        }
+        PageInfo pageInfo = new PageInfo<>(transform(taskList,id));
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setPages(page.getPages());
+        pageInfo.setPageNum(page.getPageNum());
+        return pageInfo;
+    }
+
+    private List<MdmcTaskDetailDto> transform(List<AnMdmcTask> taskList,Long id){
+        List<MdmcTaskDetailDto> taskDetailDtos = new ArrayList<>();
+        for(AnMdmcTask task:taskList){
+            MdmcTaskDetailDto taskListDto=new MdmcTaskDetailDto();
+            taskListDto.setMdmcTask(task);
+            //todo 调用其他模块聚合的信息
+            taskDetailDtos.add(taskListDto);
+        }
+        return taskDetailDtos;
     }
 
     /**
@@ -218,15 +240,16 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
             throw new BusinessException("查无此工单");
         }
         AnMdmcTask task=new AnMdmcTask();
-        BeanUtils.copyProperties(changeStatusDto,task);
-        UpdateInfoUtil.setModifyInfo(task,loginAuthDto);
+        task.setStatus(status);
+        task.setId(changeStatusDto.getTaskId());
+        UpdateInfoUtil.setInsertInfo(task,loginAuthDto);
         if(anMdmcTaskMapper.updateTaskStatus(task)<=0){
             throw new BusinessException("工单更改状态失败");
         }
-        if(MdmcTaskStatusEnum.getStatusMsg(status).equals(MdmcTaskStatusEnum.Reject1.getStatusMsg())){
+        if(MdmcTaskStatusEnum.getEnum(status)==MdmcTaskStatusEnum.Reject1){
             anMdmcTaskMapper.rejectByFac(taskId);
         }
-        if (MdmcTaskStatusEnum.getStatusMsg(status).equals(MdmcTaskStatusEnum.Reject2.getStatusMsg())){
+        if (MdmcTaskStatusEnum.getEnum(status)==MdmcTaskStatusEnum.JieDan2){
             anMdmcTaskMapper.rejectByMan(taskId);
         }
         changeStatusDto.setTask(anMdmcTaskMapper.selectByPrimaryKey(taskId));

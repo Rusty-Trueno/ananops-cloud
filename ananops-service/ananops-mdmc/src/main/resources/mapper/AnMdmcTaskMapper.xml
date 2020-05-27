@@ -55,35 +55,71 @@
         </where>
     </select>
 
-    <select id="selectAnMdmcTaskListByUserId" parameterType="Long" resultMap="AnMdmcTaskResult">
-        <include refid="selectAnMdmcTaskVo"/>
-        where
-        user_id=#{id} or facilitator_id=#{id} or maintainer_id=#{id} or principal_id=#{id}) order by created_time desc
-    </select>
 
     <select id="selectAnMdmcTaskById" parameterType="Long" resultMap="AnMdmcTaskResult">
         <include refid="selectAnMdmcTaskVo"/>
+        as task
         where
-        id = #{id}
+        task.id = #{id}
+    </select>
+
+    <select id="selectByUserId" parameterType="Long" resultMap="AnMdmcTaskResult">
+        <include refid="selectAnMdmcTaskVo"/>
+        as task
+        where
+        task.user_id=#{id} order by task.update_time desc
+    </select>
+
+    <select id="selectByUserIdAndStatus"  resultMap="AnMdmcTaskResult">
+        <include refid="selectAnMdmcTaskVo"/>
+        as task
+        where
+        task.user_id=#{id} and task.status=#{status}order by task.update_time desc
+    </select>
+
+    <select id="selectByBossId" parameterType="Long" resultMap="AnMdmcTaskResult">
+        <include refid="selectAnMdmcTaskVo"/>
+        as task
+        where
+        task.principal_id=#{id} order by task.update_time desc
+    </select>
+
+    <select id="selectByBossIdAndStatus"  resultMap="AnMdmcTaskResult">
+        <include refid="selectAnMdmcTaskVo"/>
+        as task
+        where
+        task.principal_id=#{id} and task.status=#{status}order by task.update_time desc
     </select>
 
     <select id="selectByMantainerId" parameterType="Long" resultMap="AnMdmcTaskResult">
     <include refid="selectAnMdmcTaskVo"/>
+        as task
         where
-         status>4 and status!=14 and status!=15 and maintainer_id=#{id} order by created_time desc
+        task.status>4 and task.status!=14 and task.status!=15
+        and task.maintainer_id=#{id} order by task.update_time desc
+    </select>
+
+    <select id="selectByMaintainerIdAndStatus"  resultMap="AnMdmcTaskResult">
+        <include refid="selectAnMdmcTaskVo"/>
+        as task
+        where
+        task.maintainer_id=#{id} and task.status=#{status}order by task.update_time desc
     </select>
 
     <select id="selectByFacId" parameterType="Long" resultMap="AnMdmcTaskResult">
         <include refid="selectAnMdmcTaskVo"/>
+        as task
         where
-         status>2 and status!=14  and facilitator_id=#{id} order by created_time desc
+        task.status>2 and task.status!=14  and task.facilitator_id=#{id} order by task.update_time desc
     </select>
 
-    <select id="selectBySomeoneIdAndStatus"  resultMap="AnMdmcTaskResult">
+    <select id="selectByFacIdAndStatus"  resultMap="AnMdmcTaskResult">
         <include refid="selectAnMdmcTaskVo"/>
+        as task
         where
-         status=#{status} and (user_id=#{id} or facilitator_id=#{id} or maintainer_id=#{id} or principal_id=#{id}) order by created_time desc
+        task.facilitator_id=#{id} and task.status=#{status}order by task.update_time desc
     </select>
+
 
     <insert id="insertAnMdmcTask" parameterType="AnMdmcTask" useGeneratedKeys="true" keyProperty="id">
         insert into an_mdmc_task
@@ -172,7 +208,7 @@
     </update>
 
     <update id="updateTaskStatus" parameterType="AnMdmcTask">
-            update an_mdmc_task as task
+    update an_mdmc_task as task
     <trim prefix="SET" suffixOverrides=",">
         <if test="version != null ">version = #{version},</if>
         <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
@@ -214,7 +250,7 @@
     where
     (<if test="status == 3">task.status = 2 or task.status=14</if>
     <if test="status == 1">task.status = 2</if>
-    <if test="status == 4">task.status = 3 or task.status = 15</if>
+    <if test="status == 4">task.status = 3 </if>
     <if test="status == 14">task.status = 3 </if>
     <if test="status == 5">task.status = 4</if>
     <if test="status == 6">task.status = 5</if>
@@ -226,20 +262,18 @@
 
     <update id="rejectByFac" parameterType="Long">
     update an_mdmc_task as task
-    <trim prefix="SET" suffixOverrides=",">
-    <if test="facilitatorId != null ">facilitator_id = null,</if>
-    </trim>
+    set task.facilitator_id = null
     where
     task.id = #{id}
+    and task.facilitator_id !=null
     </update>
 
     <update id="rejectByMan" parameterType="Long">
         update an_mdmc_task as task
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="maintainerId != null ">maintainer_id = null,</if>
-        </trim>
+        set maintainer_id = null
         where
         task.id = #{id}
+        and task.maintainer_id !=null
     </update>
 
     <update id="dispatchFacOrEng" parameterType="MdmcDispatchDto">

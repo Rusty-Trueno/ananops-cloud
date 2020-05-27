@@ -42,7 +42,7 @@ public class AnMdmcTaskController extends BaseController
     /**
      * 查询维修工单表
      */
-    @ApiOperation(value = "查询维修工单详情")
+    @ApiOperation(value = "查询维修工单详情，可测")
     @GetMapping("getTaskDetailByTaskId/{id}")
     public R get(@PathVariable("id") Long id)
     {
@@ -53,8 +53,8 @@ public class AnMdmcTaskController extends BaseController
     /**
      * 查询维修工单列表
      */
-    @ApiOperation(value = "查询维修工单列表")
-    @GetMapping("getTaskList")
+    @ApiOperation(value = "查询维修工单列表，可测")
+    @PostMapping("getTaskList")
     public R list(@RequestBody MdmcQueryDto queryDto)
     {
         return R.data(anMdmcTaskService.selectAnMdmcTaskList(queryDto));
@@ -64,7 +64,7 @@ public class AnMdmcTaskController extends BaseController
     /**
      * 新增保存维修工单
      */
-    @ApiOperation(value = "新增保存维修工单")
+    @ApiOperation(value = "新增保存维修工单，可测")
     @PostMapping("save")
     public R addSave(@RequestBody MdmcAddTaskDto mdmcAddTaskDto)
     {
@@ -75,7 +75,7 @@ public class AnMdmcTaskController extends BaseController
     /**
      * 修改保存维修工单
      */
-    @ApiOperation(value = "修改保存维修工单")
+    @ApiOperation(value = "修改保存维修工单，可测")
     @PostMapping("update")
     public R editSave(@RequestBody MdmcAddTaskDto updateTaskDto)
     {
@@ -86,7 +86,7 @@ public class AnMdmcTaskController extends BaseController
     /**
      * 删除维修工单表
      */
-    @ApiOperation(value = "根据id删除维修工单及其所属任务子项")
+    @ApiOperation(value = "根据id删除维修工单及其所属任务子项，可测")
     @PostMapping("remove/{id}")
     public R remove(@PathVariable("id") Long id)
     {
@@ -96,7 +96,7 @@ public class AnMdmcTaskController extends BaseController
     /**
      * 修改工单状态
      */
-    @ApiOperation(value = "更改工单状态")
+    @ApiOperation(value = "更改工单状态，可测")
     @PostMapping("modifyTaskStatusByTaskId")
     public R modifyStatus(@RequestBody MdmcChangeStatusDto changeStatusDto)
     {
@@ -107,7 +107,7 @@ public class AnMdmcTaskController extends BaseController
     /**
      * 服务商拒单
      */
-    @ApiOperation(value = "服务商拒单")
+    @ApiOperation(value = "服务商拒单，可测")
     @PostMapping("refuseTaskByFacilitator/{taskId}")
     public R refuseTaskByFacilitator(@PathVariable("taskId")Long taskId){
         LoginAuthDto loginAuthDto=getLoginAuthDto();
@@ -120,12 +120,12 @@ public class AnMdmcTaskController extends BaseController
     /**
      * 工程师拒单
      */
-    @ApiOperation(value = "工程师拒单")
+    @ApiOperation(value = "工程师拒单，可测")
     @PostMapping("refuseTaskByMaintainer/{taskId}")
     public R refuseTaskByMaintainer(@PathVariable("taskId")Long taskId){
         LoginAuthDto loginAuthDto=getLoginAuthDto();
         MdmcChangeStatusDto changeStatusDto=new MdmcChangeStatusDto();
-        changeStatusDto.setStatus(MdmcTaskStatusEnum.Reject2.getStatusNum());
+        changeStatusDto.setStatus(MdmcTaskStatusEnum.JieDan2.getStatusNum());
         changeStatusDto.setTaskId(taskId);
         return R.data(anMdmcTaskService.modifyTaskStatus(changeStatusDto,loginAuthDto));
     }
@@ -133,7 +133,7 @@ public class AnMdmcTaskController extends BaseController
     /**
      * 平台管理员重新分配服务商
      */
-    @ApiOperation(value = "平台管理员重新分配服务商")
+    @ApiOperation(value = "平台管理员重新分配服务商，可测")
     @PostMapping("dispatchFacilitator")
     public R dispatchFac(@RequestBody MdmcDispatchDto dispatchDto){
         LoginAuthDto loginAuthDto=getLoginAuthDto();
@@ -147,7 +147,7 @@ public class AnMdmcTaskController extends BaseController
     /**
      * 服务商分配工程师
      */
-    @ApiOperation(value = "服务商分配工程师")
+    @ApiOperation(value = "服务商分配工程师，可测")
     @PostMapping("dispatchMaintainer")
     public R dispatchEng(@RequestBody MdmcDispatchDto dispatchDto){
         LoginAuthDto loginAuthDto=getLoginAuthDto();
