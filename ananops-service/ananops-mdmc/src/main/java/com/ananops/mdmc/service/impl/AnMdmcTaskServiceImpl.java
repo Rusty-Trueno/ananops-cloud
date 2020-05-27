@@ -223,9 +223,23 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
         if(anMdmcTaskMapper.updateTaskStatus(task)<=0){
             throw new BusinessException("工单更改状态失败");
         }
+        if(MdmcTaskStatusEnum.getStatusMsg(status).equals(MdmcTaskStatusEnum.Reject1.getStatusMsg())){
+            anMdmcTaskMapper.rejectByFac(taskId);
+        }
+        if (MdmcTaskStatusEnum.getStatusMsg(status).equals(MdmcTaskStatusEnum.Reject2.getStatusMsg())){
+            anMdmcTaskMapper.rejectByMan(taskId);
+        }
         changeStatusDto.setTask(anMdmcTaskMapper.selectByPrimaryKey(taskId));
         //todo 巡检引起工单状态改变
         //todo 消息
         return changeStatusDto;
+    }
+
+    @Override
+    public AnMdmcTask dispatch(MdmcDispatchDto dispatchDto) {
+        if (anMdmcTaskMapper.dispatchFacOrEng(dispatchDto)<=0){
+            throw new BusinessException("更新失败");
+        }
+        return anMdmcTaskMapper.selectByPrimaryKey(dispatchDto.getId());
     }
 }

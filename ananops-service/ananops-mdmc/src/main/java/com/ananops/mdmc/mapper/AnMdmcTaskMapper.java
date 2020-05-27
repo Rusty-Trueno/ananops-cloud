@@ -2,6 +2,7 @@ package com.ananops.mdmc.mapper;
 
 import com.ananops.common.core.dao.BaseMapper;
 import com.ananops.mdmc.domain.AnMdmcTask;
+import com.ananops.mdmc.dto.MdmcDispatchDto;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -101,5 +102,30 @@ public interface AnMdmcTaskMapper extends BaseMapper<AnMdmcTask>
      * @return 结果
      */
     public int updateTaskStatus(AnMdmcTask task);
+
+    /**
+     * 服务商拒单，把服务商id设为空
+     *
+     * @param id 工单id
+     * @return 结果
+     */
+    public int rejectByFac(Long id);
+
+    /**
+     * 工程师拒单，把工程师id设为空
+     *
+     * @param id 工单id
+     * @return 结果
+     */
+    public int rejectByMan(Long id);
+
+    /**
+     * 平台管理员重新分配服务商或者服务商分配工程师
+     *
+     * @param dispatchDto 工单dto
+     * @return 结果
+     */
+    public int dispatchFacOrEng(MdmcDispatchDto dispatchDto);
+
 
 }

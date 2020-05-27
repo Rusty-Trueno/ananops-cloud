@@ -224,7 +224,33 @@
     and task.id = #{id}
     </update>
 
+    <update id="rejectByFac" parameterType="Long">
+    update an_mdmc_task as task
+    <trim prefix="SET" suffixOverrides=",">
+    <if test="facilitatorId != null ">facilitator_id = null,</if>
+    </trim>
+    where
+    task.id = #{id}
+    </update>
 
+    <update id="rejectByMan" parameterType="Long">
+        update an_mdmc_task as task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="maintainerId != null ">maintainer_id = null,</if>
+        </trim>
+        where
+        task.id = #{id}
+    </update>
+
+    <update id="dispatchFacOrEng" parameterType="MdmcDispatchDto">
+        update an_mdmc_task as task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="facilitatorId != null ">facilitator_id = #{facilitatorId},</if>
+            <if test="maintainerId != null ">maintainer_id = #{maintainerId},</if>
+        </trim>
+        where
+        task.id = #{id}
+    </update>
 
     <delete id="deleteAnMdmcTaskById" parameterType="Long">
         delete from an_mdmc_task where id = #{id}

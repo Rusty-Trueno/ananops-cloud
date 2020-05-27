@@ -3,7 +3,9 @@ package com.ananops.mdmc.controller;
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.mdmc.dto.MdmcAddTaskDto;
 import com.ananops.mdmc.dto.MdmcChangeStatusDto;
+import com.ananops.mdmc.dto.MdmcDispatchDto;
 import com.ananops.mdmc.dto.MdmcQueryDto;
+import com.ananops.mdmc.enums.MdmcTaskStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -100,6 +102,60 @@ public class AnMdmcTaskController extends BaseController
     {
         LoginAuthDto loginAuthDto = getLoginAuthDto();
         return R.data(anMdmcTaskService.modifyTaskStatus(changeStatusDto,loginAuthDto));
+    }
+
+    /**
+     * 服务商拒单
+     */
+    @ApiOperation(value = "服务商拒单")
+    @PostMapping("refuseTaskByFacilitator/{taskId}")
+    public R refuseTaskByFacilitator(@PathVariable("taskId")Long taskId){
+        LoginAuthDto loginAuthDto=getLoginAuthDto();
+        MdmcChangeStatusDto changeStatusDto=new MdmcChangeStatusDto();
+        changeStatusDto.setStatus(MdmcTaskStatusEnum.Reject1.getStatusNum());
+        changeStatusDto.setTaskId(taskId);
+        return R.data(anMdmcTaskService.modifyTaskStatus(changeStatusDto,loginAuthDto));
+    }
+
+    /**
+     * 工程师拒单
+     */
+    @ApiOperation(value = "工程师拒单")
+    @PostMapping("refuseTaskByMaintainer/{taskId}")
+    public R refuseTaskByMaintainer(@PathVariable("taskId")Long taskId){
+        LoginAuthDto loginAuthDto=getLoginAuthDto();
+        MdmcChangeStatusDto changeStatusDto=new MdmcChangeStatusDto();
+        changeStatusDto.setStatus(MdmcTaskStatusEnum.Reject2.getStatusNum());
+        changeStatusDto.setTaskId(taskId);
+        return R.data(anMdmcTaskService.modifyTaskStatus(changeStatusDto,loginAuthDto));
+    }
+
+    /**
+     * 平台管理员重新分配服务商
+     */
+    @ApiOperation(value = "平台管理员重新分配服务商")
+    @PostMapping("dispatchFacilitator")
+    public R dispatchFac(@RequestBody MdmcDispatchDto dispatchDto){
+        LoginAuthDto loginAuthDto=getLoginAuthDto();
+        MdmcChangeStatusDto changeStatusDto=new MdmcChangeStatusDto();
+        changeStatusDto.setStatus(MdmcTaskStatusEnum.JieDan1.getStatusNum());
+        changeStatusDto.setTaskId(dispatchDto.getId());
+        anMdmcTaskService.modifyTaskStatus(changeStatusDto,loginAuthDto);
+        return R.data(anMdmcTaskService.dispatch(dispatchDto));
+    }
+
+    /**
+     * 服务商分配工程师
+     */
+    @ApiOperation(value = "服务商分配工程师")
+    @PostMapping("dispatchMaintainer")
+    public R dispatchEng(@RequestBody MdmcDispatchDto dispatchDto){
+        LoginAuthDto loginAuthDto=getLoginAuthDto();
+        MdmcChangeStatusDto changeStatusDto=new MdmcChangeStatusDto();
+        changeStatusDto.setStatus(MdmcTaskStatusEnum.JieDan3.getStatusNum());
+        changeStatusDto.setTaskId(dispatchDto.getId());
+        anMdmcTaskService.modifyTaskStatus(changeStatusDto,loginAuthDto);
+        return R.data(anMdmcTaskService.dispatch(dispatchDto));
     }
 
 }

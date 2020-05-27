@@ -2,10 +2,7 @@ package com.ananops.mdmc.service;
 
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.mdmc.domain.AnMdmcTask;
-import com.ananops.mdmc.dto.MdmcAddTaskDto;
-import com.ananops.mdmc.dto.MdmcChangeStatusDto;
-import com.ananops.mdmc.dto.MdmcQueryDto;
-import com.ananops.mdmc.dto.MdmcTaskDetailDto;
+import com.ananops.mdmc.dto.*;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -73,4 +70,12 @@ public interface IAnMdmcTaskService
      * @return 结果
      */
     public MdmcChangeStatusDto modifyTaskStatus(MdmcChangeStatusDto changeStatusDto,LoginAuthDto loginAuthDto);
+
+    /**
+     * 平台管理员重新分配服务商或服务商分配工程师
+     *
+     * @param dispatchDto 分配dto
+     * @return 结果
+     */
+    public AnMdmcTask dispatch(MdmcDispatchDto dispatchDto);
 }
