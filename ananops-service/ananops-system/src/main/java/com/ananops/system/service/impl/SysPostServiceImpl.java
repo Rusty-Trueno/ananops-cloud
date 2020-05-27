@@ -93,7 +93,7 @@ public class SysPostServiceImpl implements ISysPostService
      * @throws Exception
      */
     @Override
-    public int deletePostByIds(String ids) throws BusinessException
+    public int deletePostByIds(String ids)
     {
         Long[] postIds = Convert.toLongArray(ids);
         for (Long postId : postIds)
