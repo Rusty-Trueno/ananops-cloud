@@ -19,5 +19,6 @@
         <module>ananops-imc</module>
         <module>ananops-amc</module>
         <module>ananops-mdmc</module>
+        <module>ananops-bmc</module>
     </modules>
 </project>

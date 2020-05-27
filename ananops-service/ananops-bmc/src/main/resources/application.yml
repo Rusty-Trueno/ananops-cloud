@@ -1,0 +1,10 @@
+server:
+  port: 9600
+spring:
+  application:
+    name: ananops-bmc
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true
