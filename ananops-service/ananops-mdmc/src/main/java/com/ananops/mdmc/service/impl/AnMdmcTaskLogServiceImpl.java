@@ -90,6 +90,7 @@ public class AnMdmcTaskLogServiceImpl implements IAnMdmcTaskLogService
         BeanUtils.copyProperties(anMdmcTaskLog,taskLog);
         taskLog.setMovement(move);
         BeanUtils.copyProperties(task,taskLog);
+        taskLog.setId(null);
         return anMdmcTaskLogMapper.insert(taskLog);
     }
 

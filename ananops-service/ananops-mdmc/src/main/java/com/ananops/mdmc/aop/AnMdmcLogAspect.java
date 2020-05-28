@@ -105,7 +105,6 @@ public class AnMdmcLogAspect {
                 log.setTaskId(taskId);
                 AnMdmcTask task=taskMapper.selectByPrimaryKey(taskId);
                 BeanUtils.copyProperties(task,log);
-                log.setId(null);
                 if (taskLogService.insertAnMdmcTaskLog(log)<=0){
                     throw new BusinessException("新增日志失败");
                 }
