@@ -16,6 +16,8 @@ import com.ananops.common.core.controller.BaseController;
 import com.ananops.mdmc.domain.AnMdmcTaskItemLog;
 import com.ananops.mdmc.service.IAnMdmcTaskItemLogService;
 
+import javax.annotation.Resource;
+
 /**
  * 维修任务子项日志 提供者
  *
@@ -28,7 +30,7 @@ import com.ananops.mdmc.service.IAnMdmcTaskItemLogService;
 public class AnMdmcTaskItemLogController extends BaseController
 {
 
-    @Autowired
+    @Resource
     private IAnMdmcTaskItemLogService anMdmcTaskItemLogService;
 
     /**

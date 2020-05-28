@@ -49,7 +49,7 @@ public class AnMdmcTaskItemController extends BaseController
      * 查询维修任务子项列表
      */
     @ApiOperation(value = "根据工单id查询维修任务子项列表")
-    @GetMapping("getItemList")
+    @PostMapping("getItemList")
     public R list(@RequestBody MdmcQueryDto queryDto)
     {
         return R.data(anMdmcTaskItemService.selectAnMdmcTaskItemList(queryDto));

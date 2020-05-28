@@ -48,3 +48,5 @@ logs
 !*/build/*.html
 !*/build/*.xml
 ruoyi-ant
+
+.DS_Store

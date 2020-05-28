@@ -16,6 +16,19 @@ import java.util.Date;
 @ApiModel
 public class ImcInspectionItemDto implements Serializable {
     private static final long serialVersionUID = -7869606799514874716L;
+
+    private String createBy;
+
+    private String updateBy;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date createTime;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date updateTime;
+
     /**
      * 巡检任务子项Id
      */

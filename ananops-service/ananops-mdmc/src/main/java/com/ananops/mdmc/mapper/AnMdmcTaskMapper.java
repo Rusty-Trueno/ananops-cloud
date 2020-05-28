@@ -64,20 +64,37 @@ public interface AnMdmcTaskMapper extends BaseMapper<AnMdmcTask>
     public int deleteAnMdmcTaskByIds(String[] ids);
 
     /**
-     * 根据用户id查询工单列表
+     * 根据报修人id查询工单列表
      *
      * @param id 用户id
      * @return 结果
      */
-    public List<AnMdmcTask> selectAnMdmcTaskListByUserId(Long id);
+    public List<AnMdmcTask> selectByUserId(Long id);
 
     /**
-     * 根据用户id和状态查询工单列表
+     * 根据报修人id和状态查询工单列表
      *
      * @param id 用户id
      * @return 结果
      */
-    public List<AnMdmcTask> selectBySomeoneIdAndStatus(@Param("status")Integer status,@Param("id")Long id);
+    public List<AnMdmcTask> selectByUserIdAndStatus(@Param("status")Integer status,@Param("id")Long id);
+
+
+    /**
+     * 根据负责人id查询工单列表
+     *
+     * @param id 负责人id
+     * @return 结果
+     */
+    public List<AnMdmcTask> selectByBossId(Long id);
+
+    /**
+     * 根据负责人id和状态查询工单列表
+     *
+     * @param id 用户id
+     * @return 结果
+     */
+    public List<AnMdmcTask> selectByBossIdAndStatus(@Param("status")Integer status,@Param("id")Long id);
 
     /**
      * 服务商获取工单列表
@@ -87,6 +104,15 @@ public interface AnMdmcTaskMapper extends BaseMapper<AnMdmcTask>
      */
     public List<AnMdmcTask> selectByFacId(Long id);
 
+
+    /**
+     * 根据服务商id和状态查询工单列表
+     *
+     * @param id 用户id
+     * @return 结果
+     */
+    public List<AnMdmcTask> selectByFacIdAndStatus(@Param("status")Integer status,@Param("id")Long id);
+
     /**
      * 工程师获取工单列表
      *
@@ -94,6 +120,16 @@ public interface AnMdmcTaskMapper extends BaseMapper<AnMdmcTask>
      * @return 结果
      */
     public List<AnMdmcTask> selectByMantainerId(Long id);
+
+
+    /**
+     * 根据工程师id和状态查询工单列表
+     *
+     * @param id 用户id
+     * @return 结果
+     */
+    public List<AnMdmcTask> selectByMaintainerIdAndStatus(@Param("status")Integer status,@Param("id")Long id);
+
 
     /**
      * 更改工单状态

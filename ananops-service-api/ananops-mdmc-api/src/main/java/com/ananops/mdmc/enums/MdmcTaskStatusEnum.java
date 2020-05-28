@@ -37,11 +37,11 @@ public enum MdmcTaskStatusEnum {
 
     Reject1(14,"服务商业务员拒绝工单，待平台服务员重新派单"),
 
-    Reject2(15,"工程师拒绝工单，待服务商重新派单"),
-
     Reject3(16,"备件库管理员驳回备品备件方案，待工程师重新提交备品备件申请"),//工程师收消息
 
-    Reject4(17,"用户负责人驳回备品备件方案，待工程师重新提交备品备件申请");//工程师收消息
+    Reject4(17,"用户负责人驳回备品备件方案，待工程师重新提交备品备件申请"),//工程师收消息
+
+    Wrong(-1,"错误");
 
     int statusNum;
 
@@ -70,6 +70,14 @@ public enum MdmcTaskStatusEnum {
             }
         }
        throw new BusinessException("查无此状态");
+    }
+    public static MdmcTaskStatusEnum getEnum(int statusNum){
+        for(MdmcTaskStatusEnum ele:MdmcTaskStatusEnum.values()){
+            if(statusNum == ele.getStatusNum()){
+                return ele;
+            }
+        }
+        return MdmcTaskStatusEnum.Wrong;
     }
 
 }

@@ -113,6 +113,9 @@ public class AnMdmcTaskItemServiceImpl implements IAnMdmcTaskItemService
        AnMdmcTaskItem item=new AnMdmcTaskItem();
         BeanUtils.copyProperties(itemDto,item);
         UpdateInfoUtil.setModifyInfo(item,loginAuthDto);
+        anMdmcTaskItemMapper.updateByPrimaryKeySelective(item);
+        AnMdmcTaskItem item1=anMdmcTaskItemMapper.selectByPrimaryKey(itemId);
+        BeanUtils.copyProperties(item1,item);
         return item;
     }
 

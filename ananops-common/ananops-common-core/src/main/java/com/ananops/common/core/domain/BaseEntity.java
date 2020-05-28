@@ -48,6 +48,16 @@ public class BaseEntity implements Serializable {
      */
     private String remark;
 
+    /**
+     * 公司id
+     */
+    private Long companyId;
+
+    /**
+     * 公司名字
+     */
+    private String companyName;
+
     @Transient
     private String beginTime;
 

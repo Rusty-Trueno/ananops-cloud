@@ -95,7 +95,7 @@ public class MdmcAddTaskDto implements Serializable {
     private String suggestion;
 
     @ApiModelProperty("报修人电话")
-    private String call;
+    private String creatorCall;
 
     @ApiModelProperty("备注")
     private String note;
