@@ -16,6 +16,7 @@ import com.ananops.imc.enums.RoleEnum;
 import com.ananops.imc.enums.TaskStatusEnum;
 import com.ananops.imc.enums.TaskTypeEnum;
 import com.ananops.imc.mapper.AnImcInspectionItemMapper;
+import com.ananops.imc.mapper.AnImcInspectionTaskLogMapper;
 import com.ananops.imc.service.IAnImcInspectionItemService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -46,6 +47,9 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
 
     @Autowired
     private IAnImcInspectionItemService anImcInspectionItemService;
+
+    @Autowired
+    private AnImcInspectionTaskLogMapper anImcInspectionTaskLogMapper;
 
     /**
      * 查询巡检任务表
@@ -435,6 +439,20 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         }else throw new BusinessException("参数异常");
     }
 
+    /**
+     * 获取任务对应的全部操作日志
+     * @param taskId
+     * @return
+     */
+    public List<TaskLogDto> getTaskLogs(Long taskId){
+        List<TaskLogDto> taskLogDtos = anImcInspectionTaskLogMapper.getTaskLogs(taskId);
+        if(null != taskLogDtos && taskLogDtos.size()>0){
+            taskLogDtos.forEach(taskLogDto -> {
+                taskLogDto.setStatusMsg(TaskStatusEnum.getStatusMsg(taskLogDto.getStatus()));
+            });
+        }
+        return taskLogDtos;
+    }
 
     private List<ImcInspectionTaskDto> transform(List<AnImcInspectionTask> imcInspectionTasks){
         List<ImcInspectionTaskDto> imcInspectionTaskDtos = new ArrayList<>();
