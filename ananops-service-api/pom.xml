@@ -15,6 +15,7 @@
         <module>ananops-amc-api</module>
         <module>ananops-mdmc-api</module>
         <module>ananops-bmc-api</module>
+        <module>ananops-pmc-api</module>
     </modules>
     <dependencies>
         <dependency>

@@ -1,4 +1,4 @@
-package com.ananops.pmc;
+package com.ananops;
 
 import com.ananops.pmc.annotation.EnableRyFeignClients;
 import org.springframework.boot.SpringApplication;

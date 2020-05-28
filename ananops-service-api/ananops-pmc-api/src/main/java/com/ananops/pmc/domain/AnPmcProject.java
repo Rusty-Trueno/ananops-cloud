@@ -20,7 +20,7 @@ public class AnPmcProject extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /** ID 主键*/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

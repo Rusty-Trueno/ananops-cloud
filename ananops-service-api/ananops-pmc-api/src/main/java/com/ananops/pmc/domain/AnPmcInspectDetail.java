@@ -19,13 +19,13 @@ public class AnPmcInspectDetail extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /** ID 主键*/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    /** 版本号 */
+    @Excel(name = "版本号", readConverterExp = "$column.readConverterExp()")
     private String version;
 
     /** 名称 */
