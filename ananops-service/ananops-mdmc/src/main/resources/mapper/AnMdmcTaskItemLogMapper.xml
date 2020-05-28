@@ -19,10 +19,12 @@
         <result property="taskItemId"    column="task_item_id"    />
         <result property="statusTimestamp"    column="status_timestamp"    />
         <result property="remark"    column="remark"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
     </resultMap>
 
     <sql id="selectAnMdmcTaskItemLogVo">
-        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, task_id, status, movement, task_item_id, status_timestamp, remark from an_mdmc_task_item_log
+        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, task_id, status, movement, task_item_id, status_timestamp, remark,company_id,company_name from an_mdmc_task_item_log
     </sql>
 
     <select id="selectAnMdmcTaskItemLogList" parameterType="AnMdmcTaskItemLog" resultMap="AnMdmcTaskItemLogResult">
@@ -53,6 +55,8 @@
             <if test="taskItemId != null ">task_item_id,</if>
             <if test="statusTimestamp != null ">status_timestamp,</if>
             <if test="remark != null ">remark,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
         </trim>
     </insert>
 
@@ -72,6 +76,8 @@
             <if test="taskItemId != null ">task_item_id = #{taskItemId},</if>
             <if test="statusTimestamp != null ">status_timestamp = #{statusTimestamp},</if>
             <if test="remark != null ">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
         </trim>
         where id = #{id}
     </update>

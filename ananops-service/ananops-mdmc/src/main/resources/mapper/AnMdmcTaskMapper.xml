@@ -42,10 +42,15 @@
         <result property="result"    column="result"    />
         <result property="note"    column="note"    />
         <result property="remark"    column="remark"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
     </resultMap>
 
     <sql id="selectAnMdmcTaskVo">
-        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, object_type, object_id, user_id, principal_id, project_id, facilitator_id, maintainer_id, scheduled_finish_time, actual_finish_time, scheduled_start_time, actual_start_time, deadline, delay_reason, request_latitude, request_longitude, status, total_cost, clearing_form, title, contract_id, address_name, creator_call, trouble_reason, `level`, appoint_time, suggestion, result, note,remark from an_mdmc_task
+        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time,
+        object_type, object_id, user_id, principal_id, project_id, facilitator_id, maintainer_id,
+         scheduled_finish_time, actual_finish_time, scheduled_start_time, actual_start_time, deadline, delay_reason, request_latitude, request_longitude, status, total_cost, clearing_form, title, contract_id, address_name, creator_call, trouble_reason, `level`, appoint_time, suggestion, result,
+          note,remark,company_id,company_name from an_mdmc_task
     </sql>
 
     <select id="selectAnMdmcTaskList" parameterType="AnMdmcTask" resultMap="AnMdmcTaskResult">
@@ -161,6 +166,8 @@
             <if test="result != null  and result != ''">result,</if>
             <if test="note != null  and note != ''">note,</if>
             <if test="remark != null  and remark != ''">remark,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
         </trim>
     </insert>
 
@@ -203,6 +210,8 @@
             <if test="result != null  and result != ''">result = #{result},</if>
             <if test="note != null  and note != ''">note = #{note},</if>
             <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
         </trim>
         where id = #{id}
     </update>
@@ -246,15 +255,16 @@
         <if test="result != null  and result != ''">result = #{result},</if>
         <if test="note != null  and note != ''">note = #{note},</if>
         <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        <if test="companyId != null ">company_id = #{companyId},</if>
+        <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
     </trim>
     where
     (<if test="status == 3">task.status = 2 or task.status=14</if>
     <if test="status == 1">task.status = 2</if>
-    <if test="status == 4">task.status = 3 </if>
+    <if test="status == 4">task.status = 3 or task.status=5</if>
     <if test="status == 14">task.status = 3 </if>
-    <if test="status == 5">task.status = 4</if>
+    <if test="status == 5">task.status = 4 </if>
     <if test="status == 6">task.status = 5</if>
-    <if test="status == 15">task.status = 5</if>
     <if test="status == 11">task.status = 10</if>
     <if test="status == 13">task.status = 12</if>)
     and task.id = #{id}

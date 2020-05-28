@@ -38,7 +38,7 @@ public class AnMdmcReviewController extends BaseController
     /**
      * 查询工单评价表
      */
-    @ApiOperation(value = "根据工单id查询工单评价表")
+    @ApiOperation(value = "根据工单id查询工单评价，可测")
     @GetMapping("getReview/{id}")
     public AnMdmcReview get(@PathVariable("id") Long id)
     {
@@ -50,7 +50,7 @@ public class AnMdmcReviewController extends BaseController
     /**
      * 新增保存评价工单
      */
-    @ApiOperation(value = "新增保存评价工单")
+    @ApiOperation(value = "新增保存评价工单，可测")
     @PostMapping("save")
     public R addSave(@RequestBody MdmcAddReviewDto reviewDto)
     {

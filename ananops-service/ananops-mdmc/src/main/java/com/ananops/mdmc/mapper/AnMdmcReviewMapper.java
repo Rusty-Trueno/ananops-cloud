@@ -13,12 +13,12 @@ import java.util.List;
 public interface AnMdmcReviewMapper extends BaseMapper<AnMdmcReview>
 {
     /**
-     * 查询评价工单
+     * 根据工单id查询工单评价
      *
-     * @param id 评价工单ID
+     * @param id 工单ID
      * @return 评价工单
      */
-    public AnMdmcReview selectAnMdmcReviewById(Long id);
+    public AnMdmcReview selectAnMdmcReviewByTaskId(Long id);
 
     /**
      * 查询评价工单列表

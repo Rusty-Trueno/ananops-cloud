@@ -2,6 +2,8 @@ package com.ananops.mdmc.mapper;
 
 import com.ananops.common.core.dao.BaseMapper;
 import com.ananops.mdmc.domain.AnMdmcTaskLog;
+import com.ananops.mdmc.dto.MdmcQueryDto;
+
 import java.util.List;
 
 /**
@@ -21,12 +23,12 @@ public interface AnMdmcTaskLogMapper extends BaseMapper<AnMdmcTaskLog>
     public AnMdmcTaskLog selectAnMdmcTaskLogById(Long id);
 
     /**
-     * 查询维修工单日志列表
+     * 根据工单id查询维修工单日志列表
      *
-     * @param anMdmcTaskLog 维修工单日志
+     * @param taskId 维修工单日志
      * @return 维修工单日志集合
      */
-    public List<AnMdmcTaskLog> selectAnMdmcTaskLogList(AnMdmcTaskLog anMdmcTaskLog);
+    public List<AnMdmcTaskLog> selectAnMdmcTaskLogListByTaskId(Long taskId);
 
     /**
      * 新增维修工单日志

@@ -1,5 +1,6 @@
 package com.ananops.mdmc.controller;
 
+import com.ananops.mdmc.dto.MdmcQueryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,8 @@ import com.ananops.common.core.controller.BaseController;
 import com.ananops.mdmc.domain.AnMdmcTaskLog;
 import com.ananops.mdmc.service.IAnMdmcTaskLogService;
 
+import javax.annotation.Resource;
+
 /**
  * 维修工单日志 提供者
  *
@@ -23,45 +26,33 @@ import com.ananops.mdmc.service.IAnMdmcTaskLogService;
  * @date 2020-05-25
  */
 @RestController
-@RequestMapping("维修工单日志")
+@RequestMapping("mdmcLog")
 @Api("维修工单日志")
 public class AnMdmcTaskLogController extends BaseController
 {
 
-    @Autowired
+    @Resource
     private IAnMdmcTaskLogService anMdmcTaskLogService;
 
-    /**
-     * 查询维修工单日志表
-     */
-    @ApiOperation(value = "查询维修工单日志表")
-    @GetMapping("get/{id}")
-    public AnMdmcTaskLog get(@PathVariable("id") Long id)
-    {
-        return anMdmcTaskLogService.selectAnMdmcTaskLogById(id);
-
-    }
+//    /**
+//     * 查询维修工单日志表
+//     */
+//    @ApiOperation(value = "查询维修工单日志表")
+//    @GetMapping("get/{id}")
+//    public AnMdmcTaskLog get(@PathVariable("id") Long id)
+//    {
+//        return anMdmcTaskLogService.selectAnMdmcTaskLogById(id);
+//
+//    }
 
     /**
      * 查询维修工单日志列表
      */
-    @ApiOperation(value = "查询维修工单日志列表")
-    @GetMapping("list")
-    public R list(AnMdmcTaskLog anMdmcTaskLog)
+    @ApiOperation(value = "根据工单ID查询维修工单日志列表,可测")
+    @PostMapping("getTaskLogs")
+    public R list(@RequestBody MdmcQueryDto queryDto)
     {
-        startPage();
-        return result(anMdmcTaskLogService.selectAnMdmcTaskLogList(anMdmcTaskLog));
-    }
-
-
-    /**
-     * 新增保存维修工单日志
-     */
-    @ApiOperation(value = "新增保存维修工单日志")
-    @PostMapping("save")
-    public R addSave(@RequestBody AnMdmcTaskLog anMdmcTaskLog)
-    {
-        return toAjax(anMdmcTaskLogService.insertAnMdmcTaskLog(anMdmcTaskLog));
+        return result(anMdmcTaskLogService.selectAnMdmcTaskLogList(queryDto));
     }
 
     /**

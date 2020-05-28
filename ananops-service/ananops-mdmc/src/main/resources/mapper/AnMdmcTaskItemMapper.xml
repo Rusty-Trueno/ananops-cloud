@@ -30,10 +30,13 @@
         <result property="troubleType"    column="trouble_type"    />
         <result property="troubleAddress"    column="trouble_address"    />
         <result property="remark"    column="remark"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
     </resultMap>
 
     <sql id="selectAnMdmcTaskItemVo">
-        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, task_id, device_id, device_name, actual_finish_time, actual_start_time, description, `level`, device_latitude, device_longitude, maintainer_id, status, suggestion, result, device_type, trouble_type, trouble_address ,remark from an_mdmc_task_item
+        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, task_id, device_id, device_name, actual_finish_time, actual_start_time, description, `level`, device_latitude, device_longitude, maintainer_id, status, suggestion, result, device_type, trouble_type, trouble_address,remark,
+        company_id,company_name from an_mdmc_task_item
     </sql>
 
     <select id="selectAnMdmcTaskItemList" parameterType="AnMdmcTaskItem" resultMap="AnMdmcTaskItemResult">
@@ -46,6 +49,14 @@
     <select id="selectAnMdmcTaskItemById" parameterType="Long" resultMap="AnMdmcTaskItemResult">
         <include refid="selectAnMdmcTaskItemVo"/>
         where id = #{id}
+    </select>
+
+    <select id="selectAnMdmcTaskItemByTaskId" parameterType="Long" resultMap="AnMdmcTaskItemResult">
+        <include refid="selectAnMdmcTaskItemVo"/>
+        as item
+        where
+        item.task_id = #{id}
+        order by item.update_time
     </select>
 
     <insert id="insertAnMdmcTaskItem" parameterType="AnMdmcTaskItem">
@@ -75,7 +86,9 @@
             <if test="deviceType != null  and deviceType != ''">device_type,</if>
             <if test="troubleType != null  and troubleType != ''">trouble_type,</if>
             <if test="troubleAddress != null  and troubleAddress != ''">trouble_address,</if>
-            <if test="remark != null  and remark != ''">device_type,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
         </trim>
     </insert>
 
@@ -106,6 +119,8 @@
             <if test="troubleType != null  and troubleType != ''">trouble_type = #{troubleType},</if>
             <if test="troubleAddress != null  and troubleAddress != ''">trouble_address = #{troubleAddress},</if>
             <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
         </trim>
         where id = #{id}
     </update>

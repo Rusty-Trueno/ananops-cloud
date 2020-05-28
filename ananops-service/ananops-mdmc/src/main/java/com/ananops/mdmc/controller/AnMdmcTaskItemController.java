@@ -37,7 +37,7 @@ public class AnMdmcTaskItemController extends BaseController
     /**
      * 查询维修任务子项
      */
-    @ApiOperation(value = "根据子项id查看维修任务子项详情")
+    @ApiOperation(value = "根据子项id查看维修任务子项详情，可测")
     @GetMapping("get/{id}")
     public AnMdmcTaskItem get(@PathVariable("id") Long id)
     {
@@ -48,7 +48,7 @@ public class AnMdmcTaskItemController extends BaseController
     /**
      * 查询维修任务子项列表
      */
-    @ApiOperation(value = "根据工单id查询维修任务子项列表")
+    @ApiOperation(value = "根据工单id查询维修任务子项列表，可测")
     @PostMapping("getItemList")
     public R list(@RequestBody MdmcQueryDto queryDto)
     {
@@ -59,7 +59,7 @@ public class AnMdmcTaskItemController extends BaseController
     /**
      * 新增保存维修任务子项
      */
-    @ApiOperation(value = "新增保存维修任务子项")
+    @ApiOperation(value = "新增保存维修任务子项，可测")
     @PostMapping("save")
     public R addSave(@RequestBody MdmcAddTaskItemDto itemDto)
     {
@@ -70,7 +70,7 @@ public class AnMdmcTaskItemController extends BaseController
     /**
      * 修改保存维修任务子项
      */
-    @ApiOperation(value = "修改保存维修任务子项")
+    @ApiOperation(value = "修改保存维修任务子项，可测")
     @PostMapping("update")
     public R editSave(@RequestBody MdmcAddTaskItemDto itemDto)
     {
@@ -81,7 +81,7 @@ public class AnMdmcTaskItemController extends BaseController
     /**
      * 删除维修任务子项
      */
-    @ApiOperation(value = "删除维修任务子项")
+    @ApiOperation(value = "删除维修任务子项，可测")
     @PostMapping("remove/{id}")
     public R remove(@PathVariable("id") Long id)
     {

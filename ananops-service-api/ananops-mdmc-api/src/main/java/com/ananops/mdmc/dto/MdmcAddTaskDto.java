@@ -19,9 +19,6 @@ public class MdmcAddTaskDto implements Serializable {
     @ApiModelProperty("维修任务ID")
     private Long id;
 
-    @ApiModelProperty("维修任务下一状态")
-    private Integer status;
-
     @ApiModelProperty("维修任务名称")
     private String title;
 

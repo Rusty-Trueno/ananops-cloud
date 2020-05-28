@@ -17,10 +17,12 @@
         <result property="attachmentId"    column="attachment_id"    />
         <result property="taskId"    column="task_id"    />
         <result property="remark"    column="remark"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
     </resultMap>
 
     <sql id="selectAnMdmcFileTaskStatusVo">
-        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, status, attachment_id, task_id ,remark from an_mdmc_file_task_status
+        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, status, attachment_id, task_id ,remark,company_id,company_name from an_mdmc_file_task_status
     </sql>
 
     <select id="selectAnMdmcFileTaskStatusList" parameterType="AnMdmcFileTaskStatus" resultMap="AnMdmcFileTaskStatusResult">
@@ -49,6 +51,8 @@
             <if test="attachmentId != null ">attachment_id,</if>
             <if test="taskId != null ">task_id,</if>
             <if test="remark != null ">remark,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
         </trim>
     </insert>
 
@@ -66,6 +70,8 @@
             <if test="attachmentId != null ">attachment_id = #{attachmentId},</if>
             <if test="taskId != null ">task_id = #{taskId},</if>
             <if test="remark != null ">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
         </trim>
         where id = #{id}
     </update>

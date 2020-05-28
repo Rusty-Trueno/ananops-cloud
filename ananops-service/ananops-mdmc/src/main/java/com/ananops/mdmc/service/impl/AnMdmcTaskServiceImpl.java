@@ -166,7 +166,7 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
     }
 
     /**
-     * 修改维修工单
+     * 上传维修结果
      *
      * @param updateTaskDto 维修工单
      * @return 结果
@@ -181,7 +181,7 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
         if(anMdmcTaskMapper.selectByPrimaryKey(taskId)==null){
             throw new BusinessException("当前工单不存在");
         }
-        Integer status=updateTaskDto.getStatus();
+        task.setStatus(MdmcTaskStatusEnum.ShenHeZhong2.getStatusNum());
         if(anMdmcTaskMapper.updateTaskStatus(task)<=0){
             throw new BusinessException("工单更改状态失败");
         }
@@ -242,7 +242,7 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
         AnMdmcTask task=new AnMdmcTask();
         task.setStatus(status);
         task.setId(changeStatusDto.getTaskId());
-        UpdateInfoUtil.setInsertInfo(task,loginAuthDto);
+        UpdateInfoUtil.setModifyInfo(task,loginAuthDto);
         if(anMdmcTaskMapper.updateTaskStatus(task)<=0){
             throw new BusinessException("工单更改状态失败");
         }
