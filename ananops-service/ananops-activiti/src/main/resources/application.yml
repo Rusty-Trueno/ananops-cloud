@@ -21,7 +21,7 @@ spring:
   activiti:
     check-process-definitions: false
   datasource:
-    url: jdbc:mysql://ananops-db-mysql:3306/ananops_cloud_activiti?useUnicode=true&characterEncoding=utf8&nullCatalogMeansCurrent=true&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    url: jdbc:mysql://ananops-db-mysql:3306/ananops_cloud?useUnicode=true&characterEncoding=utf8&nullCatalogMeansCurrent=true&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
     username: root
     password: 123456
 

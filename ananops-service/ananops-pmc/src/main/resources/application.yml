@@ -1,0 +1,10 @@
+server:
+  port: 8300
+spring:
+  application:
+    name: ananops-pmc
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true

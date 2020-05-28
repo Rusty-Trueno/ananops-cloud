@@ -90,7 +90,9 @@ public class SysLoginService
                     MessageUtils.message("user.blocked", user.getRemark()));
             throw new UserBlockedException();
         }
-        if (!PasswordUtil.matches(user, password))
+
+        //增加原来的判断方式
+        if (!PasswordUtil.matches(user, password) && !PasswordUtil.matches(password,user.getPassword()))
         {
             throw new UserPasswordNotMatchException();
         }

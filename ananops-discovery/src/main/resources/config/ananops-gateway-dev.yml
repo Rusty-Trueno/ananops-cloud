@@ -14,7 +14,7 @@ spring:
   cloud:
     gateway:
       #白名单列表
-      whiteList: /auth/login,/user/register,/system/v2/api-docs,/imc/v2/api-docs,/amc/v2/api-docs,/mdmc/v2/api-docs,/bmc/v2/api-docs
+      whiteList: /auth/login,/user/register,/system/v2/api-docs,/imc/v2/api-docs,/pmc/v2/api-docs,/amc/v2/api-docs,/mdmc/v2/api-docs,/bmc/v2/api-docs
       discovery:
         locator:
           enabled: true
@@ -81,6 +81,19 @@ spring:
               args:
                 name: fallbackcmd
                 fallbackUri: 'forward:/fallback'
+        #pmc 模块
+        - id: ananops-pmc
+          uri: lb://ananops-pmc
+          predicates:
+            - Path=/pmc/**
+          filters:
+            # 限流配置
+            - StripPrefix=1
+            # 降级配置
+            - name: Hystrix
+              args:
+                name: fallbackcmd
+                fallbackUri: 'forward:/fallback'
         # amc 模块
         - id: ananops-amc
           uri: lb://ananops-amc
@@ -120,5 +133,3 @@ spring:
               args:
                 name: fallbackcmd
                 fallbackUri: 'forward:/fallback'
-
-

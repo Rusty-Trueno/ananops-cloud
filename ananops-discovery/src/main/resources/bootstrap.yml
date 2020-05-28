@@ -6,7 +6,7 @@ spring:
     config:
       server:
         native:
-          search-locations: /home/ananops-cloud/ananops-config-repo
+          search-locations: C:/Users/10746/Desktop/java_projects/ananops-cloud-config-repo/config
 #          search-locations: E:/GitHub/ananops-config-repo
 
 # 注册中心配置

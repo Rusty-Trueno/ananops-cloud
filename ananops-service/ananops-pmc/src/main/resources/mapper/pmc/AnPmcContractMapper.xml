@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ananops.pmc.mapper.AnPmcContractMapper">
+    
+    <resultMap type="AnPmcContract" id="AnPmcContractResult">
+        <result property="id"    column="id"    />
+        <result property="version"    column="version"    />
+        <result property="contractCode"    column="contract_code"    />
+        <result property="contractName"    column="contract_name"    />
+        <result property="contractType"    column="contract_type"    />
+        <result property="partyAId"    column="party_a_id"    />
+        <result property="partyAName"    column="party_a_name"    />
+        <result property="aLegalName"    column="a_legal_name"    />
+        <result property="partyBId"    column="party_b_id"    />
+        <result property="partyBName"    column="party_b_name"    />
+        <result property="bLegalName"    column="b_legal_name"    />
+        <result property="bankName"    column="bank_name"    />
+        <result property="bankAccount"    column="bank_account"    />
+        <result property="signTime"    column="sign_time"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="isPostpone"    column="is_postpone"    />
+        <result property="paymentType"    column="payment_type"    />
+        <result property="paymentMoney"    column="payment_money"    />
+        <result property="projectMoney"    column="project_money"    />
+        <result property="paymentTime"    column="payment_time"    />
+        <result property="deviceCount"    column="device_count"    />
+        <result property="agentContent"    column="agent_content"    />
+        <result property="isSparePart"    column="is_spare_part"    />
+        <result property="isSpareService"    column="is_spare_service"    />
+        <result property="assitMoney"    column="assit_money"    />
+        <result property="lastResponseTime"    column="last_response_time"    />
+        <result property="verification"    column="verification"    />
+        <result property="recordTime"    column="record_time"    />
+        <result property="isChange"    column="is_change"    />
+        <result property="isDestory"    column="is_destory"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="description"    column="description"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="lastOperator"    column="last_operator"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectAnPmcContractVo">
+        select id, version, contract_code, contract_name, contract_type, party_a_id, party_a_name, a_legal_name, party_b_id, party_b_name, b_legal_name, bank_name, bank_account, sign_time, start_time, end_time, is_postpone, payment_type, payment_money, project_money, payment_time, device_count, agent_content, is_spare_part, is_spare_service, assit_money, last_response_time, verification, record_time, is_change, is_destory, file_path, description, creator_id, create_by, create_time, last_operator, update_by, update_time, remark from an_pmc_contract
+    </sql>
+
+    <select id="selectAnPmcContractList" parameterType="AnPmcContract" resultMap="AnPmcContractResult">
+        <include refid="selectAnPmcContractVo"/>
+        <where>  
+            <if test="contractName != null  and contractName != ''"> and contract_name like concat('%', #{contractName}, '%')</if>
+            <if test="partyAName != null  and partyAName != ''"> and party_a_name like concat('%', #{partyAName}, '%')</if>
+            <if test="aLegalName != null  and aLegalName != ''"> and a_legal_name like concat('%', #{aLegalName}, '%')</if>
+            <if test="partyBName != null  and partyBName != ''"> and party_b_name like concat('%', #{partyBName}, '%')</if>
+            <if test="bLegalName != null  and bLegalName != ''"> and b_legal_name like concat('%', #{bLegalName}, '%')</if>
+            <if test="bankName != null  and bankName != ''"> and bank_name like concat('%', #{bankName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectAnPmcContractById" parameterType="Long" resultMap="AnPmcContractResult">
+        <include refid="selectAnPmcContractVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAnPmcContract" parameterType="AnPmcContract" useGeneratedKeys="true" keyProperty="id">
+        insert into an_pmc_contract
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="version != null  and version != ''">version,</if>
+            <if test="contractCode != null  and contractCode != ''">contract_code,</if>
+            <if test="contractName != null  and contractName != ''">contract_name,</if>
+            <if test="contractType != null  and contractType != ''">contract_type,</if>
+            <if test="partyAId != null ">party_a_id,</if>
+            <if test="partyAName != null  and partyAName != ''">party_a_name,</if>
+            <if test="aLegalName != null  and aLegalName != ''">a_legal_name,</if>
+            <if test="partyBId != null ">party_b_id,</if>
+            <if test="partyBName != null  and partyBName != ''">party_b_name,</if>
+            <if test="bLegalName != null  and bLegalName != ''">b_legal_name,</if>
+            <if test="bankName != null  and bankName != ''">bank_name,</if>
+            <if test="bankAccount != null  and bankAccount != ''">bank_account,</if>
+            <if test="signTime != null ">sign_time,</if>
+            <if test="startTime != null ">start_time,</if>
+            <if test="endTime != null ">end_time,</if>
+            <if test="isPostpone != null ">is_postpone,</if>
+            <if test="paymentType != null ">payment_type,</if>
+            <if test="paymentMoney != null ">payment_money,</if>
+            <if test="projectMoney != null ">project_money,</if>
+            <if test="paymentTime != null ">payment_time,</if>
+            <if test="deviceCount != null ">device_count,</if>
+            <if test="agentContent != null  and agentContent != ''">agent_content,</if>
+            <if test="isSparePart != null ">is_spare_part,</if>
+            <if test="isSpareService != null ">is_spare_service,</if>
+            <if test="assitMoney != null ">assit_money,</if>
+            <if test="lastResponseTime != null ">last_response_time,</if>
+            <if test="verification != null  and verification != ''">verification,</if>
+            <if test="recordTime != null ">record_time,</if>
+            <if test="isChange != null ">is_change,</if>
+            <if test="isDestory != null ">is_destory,</if>
+            <if test="filePath != null  and filePath != ''">file_path,</if>
+            <if test="description != null  and description != ''">description,</if>
+            <if test="creatorId != null ">creator_id,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="lastOperator != null  and lastOperator != ''">last_operator,</if>
+            <if test="updateBy != null ">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnPmcContract" parameterType="AnPmcContract">
+        update an_pmc_contract
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="version != null  and version != ''">version = #{version},</if>
+            <if test="contractCode != null  and contractCode != ''">contract_code = #{contractCode},</if>
+            <if test="contractName != null  and contractName != ''">contract_name = #{contractName},</if>
+            <if test="contractType != null  and contractType != ''">contract_type = #{contractType},</if>
+            <if test="partyAId != null ">party_a_id = #{partyAId},</if>
+            <if test="partyAName != null  and partyAName != ''">party_a_name = #{partyAName},</if>
+            <if test="aLegalName != null  and aLegalName != ''">a_legal_name = #{aLegalName},</if>
+            <if test="partyBId != null ">party_b_id = #{partyBId},</if>
+            <if test="partyBName != null  and partyBName != ''">party_b_name = #{partyBName},</if>
+            <if test="bLegalName != null  and bLegalName != ''">b_legal_name = #{bLegalName},</if>
+            <if test="bankName != null  and bankName != ''">bank_name = #{bankName},</if>
+            <if test="bankAccount != null  and bankAccount != ''">bank_account = #{bankAccount},</if>
+            <if test="signTime != null ">sign_time = #{signTime},</if>
+            <if test="startTime != null ">start_time = #{startTime},</if>
+            <if test="endTime != null ">end_time = #{endTime},</if>
+            <if test="isPostpone != null ">is_postpone = #{isPostpone},</if>
+            <if test="paymentType != null ">payment_type = #{paymentType},</if>
+            <if test="paymentMoney != null ">payment_money = #{paymentMoney},</if>
+            <if test="projectMoney != null ">project_money = #{projectMoney},</if>
+            <if test="paymentTime != null ">payment_time = #{paymentTime},</if>
+            <if test="deviceCount != null ">device_count = #{deviceCount},</if>
+            <if test="agentContent != null  and agentContent != ''">agent_content = #{agentContent},</if>
+            <if test="isSparePart != null ">is_spare_part = #{isSparePart},</if>
+            <if test="isSpareService != null ">is_spare_service = #{isSpareService},</if>
+            <if test="assitMoney != null ">assit_money = #{assitMoney},</if>
+            <if test="lastResponseTime != null ">last_response_time = #{lastResponseTime},</if>
+            <if test="verification != null  and verification != ''">verification = #{verification},</if>
+            <if test="recordTime != null ">record_time = #{recordTime},</if>
+            <if test="isChange != null ">is_change = #{isChange},</if>
+            <if test="isDestory != null ">is_destory = #{isDestory},</if>
+            <if test="filePath != null  and filePath != ''">file_path = #{filePath},</if>
+            <if test="description != null  and description != ''">description = #{description},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="lastOperator != null  and lastOperator != ''">last_operator = #{lastOperator},</if>
+            <if test="updateBy != null ">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnPmcContractById" parameterType="Long">
+        delete from an_pmc_contract where id = #{id}
+    </delete>
+
+    <delete id="deleteAnPmcContractByIds" parameterType="String">
+        delete from an_pmc_contract where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
