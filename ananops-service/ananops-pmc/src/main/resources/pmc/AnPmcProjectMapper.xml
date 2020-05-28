@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ananops.pmc.mapper.AnPmcProjectMapper">
+    
+    <resultMap type="AnPmcProject" id="AnPmcProjectResult">
+        <result property="id"    column="id"    />
+        <result property="version"    column="version"    />
+        <result property="contractId"    column="contract_id"    />
+        <result property="contractName"    column="contract_name"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="projectType"    column="project_type"    />
+        <result property="isContract"    column="is_contract"    />
+        <result property="partyAId"    column="party_a_id"    />
+        <result property="partyAName"    column="party_a_name"    />
+        <result property="partyBId"    column="party_b_id"    />
+        <result property="partyBName"    column="party_b_name"    />
+        <result property="aLeaderId"    column="a_leader_id"    />
+        <result property="aLeaderName"    column="a_leader_name"    />
+        <result property="aLeaderTel"    column="a_leader_tel"    />
+        <result property="aOneName"    column="a_one_name"    />
+        <result property="partyAOne"    column="party_a_one"    />
+        <result property="aTwoName"    column="a_two_name"    />
+        <result property="partyATwo"    column="party_a_two"    />
+        <result property="aThreeName"    column="a_three_name"    />
+        <result property="partyAThree"    column="party_a_three"    />
+        <result property="bLeaderId"    column="b_leader_id"    />
+        <result property="bLeaderName"    column="b_leader_name"    />
+        <result property="bLeaderTel"    column="b_leader_tel"    />
+        <result property="partyBTel"    column="party_b_tel"    />
+        <result property="partyBPhone"    column="party_b_phone"    />
+        <result property="partyBEmail"    column="party_b_email"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="isDestroy"    column="is_destroy"    />
+        <result property="description"    column="description"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="lastOperator"    column="last_operator"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectAnPmcProjectVo">
+        select id, version, contract_id, contract_name, project_name, project_type, is_contract, party_a_id, party_a_name, party_b_id, party_b_name, a_leader_id, a_leader_name, a_leader_tel, a_one_name, party_a_one, a_two_name, party_a_two, a_three_name, party_a_three, b_leader_id, b_leader_name, b_leader_tel, party_b_tel, party_b_phone, party_b_email, start_time, end_time, is_destroy, description, create_by, creator_id, create_time, last_operator, update_by, update_time from an_pmc_project
+    </sql>
+
+    <select id="selectAnPmcProjectList" parameterType="AnPmcProject" resultMap="AnPmcProjectResult">
+        <include refid="selectAnPmcProjectVo"/>
+        <where>  
+            <if test="contractName != null  and contractName != ''"> and contract_name like concat('%', #{contractName}, '%')</if>
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="partyAName != null  and partyAName != ''"> and party_a_name like concat('%', #{partyAName}, '%')</if>
+            <if test="partyBName != null  and partyBName != ''"> and party_b_name like concat('%', #{partyBName}, '%')</if>
+            <if test="aLeaderName != null  and aLeaderName != ''"> and a_leader_name like concat('%', #{aLeaderName}, '%')</if>
+            <if test="aOneName != null  and aOneName != ''"> and a_one_name like concat('%', #{aOneName}, '%')</if>
+            <if test="aTwoName != null  and aTwoName != ''"> and a_two_name like concat('%', #{aTwoName}, '%')</if>
+            <if test="aThreeName != null  and aThreeName != ''"> and a_three_name like concat('%', #{aThreeName}, '%')</if>
+            <if test="bLeaderName != null  and bLeaderName != ''"> and b_leader_name like concat('%', #{bLeaderName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectAnPmcProjectById" parameterType="Long" resultMap="AnPmcProjectResult">
+        <include refid="selectAnPmcProjectVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAnPmcProject" parameterType="AnPmcProject" useGeneratedKeys="true" keyProperty="id">
+        insert into an_pmc_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="version != null ">version,</if>
+            <if test="contractId != null ">contract_id,</if>
+            <if test="contractName != null  and contractName != ''">contract_name,</if>
+            <if test="projectName != null  and projectName != ''">project_name,</if>
+            <if test="projectType != null  and projectType != ''">project_type,</if>
+            <if test="isContract != null ">is_contract,</if>
+            <if test="partyAId != null ">party_a_id,</if>
+            <if test="partyAName != null  and partyAName != ''">party_a_name,</if>
+            <if test="partyBId != null ">party_b_id,</if>
+            <if test="partyBName != null  and partyBName != ''">party_b_name,</if>
+            <if test="aLeaderId != null ">a_leader_id,</if>
+            <if test="aLeaderName != null  and aLeaderName != ''">a_leader_name,</if>
+            <if test="aLeaderTel != null  and aLeaderTel != ''">a_leader_tel,</if>
+            <if test="aOneName != null  and aOneName != ''">a_one_name,</if>
+            <if test="partyAOne != null  and partyAOne != ''">party_a_one,</if>
+            <if test="aTwoName != null  and aTwoName != ''">a_two_name,</if>
+            <if test="partyATwo != null  and partyATwo != ''">party_a_two,</if>
+            <if test="aThreeName != null  and aThreeName != ''">a_three_name,</if>
+            <if test="partyAThree != null  and partyAThree != ''">party_a_three,</if>
+            <if test="bLeaderId != null ">b_leader_id,</if>
+            <if test="bLeaderName != null  and bLeaderName != ''">b_leader_name,</if>
+            <if test="bLeaderTel != null  and bLeaderTel != ''">b_leader_tel,</if>
+            <if test="partyBTel != null  and partyBTel != ''">party_b_tel,</if>
+            <if test="partyBPhone != null  and partyBPhone != ''">party_b_phone,</if>
+            <if test="partyBEmail != null  and partyBEmail != ''">party_b_email,</if>
+            <if test="startTime != null ">start_time,</if>
+            <if test="endTime != null ">end_time,</if>
+            <if test="isDestroy != null ">is_destroy,</if>
+            <if test="description != null  and description != ''">description,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="creatorId != null ">creator_id,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="lastOperator != null  and lastOperator != ''">last_operator,</if>
+            <if test="updateBy != null ">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnPmcProject" parameterType="AnPmcProject">
+        update an_pmc_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="version != null ">version = #{version},</if>
+            <if test="contractId != null ">contract_id = #{contractId},</if>
+            <if test="contractName != null  and contractName != ''">contract_name = #{contractName},</if>
+            <if test="projectName != null  and projectName != ''">project_name = #{projectName},</if>
+            <if test="projectType != null  and projectType != ''">project_type = #{projectType},</if>
+            <if test="isContract != null ">is_contract = #{isContract},</if>
+            <if test="partyAId != null ">party_a_id = #{partyAId},</if>
+            <if test="partyAName != null  and partyAName != ''">party_a_name = #{partyAName},</if>
+            <if test="partyBId != null ">party_b_id = #{partyBId},</if>
+            <if test="partyBName != null  and partyBName != ''">party_b_name = #{partyBName},</if>
+            <if test="aLeaderId != null ">a_leader_id = #{aLeaderId},</if>
+            <if test="aLeaderName != null  and aLeaderName != ''">a_leader_name = #{aLeaderName},</if>
+            <if test="aLeaderTel != null  and aLeaderTel != ''">a_leader_tel = #{aLeaderTel},</if>
+            <if test="aOneName != null  and aOneName != ''">a_one_name = #{aOneName},</if>
+            <if test="partyAOne != null  and partyAOne != ''">party_a_one = #{partyAOne},</if>
+            <if test="aTwoName != null  and aTwoName != ''">a_two_name = #{aTwoName},</if>
+            <if test="partyATwo != null  and partyATwo != ''">party_a_two = #{partyATwo},</if>
+            <if test="aThreeName != null  and aThreeName != ''">a_three_name = #{aThreeName},</if>
+            <if test="partyAThree != null  and partyAThree != ''">party_a_three = #{partyAThree},</if>
+            <if test="bLeaderId != null ">b_leader_id = #{bLeaderId},</if>
+            <if test="bLeaderName != null  and bLeaderName != ''">b_leader_name = #{bLeaderName},</if>
+            <if test="bLeaderTel != null  and bLeaderTel != ''">b_leader_tel = #{bLeaderTel},</if>
+            <if test="partyBTel != null  and partyBTel != ''">party_b_tel = #{partyBTel},</if>
+            <if test="partyBPhone != null  and partyBPhone != ''">party_b_phone = #{partyBPhone},</if>
+            <if test="partyBEmail != null  and partyBEmail != ''">party_b_email = #{partyBEmail},</if>
+            <if test="startTime != null ">start_time = #{startTime},</if>
+            <if test="endTime != null ">end_time = #{endTime},</if>
+            <if test="isDestroy != null ">is_destroy = #{isDestroy},</if>
+            <if test="description != null  and description != ''">description = #{description},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="lastOperator != null  and lastOperator != ''">last_operator = #{lastOperator},</if>
+            <if test="updateBy != null ">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnPmcProjectById" parameterType="Long">
+        delete from an_pmc_project where id = #{id}
+    </delete>
+
+    <delete id="deleteAnPmcProjectByIds" parameterType="String">
+        delete from an_pmc_project where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

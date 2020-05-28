@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import java.util.Date;
 
 /**
- * 合同对象 an_pmc_contract
+ * 【请填写功能名称】对象 an_pmc_contract
  * 
  * @author ananops
  * @date 2020-05-28
@@ -20,7 +20,7 @@ public class AnPmcContract extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** Id */
+    /** Id 主键*/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -431,9 +431,9 @@ public class AnPmcContract extends BaseEntity
     {
         return isChange;
     }
-    public void setIsDestroy(Integer isDestory)
+    public void setIsDestroy(Integer isDestroy)
     {
-        this.isDestroy = isDestory;
+        this.isDestroy = isDestroy;
     }
 
     public Integer getIsDestroy()
@@ -510,7 +510,7 @@ public class AnPmcContract extends BaseEntity
             .append("verification", getVerification())
             .append("recordTime", getRecordTime())
             .append("isChange", getIsChange())
-            .append("isDestory", getIsDestroy())
+            .append("isDestroy", getIsDestroy())
             .append("filePath", getFilePath())
             .append("description", getDescription())
             .append("creatorId", getCreatorId())

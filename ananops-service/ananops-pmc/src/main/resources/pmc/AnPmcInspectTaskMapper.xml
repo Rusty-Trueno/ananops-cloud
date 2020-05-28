@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ananops.pmc.mapper.AnPmcInspectTaskMapper">
+    
+    <resultMap type="AnPmcInspectTask" id="AnPmcInspectTaskResult">
+        <result property="id"    column="id"    />
+        <result property="version"    column="version"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="taskName"    column="task_name"    />
+        <result property="taskType"    column="task_type"    />
+        <result property="inspectionContent"    column="inspection_content"    />
+        <result property="inspectionCondition"    column="inspection_condition"    />
+        <result property="dealResult"    column="deal_result"    />
+        <result property="cycleTime"    column="cycle_time"    />
+        <result property="scheduledStartTime"    column="scheduled_start_time"    />
+        <result property="deadlineTime"    column="deadline_time"    />
+        <result property="scheduledFinishTime"    column="scheduled_finish_time"    />
+        <result property="isNow"    column="is_now"    />
+        <result property="description"    column="description"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="lastOperator"    column="last_operator"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectAnPmcInspectTaskVo">
+        select id, version, project_id, project_name, task_name, task_type, inspection_content, inspection_condition, deal_result, cycle_time, scheduled_start_time, deadline_time, scheduled_finish_time, is_now, description, create_by, creator_id, create_time, last_operator, update_by, update_time from an_pmc_inspect_task
+    </sql>
+
+    <select id="selectAnPmcInspectTaskList" parameterType="AnPmcInspectTask" resultMap="AnPmcInspectTaskResult">
+        <include refid="selectAnPmcInspectTaskVo"/>
+        <where>  
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="taskName != null  and taskName != ''"> and task_name like concat('%', #{taskName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectAnPmcInspectTaskById" parameterType="Long" resultMap="AnPmcInspectTaskResult">
+        <include refid="selectAnPmcInspectTaskVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAnPmcInspectTask" parameterType="AnPmcInspectTask" useGeneratedKeys="true" keyProperty="id">
+        insert into an_pmc_inspect_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="version != null  and version != ''">version,</if>
+            <if test="projectId != null ">project_id,</if>
+            <if test="projectName != null  and projectName != ''">project_name,</if>
+            <if test="taskName != null  and taskName != ''">task_name,</if>
+            <if test="taskType != null  and taskType != ''">task_type,</if>
+            <if test="inspectionContent != null  and inspectionContent != ''">inspection_content,</if>
+            <if test="inspectionCondition != null  and inspectionCondition != ''">inspection_condition,</if>
+            <if test="dealResult != null  and dealResult != ''">deal_result,</if>
+            <if test="cycleTime != null ">cycle_time,</if>
+            <if test="scheduledStartTime != null ">scheduled_start_time,</if>
+            <if test="deadlineTime != null ">deadline_time,</if>
+            <if test="scheduledFinishTime != null ">scheduled_finish_time,</if>
+            <if test="isNow != null ">is_now,</if>
+            <if test="description != null  and description != ''">description,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="creatorId != null ">creator_id,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="lastOperator != null  and lastOperator != ''">last_operator,</if>
+            <if test="updateBy != null ">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnPmcInspectTask" parameterType="AnPmcInspectTask">
+        update an_pmc_inspect_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="version != null  and version != ''">version = #{version},</if>
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="projectName != null  and projectName != ''">project_name = #{projectName},</if>
+            <if test="taskName != null  and taskName != ''">task_name = #{taskName},</if>
+            <if test="taskType != null  and taskType != ''">task_type = #{taskType},</if>
+            <if test="inspectionContent != null  and inspectionContent != ''">inspection_content = #{inspectionContent},</if>
+            <if test="inspectionCondition != null  and inspectionCondition != ''">inspection_condition = #{inspectionCondition},</if>
+            <if test="dealResult != null  and dealResult != ''">deal_result = #{dealResult},</if>
+            <if test="cycleTime != null ">cycle_time = #{cycleTime},</if>
+            <if test="scheduledStartTime != null ">scheduled_start_time = #{scheduledStartTime},</if>
+            <if test="deadlineTime != null ">deadline_time = #{deadlineTime},</if>
+            <if test="scheduledFinishTime != null ">scheduled_finish_time = #{scheduledFinishTime},</if>
+            <if test="isNow != null ">is_now = #{isNow},</if>
+            <if test="description != null  and description != ''">description = #{description},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="lastOperator != null  and lastOperator != ''">last_operator = #{lastOperator},</if>
+            <if test="updateBy != null ">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnPmcInspectTaskById" parameterType="Long">
+        delete from an_pmc_inspect_task where id = #{id}
+    </delete>
+
+    <delete id="deleteAnPmcInspectTaskByIds" parameterType="String">
+        delete from an_pmc_inspect_task where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
