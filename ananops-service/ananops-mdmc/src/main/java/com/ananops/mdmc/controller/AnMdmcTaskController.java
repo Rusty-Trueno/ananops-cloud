@@ -1,6 +1,7 @@
 package com.ananops.mdmc.controller;
 
 import com.ananops.common.core.dto.LoginAuthDto;
+import com.ananops.mdmc.aop.AnMdmcLog;
 import com.ananops.mdmc.dto.MdmcAddTaskDto;
 import com.ananops.mdmc.dto.MdmcChangeStatusDto;
 import com.ananops.mdmc.dto.MdmcDispatchDto;
@@ -66,6 +67,7 @@ public class AnMdmcTaskController extends BaseController
      */
     @ApiOperation(value = "新增保存维修工单，可测")
     @PostMapping("save")
+    @AnMdmcLog
     public R addSave(@RequestBody MdmcAddTaskDto mdmcAddTaskDto)
     {
         LoginAuthDto loginAuthDto = getLoginAuthDto();
@@ -73,10 +75,11 @@ public class AnMdmcTaskController extends BaseController
     }
 
     /**
-     * 修改保存维修工单
+     * 上传维修结果
      */
-    @ApiOperation(value = "修改保存维修工单，可测")
+    @ApiOperation(value = "上传维修结果，可测")
     @PostMapping("update")
+    @AnMdmcLog
     public R editSave(@RequestBody MdmcAddTaskDto updateTaskDto)
     {
         LoginAuthDto loginAuthDto = getLoginAuthDto();
@@ -98,6 +101,7 @@ public class AnMdmcTaskController extends BaseController
      */
     @ApiOperation(value = "更改工单状态，可测")
     @PostMapping("modifyTaskStatusByTaskId")
+    @AnMdmcLog
     public R modifyStatus(@RequestBody MdmcChangeStatusDto changeStatusDto)
     {
         LoginAuthDto loginAuthDto = getLoginAuthDto();
@@ -109,6 +113,7 @@ public class AnMdmcTaskController extends BaseController
      */
     @ApiOperation(value = "服务商拒单，可测")
     @PostMapping("refuseTaskByFacilitator/{taskId}")
+    @AnMdmcLog
     public R refuseTaskByFacilitator(@PathVariable("taskId")Long taskId){
         LoginAuthDto loginAuthDto=getLoginAuthDto();
         MdmcChangeStatusDto changeStatusDto=new MdmcChangeStatusDto();
@@ -122,6 +127,7 @@ public class AnMdmcTaskController extends BaseController
      */
     @ApiOperation(value = "工程师拒单，可测")
     @PostMapping("refuseTaskByMaintainer/{taskId}")
+    @AnMdmcLog
     public R refuseTaskByMaintainer(@PathVariable("taskId")Long taskId){
         LoginAuthDto loginAuthDto=getLoginAuthDto();
         MdmcChangeStatusDto changeStatusDto=new MdmcChangeStatusDto();
@@ -135,6 +141,7 @@ public class AnMdmcTaskController extends BaseController
      */
     @ApiOperation(value = "平台管理员重新分配服务商，可测")
     @PostMapping("dispatchFacilitator")
+    @AnMdmcLog
     public R dispatchFac(@RequestBody MdmcDispatchDto dispatchDto){
         LoginAuthDto loginAuthDto=getLoginAuthDto();
         MdmcChangeStatusDto changeStatusDto=new MdmcChangeStatusDto();
@@ -149,6 +156,7 @@ public class AnMdmcTaskController extends BaseController
      */
     @ApiOperation(value = "服务商分配工程师，可测")
     @PostMapping("dispatchMaintainer")
+    @AnMdmcLog
     public R dispatchEng(@RequestBody MdmcDispatchDto dispatchDto){
         LoginAuthDto loginAuthDto=getLoginAuthDto();
         MdmcChangeStatusDto changeStatusDto=new MdmcChangeStatusDto();

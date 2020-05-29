@@ -2,6 +2,8 @@ package com.ananops.imc.mapper;
 
 import com.ananops.common.core.dao.BaseMapper;
 import com.ananops.imc.domain.AnImcInspectionTaskLog;
+import com.ananops.imc.dto.TaskLogDto;
+
 import java.util.List;
 
 /**
@@ -59,4 +61,11 @@ public interface AnImcInspectionTaskLogMapper extends BaseMapper<AnImcInspection
      * @return 结果
      */
     public int deleteAnImcInspectionTaskLogByIds(String[] ids);
+
+    /**
+     * 查询巡检任务日志
+     * @param taskId
+     * @return
+     */
+    public List<TaskLogDto> getTaskLogs(Long taskId);
 }

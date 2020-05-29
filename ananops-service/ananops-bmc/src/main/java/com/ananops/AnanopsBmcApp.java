@@ -1,6 +1,6 @@
 package com.ananops;
 
-import com.ananops.system.annotation.EnableRyFeignClients;
+import com.ananops.bmc.annotation.EnableRyFeignClients;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;

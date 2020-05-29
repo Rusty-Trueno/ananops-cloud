@@ -50,10 +50,7 @@ public class AnMdmcReviewServiceImpl implements IAnMdmcReviewService
         if (taskMapper.selectByPrimaryKey(id)==null){
             throw new BusinessException("查无此工单");
         }
-        Example example=new Example(AnMdmcReview.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("taskId",id);
-        return anMdmcReviewMapper.selectByExample(example).get(0);
+        return anMdmcReviewMapper.selectAnMdmcReviewByTaskId(id);
     }
 
     /**
@@ -90,10 +87,7 @@ public class AnMdmcReviewServiceImpl implements IAnMdmcReviewService
         if(taskMapper.selectByPrimaryKey(taskId)==null){
             throw new BusinessException("当前被评价工单不存在");
         }
-        Example example=new Example(AnMdmcReview.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("taskId",taskId);
-        if(anMdmcReviewMapper.selectByExample(example)!=null&&anMdmcReviewMapper.selectByExample(example).size()>0){
+        if(anMdmcReviewMapper.selectAnMdmcReviewByTaskId(taskId)!=null){
             throw new BusinessException("该工单已经被评价过");
         }
         AnMdmcTask task=taskMapper.selectByPrimaryKey(taskId);
@@ -101,7 +95,7 @@ public class AnMdmcReviewServiceImpl implements IAnMdmcReviewService
         if(taskMapper.updateTaskStatus(task)<=0){
             throw new BusinessException("工单状态更改失败");
         }
-        anMdmcReviewMapper.insertSelective(review);
+        anMdmcReviewMapper.insert(review);
         return review;
     }
 

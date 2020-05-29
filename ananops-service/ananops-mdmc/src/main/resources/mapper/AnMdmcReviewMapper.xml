@@ -22,15 +22,25 @@
         <result property="principalId"    column="principal_id"    />
         <result property="checkContents"    column="check_contents"    />
         <result property="remark"    column="remark"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
     </resultMap>
 
     <sql id="selectAnMdmcReviewVo">
-        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, task_id, facilitator_id, maintainer_id, user_id, score, contents, principal_id, check_contents ,remark from an_mdmc_review
+        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, task_id, facilitator_id, maintainer_id, user_id, score, contents, principal_id, check_contents,remark,company_id,company_name from an_mdmc_review
     </sql>
 
     <select id="selectAnMdmcReviewList" parameterType="AnMdmcReview" resultMap="AnMdmcReviewResult">
         <include refid="selectAnMdmcReviewVo"/>
         <where>
+        </where>
+    </select>
+
+    <select id="selectAnMdmcReviewByTaskId" parameterType="Long" resultMap="AnMdmcReviewResult">
+        <include refid="selectAnMdmcReviewVo"/>
+        as review
+        <where>
+        review.task_id=#{id}
         </where>
     </select>
 
@@ -59,6 +69,8 @@
             <if test="principalId != null ">principal_id,</if>
             <if test="checkContents != null  and checkContents != ''">check_contents,</if>
             <if test="remark != null ">remark,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
         </trim>
     </insert>
 
@@ -81,6 +93,8 @@
             <if test="principalId != null ">principal_id = #{principalId},</if>
             <if test="checkContents != null  and checkContents != ''">check_contents = #{checkContents},</if>
             <if test="remark != null ">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
         </trim>
         where id = #{id}
     </update>

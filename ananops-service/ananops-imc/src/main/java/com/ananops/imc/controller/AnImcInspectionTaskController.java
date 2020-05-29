@@ -201,4 +201,10 @@ public class AnImcInspectionTaskController extends BaseController
 		taskQueryDto.setRole(RoleEnum.PRINCIPAL.getStatusNum());
 		return result(anImcInspectionTaskService.getTaskByUserId(taskQueryDto));
 	}
+
+	@ApiOperation(value = "根据巡检任务ID查询任务的日志")
+	@PostMapping(value = "getTaskLogs/{taskId}")
+	public R getTaskLogs(@PathVariable Long taskId){
+		return result(anImcInspectionTaskService.getTaskLogs(taskId));
+	}
 }

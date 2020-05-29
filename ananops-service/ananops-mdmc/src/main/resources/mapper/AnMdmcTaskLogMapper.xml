@@ -18,15 +18,27 @@
         <result property="movement"    column="movement"    />
         <result property="statusTimestamp"    column="status_timestamp"    />
         <result property="remark"    column="remark"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
     </resultMap>
 
     <sql id="selectAnMdmcTaskLogVo">
-        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, task_id, status, movement, status_timestamp ,remark from an_mdmc_task_log
+        select id, version, create_by, creator_id, create_time, last_operator, update_by, update_time, task_id, status, movement, status_timestamp,remark,
+         company_id, company_name from an_mdmc_task_log
     </sql>
 
     <select id="selectAnMdmcTaskLogList" parameterType="AnMdmcTaskLog" resultMap="AnMdmcTaskLogResult">
         <include refid="selectAnMdmcTaskLogVo"/>
         <where>
+        </where>
+    </select>
+
+    <select id="selectAnMdmcTaskLogListByTaskId" parameterType="Long" resultMap="AnMdmcTaskLogResult">
+        <include refid="selectAnMdmcTaskLogVo"/>
+        as tasklog
+        <where>
+        tasklog.task_id= #{taskId}
+        order by tasklog.update_time
         </where>
     </select>
 
@@ -51,6 +63,8 @@
             <if test="movement != null  and movement != ''">movement,</if>
             <if test="statusTimestamp != null ">status_timestamp,</if>
             <if test="remark != null  and remark != ''">remark,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
         </trim>
     </insert>
 
@@ -69,6 +83,8 @@
             <if test="movement != null  and movement != ''">movement = #{movement},</if>
             <if test="statusTimestamp != null ">status_timestamp = #{statusTimestamp},</if>
             <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
         </trim>
         where id = #{id}
     </update>

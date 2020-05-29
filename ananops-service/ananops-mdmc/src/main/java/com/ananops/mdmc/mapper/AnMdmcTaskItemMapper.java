@@ -21,12 +21,12 @@ public interface AnMdmcTaskItemMapper extends BaseMapper<AnMdmcTaskItem>
     public AnMdmcTaskItem selectAnMdmcTaskItemById(Long id);
 
     /**
-     * 查询维修任务子项列表
+     * 根据工单id查询维修任务子项列表
      *
-     * @param anMdmcTaskItem 维修任务子项
+     * @param id 工单id
      * @return 维修任务子项集合
      */
-    public List<AnMdmcTaskItem> selectAnMdmcTaskItemList(AnMdmcTaskItem anMdmcTaskItem);
+    public List<AnMdmcTaskItem> selectAnMdmcTaskItemByTaskId(Long id);
 
     /**
      * 新增维修任务子项

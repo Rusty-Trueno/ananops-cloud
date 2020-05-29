@@ -1,6 +1,10 @@
 package com.ananops.mdmc.service;
 
+import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.mdmc.domain.AnMdmcTaskLog;
+import com.ananops.mdmc.dto.MdmcQueryDto;
+import com.github.pagehelper.PageInfo;
+
 import java.util.List;
 
 /**
@@ -20,12 +24,12 @@ public interface IAnMdmcTaskLogService
     public AnMdmcTaskLog selectAnMdmcTaskLogById(Long id);
 
     /**
-     * 查询维修工单日志列表
+     * 根据工单id查询维修工单日志列表
      *
-     * @param anMdmcTaskLog 维修工单日志
+     * @param queryDto 工单id
      * @return 维修工单日志集合
      */
-    public List<AnMdmcTaskLog> selectAnMdmcTaskLogList(AnMdmcTaskLog anMdmcTaskLog);
+    public PageInfo selectAnMdmcTaskLogList(MdmcQueryDto queryDto);
 
     /**
      * 新增维修工单日志

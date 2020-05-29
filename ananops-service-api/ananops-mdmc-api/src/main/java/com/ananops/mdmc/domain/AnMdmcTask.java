@@ -134,7 +134,7 @@ public class AnMdmcTask extends BaseEntity
 
     /** 故障等级 */
     @Excel(name = "故障等级")
-    private Long level;
+    private Integer level;
 
     /** 预约时间 */
     @Excel(name = "预约时间", width = 30, dateFormat = "yyyy-MM-dd")
@@ -399,12 +399,12 @@ public class AnMdmcTask extends BaseEntity
     {
         return troubleReason;
     }
-    public void setLevel(Long level)
+    public void setLevel(Integer level)
     {
         this.level = level;
     }
 
-    public Long getLevel()
+    public Integer getLevel()
     {
         return level;
     }

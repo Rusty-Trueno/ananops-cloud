@@ -3,10 +3,7 @@ package com.ananops.imc.service;
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.common.core.service.IService;
 import com.ananops.imc.domain.AnImcInspectionTask;
-import com.ananops.imc.dto.ImcAddInspectionTaskDto;
-import com.ananops.imc.dto.ImcInspectionTaskDto;
-import com.ananops.imc.dto.ImcTaskChangeStatusDto;
-import com.ananops.imc.dto.TaskQueryDto;
+import com.ananops.imc.dto.*;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -130,4 +127,11 @@ public interface IAnImcInspectionTaskService extends IService<AnImcInspectionTas
      * @return
      */
     public PageInfo getAllFinishedTaskByFacilitatorId(TaskQueryDto taskQueryDto);
+
+    /**
+     * 获取任务对应的全部操作日志
+     * @param taskId
+     * @return
+     */
+    public List<TaskLogDto> getTaskLogs(Long taskId);
 }

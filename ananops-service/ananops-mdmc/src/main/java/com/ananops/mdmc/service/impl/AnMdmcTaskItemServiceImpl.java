@@ -57,15 +57,12 @@ public class AnMdmcTaskItemServiceImpl implements IAnMdmcTaskItemService
     @Override
     public PageInfo selectAnMdmcTaskItemList(MdmcQueryDto queryDto)
     {
-        Example example=new Example(AnMdmcTaskItem.class);
-        Example.Criteria criteria=example.createCriteria();
         Long taskId=queryDto.getTaskId();
-        criteria.andEqualTo("taskId",taskId);
         if(anMdmcTaskMapper.selectByPrimaryKey(taskId)==null){
             throw new BusinessException("查无此工单");
         }
         PageHelper.startPage(queryDto.getPageNum(),queryDto.getPageSize());
-        List<AnMdmcTaskItem> itemList=anMdmcTaskItemMapper.selectByExample(example);
+        List<AnMdmcTaskItem> itemList=anMdmcTaskItemMapper.selectAnMdmcTaskItemByTaskId(taskId);
         return new PageInfo<>(itemList);
     }
 
@@ -85,11 +82,7 @@ public class AnMdmcTaskItemServiceImpl implements IAnMdmcTaskItemService
         if (taskId==null){
             throw new BusinessException("工单id不能是空");
         }
-        Example example = new Example(AnMdmcTask.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("id",taskId);
-        List<AnMdmcTask> taskList =anMdmcTaskMapper.selectByExample(example);
-        if(taskList.size()==0){
+        if(anMdmcTaskMapper.selectByPrimaryKey(taskId)==null){
             throw new BusinessException("当前工单不存在");
         }
 
