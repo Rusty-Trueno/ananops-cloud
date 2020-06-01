@@ -29,10 +29,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="count"    column="count"    />
         <result property="location"    column="location"    />
         <result property="remark"    column="remark"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
     </resultMap>
 
     <sql id="selectAnImcInspectionItemVo">
-        select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, inspection_task_id, scheduled_start_time, actual_start_time, actual_finish_time, days, frequency, description, status, item_latitude, item_longitude, result, item_name, maintainer_id, count, location, remark from an_imc_inspection_item
+        select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, inspection_task_id, scheduled_start_time, actual_start_time, actual_finish_time, days, frequency, description, status, item_latitude, item_longitude, result, item_name, maintainer_id, count, location, remark, company_id, company_name from an_imc_inspection_item
     </sql>
 
     <select id="selectAnImcInspectionItemList" parameterType="AnImcInspectionItem" resultMap="AnImcInspectionItemResult">
@@ -77,6 +79,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="count != null ">count,</if>
             <if test="location != null  and location != ''">location,</if>
             <if test="remark != null  and remark != ''">remark,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
          </trim>
     </insert>
 
@@ -106,6 +110,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="count != null ">count = #{count},</if>
             <if test="location != null  and location != ''">location = #{location},</if>
             <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
         </trim>
         where id = #{id}
     </update>
@@ -147,6 +153,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="count != null ">count = #{count},</if>
             <if test="location != null  and location != ''">location = #{location},</if>
             <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
         </trim>
         where 1 = 1
         and(
