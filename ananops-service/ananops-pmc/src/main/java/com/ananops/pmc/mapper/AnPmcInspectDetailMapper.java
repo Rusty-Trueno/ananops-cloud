@@ -5,7 +5,7 @@ import com.ananops.pmc.domain.AnPmcInspectDetail;
 import java.util.List;
 
 /**
- * 【请填写功能名称】Mapper接口
+ * 巡检详情Mapper接口
  * 
  * @author ananops
  * @date 2020-05-28
@@ -13,9 +13,9 @@ import java.util.List;
 public interface AnPmcInspectDetailMapper extends BaseMapper<AnPmcInspectDetail>
 {
     /**
-     * 查询【请填写功能名称】
+     * 查询巡检详情
      * 
-     * @param id 【请填写功能名称】ID
+     * @param id 巡检详情ID
      * @return 【请填写功能名称】
      */
     public AnPmcInspectDetail selectAnPmcInspectDetailById(Long id);

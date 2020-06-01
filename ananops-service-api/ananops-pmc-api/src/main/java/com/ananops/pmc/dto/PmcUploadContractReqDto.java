@@ -1,6 +1,7 @@
-package com.ananops.provider.model.dto;
+package com.ananops.pmc.dto;
 
-import com.ananops.provider.model.dto.oss.OptUploadFileReqDto;
+
+import com.ananops.system.domain.SysOss;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,7 +9,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * Created By ChengHao On 2020/2/13
+ * Created By zhangyue On 2020/05/28
  */
 @Data
 @ApiModel(value = "PmcUploadContractReqDto")
@@ -24,6 +25,7 @@ public class PmcUploadContractReqDto implements Serializable {
     /**
      * 文件上传Dto
      */
-    @ApiModelProperty(value = "OptUploadFileReqDto")
-    private OptUploadFileReqDto optUploadFileReqDto;
+    //TODO 暂时先用的system里的文件上传功能的实体类，之后再考虑别的
+    @ApiModelProperty(value = "sys_oss文件上传")
+    private SysOss uploadFileReqDto;
 }

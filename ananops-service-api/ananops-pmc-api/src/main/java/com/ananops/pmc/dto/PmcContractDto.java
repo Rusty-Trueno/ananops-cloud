@@ -1,4 +1,4 @@
-package com.ananops.provider.model.dto;
+package com.ananops.pmc.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -108,7 +108,7 @@ public class PmcContractDto implements Serializable {
     @ApiModelProperty(value = "合同结束时间", example = "2019-12-01 12:18:48")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date endTime;
+    private Date endedTime;
 
     /**
      * 是否自动顺延（0-未顺延，1-顺延）

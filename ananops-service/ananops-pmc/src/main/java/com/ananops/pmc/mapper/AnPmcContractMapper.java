@@ -5,7 +5,7 @@ import com.ananops.pmc.domain.AnPmcContract;
 import java.util.List;
 
 /**
- * 【请填写功能名称】Mapper接口
+ * 合同管理 Mapper接口
  * 
  * @author ananops
  * @date 2020-05-28
@@ -13,47 +13,47 @@ import java.util.List;
 public interface AnPmcContractMapper extends BaseMapper<AnPmcContract>
 {
     /**
-     * 查询【请填写功能名称】
+     * 查询合同
      * 
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id 合同ID
+     * @return 合同
      */
     public AnPmcContract selectAnPmcContractById(Long id);
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询【合同】列表
      * 
-     * @param anPmcContract 【请填写功能名称】
-     * @return 【请填写功能名称】集合
+     * @param anPmcContract 合同
+     * @return 合同集合
      */
      List<AnPmcContract> selectAnPmcContractList(AnPmcContract anPmcContract);
 
     /**
-     * 新增【请填写功能名称】
+     * 新增【合同】
      * 
-     * @param anPmcContract 【请填写功能名称】
+     * @param anPmcContract 合同
      * @return 结果
      */
      int insertAnPmcContract(AnPmcContract anPmcContract);
 
     /**
-     * 修改【请填写功能名称】
+     * 修改【合同】
      * 
-     * @param anPmcContract 【请填写功能名称】
+     * @param anPmcContract 合同
      * @return 结果
      */
     int updateAnPmcContract(AnPmcContract anPmcContract);
 
     /**
-     * 删除【请填写功能名称】
+     * 删除合同
      * 
-     * @param id 【请填写功能名称】ID
+     * @param id 合同ID
      * @return 结果
      */
     int deleteAnPmcContractById(Long id);
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除合同
      * 
      * @param ids 需要删除的数据ID
      * @return 结果

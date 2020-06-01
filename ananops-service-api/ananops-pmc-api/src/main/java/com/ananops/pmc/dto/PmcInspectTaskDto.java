@@ -1,4 +1,4 @@
-package com.ananops.provider.model.dto;
+package com.ananops.pmc.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -6,12 +6,11 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created By ChengHao On 2019/12/5
+ * Created By zhangyue On 2020/05/28
  */
 @Data
 @ApiModel

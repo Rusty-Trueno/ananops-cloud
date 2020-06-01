@@ -58,4 +58,25 @@ public interface IAnPmcInspectDetailService
      * @return 结果
      */
      int deleteAnPmcInspectDetailById(Long id);
+
+    /**
+     * 查找巡检详情
+     * @param id
+     * @return
+     */
+    AnPmcInspectDetail getInspectDetailById(Long id);
+
+    /**
+     * 获取巡检任务的详情列表
+     * @param inspectTaskId
+     * @return
+     */
+    List<AnPmcInspectDetail> getInspectDetailList(Long inspectTaskId);
+
+    /**
+     * 删除巡检任务下的所有巡检详情信息
+     * @param taskId
+     * @return
+     */
+    int deleteDetailByTaskId(Long taskId);
 }

@@ -1,14 +1,13 @@
-package com.ananops.provider.model.dto;
+package com.ananops.pmc.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.Column;
 import java.io.Serializable;
 
 /**
- * Created By ChengHao On 2019/12/23
+ * Created By zhangyue On 2020/05/28
  */
 @Data
 @ApiModel

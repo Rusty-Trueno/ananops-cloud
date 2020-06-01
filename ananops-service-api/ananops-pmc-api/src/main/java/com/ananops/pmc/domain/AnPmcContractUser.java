@@ -5,6 +5,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ananops.common.annotation.Excel;
 import com.ananops.common.core.domain.BaseEntity;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * 合同用户中间表对象 an_pmc_contract_user
  * 
@@ -21,8 +25,8 @@ public class AnPmcContractUser extends BaseEntity
     private Long contractId;
 
     /** 用户id */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
     public void setContractId(Long contractId) 

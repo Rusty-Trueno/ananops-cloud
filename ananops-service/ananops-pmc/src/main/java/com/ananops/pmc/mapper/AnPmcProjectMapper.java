@@ -59,4 +59,9 @@ public interface AnPmcProjectMapper extends BaseMapper<AnPmcProject>
      * @return 结果
      */
     int deleteAnPmcProjectByIds(String[] ids);
+
+    List<AnPmcProject> getProjectByContractId(Long contractId);
+
+    List<AnPmcProject> getProjectByUserId(Long userId);
+
 }

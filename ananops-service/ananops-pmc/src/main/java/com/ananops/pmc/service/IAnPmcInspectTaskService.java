@@ -1,5 +1,6 @@
 package com.ananops.pmc.service;
 
+import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.pmc.domain.AnPmcInspectTask;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public interface IAnPmcInspectTaskService
      * @param anPmcInspectTask 【请填写功能名称】
      * @return 结果
      */
-     int insertAnPmcInspectTask(AnPmcInspectTask anPmcInspectTask);
+     int insertAnPmcInspectTask(AnPmcInspectTask anPmcInspectTask, LoginAuthDto loginAuthDto);
 
     /**
      * 修改【请填写功能名称】
@@ -58,4 +59,17 @@ public interface IAnPmcInspectTaskService
      * @return 结果
      */
      int deleteAnPmcInspectTaskById(Long id);
+
+    /**
+     * 获取某个项目的巡检任务
+     * @param projectId
+     * @return
+     */
+    List<AnPmcInspectTask> getTasksByProjectId(Long projectId);
+
+    /**
+     *
+     * @param projectId
+     */
+    int deleteTaskByProjectId(Long projectId);
 }

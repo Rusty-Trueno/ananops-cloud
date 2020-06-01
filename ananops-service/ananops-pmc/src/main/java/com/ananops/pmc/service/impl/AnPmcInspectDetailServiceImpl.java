@@ -8,6 +8,7 @@ import com.ananops.pmc.mapper.AnPmcInspectDetailMapper;
 import com.ananops.pmc.domain.AnPmcInspectDetail;
 import com.ananops.pmc.service.IAnPmcInspectDetailService;
 import com.ananops.common.core.text.Convert;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * 【请填写功能名称】Service业务层处理
@@ -92,5 +93,26 @@ public class AnPmcInspectDetailServiceImpl implements IAnPmcInspectDetailService
     public int deleteAnPmcInspectDetailById(Long id)
     {
         return anPmcInspectDetailMapper.deleteAnPmcInspectDetailById(id);
+    }
+
+    @Override
+    public AnPmcInspectDetail getInspectDetailById(Long id) {
+        return anPmcInspectDetailMapper.selectAnPmcInspectDetailById(id);
+    }
+
+    @Override
+    public List<AnPmcInspectDetail> getInspectDetailList(Long inspectTaskId) {
+        Example example = new Example(AnPmcInspectDetail.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("inspectionTaskId", inspectTaskId);
+        return anPmcInspectDetailMapper.selectByExample(example);
+    }
+
+    @Override
+    public int deleteDetailByTaskId(Long taskId) {
+        Example example = new Example(AnPmcInspectDetail.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("inspectionTaskId", taskId);
+        return anPmcInspectDetailMapper.deleteByExample(example);
     }
 }

@@ -1,4 +1,4 @@
-package com.ananops.provider.model.dto;
+package com.ananops.pmc.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -178,7 +178,7 @@ public class PmcProjectDto implements Serializable {
     @ApiModelProperty(value = "结束时间（虚拟项目必填)",example = "2019-12-01 12:18:48")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date endTime;
+    private Date endedTime;
 
     /**
      * 项目是否作废（0-有效，1-作废）

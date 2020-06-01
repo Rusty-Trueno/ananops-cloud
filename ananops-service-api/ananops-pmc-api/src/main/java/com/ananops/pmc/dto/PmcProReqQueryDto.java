@@ -1,4 +1,4 @@
-package com.ananops.provider.model.dto;
+package com.ananops.pmc.dto;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -6,11 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 项目列表查询参数
- *
- * @author Bingyue Duan
- * @version 1.0
- * @date 2020-04-08 10:48
+ * Created By zhangyue On 2020/05/28
  */
 @Data
 @ApiModel
@@ -19,9 +15,9 @@ public class PmcProReqQueryDto implements Serializable {
     private static final long serialVersionUID = 8336639667959028926L;
 
     /**
-     * 公司组织Id
+     * 公司部门Id
      */
-    private Long groupId;
+    private Long deptId;
 
     /**
      * 项目类型

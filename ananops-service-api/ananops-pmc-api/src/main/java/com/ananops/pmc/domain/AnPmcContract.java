@@ -8,6 +8,7 @@ import com.ananops.common.core.domain.BaseEntity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -95,7 +96,7 @@ public class AnPmcContract extends BaseEntity
 
     /** 支付金额 */
     @Excel(name = "支付金额")
-    private Double paymentMoney;
+    private BigDecimal paymentMoney;
 
     /** 项目金额 */
     @Excel(name = "项目金额")
@@ -323,12 +324,12 @@ public class AnPmcContract extends BaseEntity
     {
         return paymentType;
     }
-    public void setPaymentMoney(Double paymentMoney) 
+    public void setPaymentMoney(BigDecimal paymentMoney)
     {
         this.paymentMoney = paymentMoney;
     }
 
-    public Double getPaymentMoney() 
+    public BigDecimal getPaymentMoney()
     {
         return paymentMoney;
     }

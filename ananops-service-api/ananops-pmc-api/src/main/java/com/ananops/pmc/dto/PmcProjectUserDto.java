@@ -1,4 +1,4 @@
-package com.ananops.provider.model.dto;
+package com.ananops.pmc.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

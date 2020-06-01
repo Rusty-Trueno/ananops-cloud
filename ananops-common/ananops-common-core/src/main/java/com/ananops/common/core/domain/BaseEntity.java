@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Transient;
 
@@ -63,6 +64,12 @@ public class BaseEntity implements Serializable {
 
     @Transient
     private String endTime;
+
+    /**
+     * Is new boolean.
+     *
+     * @return the boolean
+     */
 
     /**
      * 请求参数
