@@ -22,10 +22,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="browser"    column="browser"    />
         <result property="ipAddress"    column="ip_address"    />
         <result property="remark"    column="remark"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
     </resultMap>
 
     <sql id="selectAnImcInspectionItemLogVo">
-        select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, task_id, status, status_timestamp, movement, item_id, os, browser, ip_address, remark from an_imc_inspection_item_log
+        select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, task_id, status, status_timestamp, movement, item_id, os, browser, ip_address, remark, company_id, company_name from an_imc_inspection_item_log
     </sql>
 
     <select id="selectAnImcInspectionItemLogList" parameterType="AnImcInspectionItemLog" resultMap="AnImcInspectionItemLogResult">
@@ -58,6 +60,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="browser != null  and browser != ''">browser,</if>
             <if test="ipAddress != null  and ipAddress != ''">ip_address,</if>
             <if test="remark != null  and remark != ''">remark,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
          </trim>
     </insert>
 
@@ -80,6 +84,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="browser != null  and browser != ''">browser = #{browser},</if>
             <if test="ipAddress != null  and ipAddress != ''">ip_address = #{ipAddress},</if>
             <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
         </trim>
         where id = #{id}
     </update>

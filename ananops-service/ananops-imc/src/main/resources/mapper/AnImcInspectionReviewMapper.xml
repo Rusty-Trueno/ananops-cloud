@@ -19,10 +19,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="contents"    column="contents"    />
         <result property="remark"    column="remark"    />
         <result property="checkContens"    column="check_contens"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
     </resultMap>
 
     <sql id="selectAnImcInspectionReviewVo">
-        select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, inspection_task_id, principal_id, score, contents, remark, check_contens from an_imc_inspection_review
+        select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, inspection_task_id, principal_id, score, contents, remark, check_contens, company_id, company_name from an_imc_inspection_review
     </sql>
 
     <select id="selectAnImcInspectionReviewList" parameterType="AnImcInspectionReview" resultMap="AnImcInspectionReviewResult">
@@ -52,6 +54,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contents != null  and contents != ''">contents,</if>
             <if test="remark != null  and remark != ''">remark,</if>
             <if test="checkContens != null  and checkContens != ''">check_contens,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
          </trim>
     </insert>
 
@@ -71,6 +75,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contents != null  and contents != ''">contents = #{contents},</if>
             <if test="remark != null  and remark != ''">remark = #{remark},</if>
             <if test="checkContens != null  and checkContens != ''">check_contens = #{checkContens},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
         </trim>
         where id = #{id}
     </update>

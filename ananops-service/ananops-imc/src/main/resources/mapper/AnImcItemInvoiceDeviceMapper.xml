@@ -17,10 +17,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="lastOperatorId"    column="last_operator_id"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
     </resultMap>
 
     <sql id="selectAnImcItemInvoiceDeviceVo">
-        select id, invoice_id, device, sort, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, remark from an_imc_item_invoice_device
+        select id, invoice_id, device, sort, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, remark, company_id, company_name from an_imc_item_invoice_device
     </sql>
 
     <select id="selectAnImcItemInvoiceDeviceList" parameterType="AnImcItemInvoiceDevice" resultMap="AnImcItemInvoiceDeviceResult">
@@ -48,6 +50,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="lastOperatorId != null ">last_operator_id,</if>
             <if test="updateTime != null ">update_time,</if>
             <if test="remark != null  and remark != ''">remark,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
          </trim>
     </insert>
 
@@ -65,6 +69,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="lastOperatorId != null ">last_operator_id = #{lastOperatorId},</if>
             <if test="updateTime != null ">update_time = #{updateTime},</if>
             <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
         </trim>
         where id = #{id}
     </update>
