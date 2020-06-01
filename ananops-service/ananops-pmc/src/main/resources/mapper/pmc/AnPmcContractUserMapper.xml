@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ananops.pmc.mapper.AnPmcContractUserMapper">
+    
+    <resultMap type="AnPmcContractUser" id="AnPmcContractUserResult">
+        <result property="contractId"    column="contract_id"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectAnPmcContractUserVo">
+        select contract_id, user_id from an_pmc_contract_user
+    </sql>
+
+    <select id="selectAnPmcContractUserList" parameterType="AnPmcContractUser" resultMap="AnPmcContractUserResult">
+        <include refid="selectAnPmcContractUserVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectAnPmcContractUserById" parameterType="Long" resultMap="AnPmcContractUserResult">
+        <include refid="selectAnPmcContractUserVo"/>
+        where contract_id = #{contractId}
+    </select>
+        
+    <insert id="insertAnPmcContractUser" parameterType="AnPmcContractUser">
+        insert into an_pmc_contract_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contractId != null ">contract_id,</if>
+            <if test="userId != null ">user_id,</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnPmcContractUser" parameterType="AnPmcContractUser">
+        update an_pmc_contract_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null ">user_id = #{userId},</if>
+        </trim>
+        where contract_id = #{contractId}
+    </update>
+
+    <delete id="deleteAnPmcContractUserById" parameterType="Long">
+        delete from an_pmc_contract_user where contract_id = #{contractId}
+    </delete>
+
+    <delete id="deleteAnPmcContractUserByIds" parameterType="String">
+        delete from an_pmc_contract_user where contract_id in 
+        <foreach item="contractId" collection="array" open="(" separator="," close=")">
+            #{contractId}
+        </foreach>
+    </delete>
+    
+</mapper>

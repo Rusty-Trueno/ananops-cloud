@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ananops.pmc.mapper.AnPmcProjectUserMapper">
+    
+    <resultMap type="AnPmcProjectUser" id="AnPmcProjectUserResult">
+        <result property="projectId"    column="project_id"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectAnPmcProjectUserVo">
+        select project_id, user_id from an_pmc_project_user
+    </sql>
+
+    <select id="selectAnPmcProjectUserList" parameterType="AnPmcProjectUser" resultMap="AnPmcProjectUserResult">
+        <include refid="selectAnPmcProjectUserVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectAnPmcProjectUserById" parameterType="Long" resultMap="AnPmcProjectUserResult">
+        <include refid="selectAnPmcProjectUserVo"/>
+        where project_id = #{projectId}
+    </select>
+        
+    <insert id="insertAnPmcProjectUser" parameterType="AnPmcProjectUser">
+        insert into an_pmc_project_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null ">project_id,</if>
+            <if test="userId != null ">user_id,</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnPmcProjectUser" parameterType="AnPmcProjectUser">
+        update an_pmc_project_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null ">user_id = #{userId},</if>
+        </trim>
+        where project_id = #{projectId}
+    </update>
+
+    <delete id="deleteAnPmcProjectUserById" parameterType="Long">
+        delete from an_pmc_project_user where project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteAnPmcProjectUserByIds" parameterType="String">
+        delete from an_pmc_project_user where project_id in 
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </delete>
+    
+</mapper>
