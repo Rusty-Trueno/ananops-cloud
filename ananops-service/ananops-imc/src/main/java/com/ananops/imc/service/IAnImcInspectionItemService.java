@@ -3,13 +3,11 @@ package com.ananops.imc.service;
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.common.core.service.IService;
 import com.ananops.imc.domain.AnImcInspectionItem;
-import com.ananops.imc.dto.ImcAddInspectionItemDto;
-import com.ananops.imc.dto.ImcItemChangeStatusDto;
-import com.ananops.imc.dto.ItemQueryDto;
-import com.ananops.imc.dto.ItemResultDto;
+import com.ananops.imc.dto.*;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
+
 
 /**
  * 巡检任务子项Service接口
@@ -25,7 +23,7 @@ public interface IAnImcInspectionItemService extends IService<AnImcInspectionIte
      * @param id 巡检任务子项ID
      * @return 巡检任务子项
      */
-    public AnImcInspectionItem selectAnImcInspectionItemById(Long id);
+    public ImcInspectionItemDto selectAnImcInspectionItemById(Long id);
 
     /**
      * 查询巡检任务子项列表
@@ -89,4 +87,11 @@ public interface IAnImcInspectionItemService extends IService<AnImcInspectionIte
      * @return
      */
     public PageInfo getAllFinishedImcItemByMaintainerId(ItemQueryDto itemQueryDto);
+
+    /**
+     * 查询巡检任务子项的日志
+     * @param itemId
+     * @return
+     */
+    public List<ItemLogDto> getItemLogs(Long itemId);
 }

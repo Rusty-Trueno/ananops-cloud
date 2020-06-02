@@ -2,6 +2,8 @@ package com.ananops.imc.service;
 
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.imc.domain.AnImcItemInvoice;
+import com.ananops.imc.dto.ImcInvoiceQueryDto;
+
 import java.util.List;
 
 /**
@@ -59,4 +61,19 @@ public interface IAnImcItemInvoiceService
      * @return 结果
      */
     public int deleteAnImcItemInvoiceById(Long id);
+
+    /**
+     * 用户确认后，将用户名称填入到巡检单据的用户确认字段中
+     * @param imcInvoiceQueryDto
+     * @param user
+     * @return
+     */
+    public List<AnImcItemInvoice> queryInvoiceList(ImcInvoiceQueryDto imcInvoiceQueryDto, LoginAuthDto user);
+
+    /**
+     *
+     * @param itemId
+     * @param user
+     */
+    public void handleUserConfirm(Long itemId,LoginAuthDto user);
 }

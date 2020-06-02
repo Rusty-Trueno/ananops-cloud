@@ -1,6 +1,6 @@
 package com.ananops.imc.controller;
 
-import com.ananops.common.core.dto.LoginAuthDto;
+import com.ananops.imc.aop.AnImcLog;
 import com.ananops.imc.dto.ImcAddInspectionTaskDto;
 import com.ananops.imc.dto.ImcInspectionTaskDto;
 import com.ananops.imc.dto.ImcTaskChangeStatusDto;
@@ -64,8 +64,9 @@ public class AnImcInspectionTaskController extends BaseController
 	/**
 	 * 新增保存巡检任务表
 	 */
-	@ApiOperation(value = "新增保存巡检任务表")
+	@ApiOperation(value = "新增保存巡检任务")
 	@PostMapping("save")
+	@AnImcLog
 	public R addSave(@RequestBody ImcAddInspectionTaskDto imcAddInspectionTaskDto)
 	{		
 		return R.data(anImcInspectionTaskService.insertAnImcInspectionTask(imcAddInspectionTaskDto,getLoginAuthDto()));
@@ -76,6 +77,7 @@ public class AnImcInspectionTaskController extends BaseController
 	 */
 	@ApiOperation(value = "修改保存巡检任务表")
 	@PostMapping("update")
+	@AnImcLog
 	public R editSave(@RequestBody AnImcInspectionTask anImcInspectionTask)
 	{		
 		return toAjax(anImcInspectionTaskService.updateAnImcInspectionTask(anImcInspectionTask));
@@ -86,6 +88,7 @@ public class AnImcInspectionTaskController extends BaseController
 	 */
 	@ApiOperation(value = "删除巡检任务")
 	@PostMapping("deleteTaskByTaskId/{taskId}")
+	@AnImcLog
 	public R remove(@PathVariable Long taskId)
 	{		
 		return toAjax(anImcInspectionTaskService.deleteAnImcInspectionTaskById(taskId));
@@ -97,6 +100,7 @@ public class AnImcInspectionTaskController extends BaseController
 	 */
 	@ApiOperation(value = "更改巡检任务的状态")
 	@PostMapping("modifyTaskStatusByTaskId")
+	@AnImcLog
 	public ImcTaskChangeStatusDto modifyTaskStatusByTaskId(@RequestBody ImcTaskChangeStatusDto imcTaskChangeStatusDto){
 		anImcInspectionTaskService.modifyTaskStatus(imcTaskChangeStatusDto,getLoginAuthDto());
 		return imcTaskChangeStatusDto;
@@ -116,6 +120,7 @@ public class AnImcInspectionTaskController extends BaseController
 
 	@ApiOperation(value = "服务商拒单")
     @PostMapping("refuseTaskByFacilitator/{taskId}")
+	@AnImcLog
     public R refuseTaskByFacilitator(@PathVariable Long taskId){
 	    ImcTaskChangeStatusDto imcTaskChangeStatusDto = new ImcTaskChangeStatusDto();
 	    imcTaskChangeStatusDto.setStatus(TaskStatusEnum.WAITING_FOR_FACILITATOR.getStatusNum());
@@ -125,6 +130,7 @@ public class AnImcInspectionTaskController extends BaseController
 
     @ApiOperation(value = "服务商接单")
 	@PostMapping("acceptTaskByFacilitator/{taskId}")
+	@AnImcLog
 	public R acceptTaskByFacilitator(@PathVariable Long taskId){
 		ImcTaskChangeStatusDto imcTaskChangeStatusDto = new ImcTaskChangeStatusDto();
 		imcTaskChangeStatusDto.setTaskId(taskId);
@@ -148,15 +154,17 @@ public class AnImcInspectionTaskController extends BaseController
 	    return result(anImcInspectionTaskService.getTaskByUserId(taskQueryDto));
     }
 
-    @ApiOperation(value = "甲方负责人同意执行巡检任务")
+    @ApiOperation(value = "同意执行巡检任务")
     @PostMapping(value = "acceptImcTaskByPrincipal")
+	@AnImcLog
     public R acceptImcTaskByPrincipal(@RequestBody ImcTaskChangeStatusDto imcTaskChangeStatusDto){
         imcTaskChangeStatusDto.setStatus(TaskStatusEnum.WAITING_FOR_FACILITATOR.getStatusNum());
         return R.data(anImcInspectionTaskService.modifyTaskStatus(imcTaskChangeStatusDto,getLoginAuthDto()));
     }
 
-    @ApiOperation(value = "甲方负责人否决巡检任务")
+    @ApiOperation(value = "否决巡检任务")
     @PostMapping(value = "denyImcTaskByPrincipal")
+	@AnImcLog
     public R denyImcTaskByPrincipal(@RequestBody ImcTaskChangeStatusDto imcTaskChangeStatusDto){
         imcTaskChangeStatusDto.setStatus(TaskStatusEnum.NO_SUCH_STATUS.getStatusNum());
         return R.data(anImcInspectionTaskService.modifyTaskStatus(imcTaskChangeStatusDto,getLoginAuthDto()));

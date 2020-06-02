@@ -2,10 +2,7 @@ package com.ananops.imc.controller;
 
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.common.exception.BusinessException;
-import com.ananops.imc.dto.ImcAddInspectionItemDto;
-import com.ananops.imc.dto.ImcItemChangeStatusDto;
-import com.ananops.imc.dto.ItemQueryDto;
-import com.ananops.imc.dto.ItemResultDto;
+import com.ananops.imc.dto.*;
 import com.ananops.imc.enums.ItemStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +40,7 @@ public class AnImcInspectionItemController extends BaseController
 	 */
 	@ApiOperation(value = "查询巡检任务子项")
 	@GetMapping("get/{id}")
-	public AnImcInspectionItem get(@PathVariable("id") Long id)
+	public ImcInspectionItemDto get(@PathVariable("id") Long id)
 	{
 		return anImcInspectionItemService.selectAnImcInspectionItemById(id);
 		
@@ -140,5 +137,10 @@ public class AnImcInspectionItemController extends BaseController
 		return result(anImcInspectionItemService.getAllFinishedImcItemByMaintainerId(itemQueryDto));
 	}
 
+	@ApiOperation(value = "根据巡检任务子项ID查询任务子项的日志")
+	@PostMapping(value = "getItemLogs/{itemId}")
+	public R getTaskLogs(@PathVariable Long itemId){
+		return result(anImcInspectionItemService.getItemLogs(itemId));
+	}
 
 }

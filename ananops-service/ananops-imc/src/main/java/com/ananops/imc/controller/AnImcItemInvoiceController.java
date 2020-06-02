@@ -1,5 +1,6 @@
 package com.ananops.imc.controller;
 
+import com.ananops.imc.dto.ImcInvoiceQueryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,7 @@ import com.ananops.imc.service.IAnImcItemInvoiceService;
  * @date 2020-05-22
  */
 @RestController
-@RequestMapping("invoice")
+@RequestMapping("itemInvoice")
 @Api("巡检记录")
 public class AnImcItemInvoiceController extends BaseController
 {
@@ -83,5 +84,19 @@ public class AnImcItemInvoiceController extends BaseController
 	{		
 		return toAjax(anImcItemInvoiceService.deleteAnImcItemInvoiceByIds(ids));
 	}
-	
+
+	@ApiOperation(value = "查询巡检单据列表")
+	@PostMapping(value = "queryInvoiceList")
+	public R queryInvoiceList(@RequestBody ImcInvoiceQueryDto imcInvoiceQueryDto){
+		return result(anImcItemInvoiceService.queryInvoiceList(imcInvoiceQueryDto,getLoginAuthDto()));
+	}
+
+	//根据巡检单Id查询详情
+	//TODO
+
+	//保存更新巡检单数据
+	//TODO
+
+	//查看已完成的巡检单预览文件
+	//TODO
 }

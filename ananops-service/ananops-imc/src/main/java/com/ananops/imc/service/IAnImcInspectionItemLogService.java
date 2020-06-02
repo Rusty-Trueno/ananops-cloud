@@ -2,6 +2,8 @@ package com.ananops.imc.service;
 
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.imc.domain.AnImcInspectionItemLog;
+import com.ananops.imc.dto.ItemLogDto;
+
 import java.util.List;
 
 /**
