@@ -15,5 +15,9 @@
         <module>ananops-common-log</module>
         <module>ananops-common-auth</module>
         <module>ananops-common-swagger</module>
+        <module>ananops-common-zk</module>
+        <module>ananops-common-util</module>
+        <module>ananops-common-config</module>
+        <module>ananops-common-base</module>
     </modules>
 </project>

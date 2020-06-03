@@ -1,7 +1,7 @@
 package com.ananops.system.mapper;
 
-import com.ananops.common.core.dao.BaseMapper;
 import com.ananops.system.domain.Donate;
+import tk.mybatis.mapper.common.BaseMapper;
 
 /**
  * 捐赠 数据层

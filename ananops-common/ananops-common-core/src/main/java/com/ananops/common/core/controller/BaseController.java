@@ -10,8 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ananops.PublicUtil;
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.common.redis.util.RedisUtils;
+import com.ananops.core.generator.IncrementIdGenerator;
+import com.ananops.core.generator.UniqueIdGenerator;
+import com.ananops.wrapper.WrapMapper;
+import com.ananops.wrapper.Wrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -178,4 +183,58 @@ public class BaseController
         String token = request.getHeader("token");
         return redis.get(Constants.ACCESS_TOKEN + token,LoginAuthDto.class);
     }
+
+    /**
+     * Handle result wrapper.
+     *
+     * @param <T>    the type parameter
+     * @param result the result
+     *
+     * @return the wrapper
+     */
+    protected <T> Wrapper<T> handleResult(T result) {
+        boolean flag = isFlag(result);
+
+        if (flag) {
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功", result);
+        } else {
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "操作失败", result);
+        }
+    }
+
+    /**
+     * Handle result wrapper.
+     *
+     * @param <E>      the type parameter
+     * @param result   the result
+     * @param errorMsg the error msg
+     *
+     * @return the wrapper
+     */
+    protected <E> Wrapper<E> handleResult(E result, String errorMsg) {
+        boolean flag = isFlag(result);
+
+        if (flag) {
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功", result);
+        } else {
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, errorMsg, result);
+        }
+    }
+
+    private boolean isFlag(Object result) {
+        boolean flag;
+        if (result instanceof Integer) {
+            flag = (Integer) result > 0;
+        } else if (result instanceof Boolean) {
+            flag = (Boolean) result;
+        } else {
+            flag = PublicUtil.isNotEmpty(result);
+        }
+        return flag;
+    }
+
+    protected long generateId() {
+        return UniqueIdGenerator.getInstance(IncrementIdGenerator.getServiceId()).nextId();
+    }
+
 }

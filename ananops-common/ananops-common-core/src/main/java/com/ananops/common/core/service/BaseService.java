@@ -13,12 +13,15 @@ package com.ananops.common.core.service;
 
 
 import com.ananops.common.exception.BusinessException;
+import com.ananops.core.generator.IncrementIdGenerator;
+import com.ananops.core.generator.UniqueIdGenerator;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.common.Mapper;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -38,7 +41,7 @@ public abstract class BaseService<T> implements IService<T> {
 	/**
 	 * The Mapper.
 	 */
-	@Autowired
+	@Resource
 	protected Mapper<T> mapper;
 
 	/**
@@ -269,4 +272,7 @@ public abstract class BaseService<T> implements IService<T> {
 		return mapper.selectByExampleAndRowBounds(example, rowBounds);
 	}
 
+	protected long generateId() {
+		return UniqueIdGenerator.getInstance(IncrementIdGenerator.getServiceId()).nextId();
+	}
 }

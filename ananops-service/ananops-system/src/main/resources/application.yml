@@ -8,3 +8,11 @@ spring:
   devtools:
     restart:
       enabled: true
+#mapper:
+#  mappers: com.ananops.common.core.dao.MyMapper
+#  not-empty: false
+#  identity: MYSQL
+
+
+
+

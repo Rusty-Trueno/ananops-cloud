@@ -229,6 +229,7 @@
         <module>ananops-service-api</module>
         <module>ananops-service</module>
         <module>ananops-tool</module>
+        <module>elastic-job-lite-starter-parent</module>
     </modules>
     <packaging>pom</packaging>
 

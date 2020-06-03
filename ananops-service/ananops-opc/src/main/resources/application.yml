@@ -1,0 +1,13 @@
+server:
+  port: 8071
+spring:
+  application:
+    name: ananops-opc
+  datasource:
+    username: root
+    password: 123456
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true

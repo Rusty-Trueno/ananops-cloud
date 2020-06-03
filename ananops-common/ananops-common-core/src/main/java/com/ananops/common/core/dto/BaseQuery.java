@@ -29,4 +29,5 @@ public class BaseQuery implements Serializable {
 
     /** 排序的方向 "desc" 或者 "asc". */
     private String isAsc;
+
 }

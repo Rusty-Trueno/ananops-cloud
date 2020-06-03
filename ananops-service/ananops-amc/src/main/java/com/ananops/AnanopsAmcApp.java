@@ -13,7 +13,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @EnableEurekaClient
 @EnableRyFeignClients
-@MapperScan("com.ananops.*.mapper" )
+@MapperScan("com.ananops.amc.mapper" )
 public class AnanopsAmcApp {
     public static void main(String[] args) {
         SpringApplication.run(AnanopsAmcApp.class, args);

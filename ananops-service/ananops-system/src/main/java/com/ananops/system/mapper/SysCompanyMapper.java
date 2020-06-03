@@ -1,6 +1,6 @@
 package com.ananops.system.mapper;
 
-import com.ananops.common.core.dao.BaseMapper;
+import tk.mybatis.mapper.common.BaseMapper;
 import com.ananops.system.domain.SysCompany;
 
 import java.util.List;

@@ -34,7 +34,7 @@ public interface RemoteUserService
 
     /**
      * 查询拥有当前角色的所有用户
-     * @param auditor
+     * @param roleIds
      * @return
      * @author zmr
      */
@@ -44,7 +44,7 @@ public interface RemoteUserService
     /**
      * 查询所有当前部门中的用户
      * 
-     * @param deptId
+     * @param deptIds
      * @return
      * @author zmr
      */

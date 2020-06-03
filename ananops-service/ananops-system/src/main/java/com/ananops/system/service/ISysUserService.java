@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ananops.system.domain.SysUser;
+import com.ananops.system.dto.UserRegisterDto;
 
 /**
  * 用户 业务层
@@ -12,6 +13,13 @@ import com.ananops.system.domain.SysUser;
  */
 public interface ISysUserService
 {
+    /**
+     * 注册用户.
+     *
+     * @param registerDto the register dto
+     */
+    Long register(UserRegisterDto registerDto);
+
     /**
      * 根据条件分页查询用户列表
      * 

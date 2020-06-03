@@ -9,7 +9,11 @@
 	</parent>
 	<artifactId>ananops-cloud-auth</artifactId>
 	<dependencies>
-
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-framework</artifactId>
+			<version>2.13.0</version>
+		</dependency>
 		<!--配置中心客户端 -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>

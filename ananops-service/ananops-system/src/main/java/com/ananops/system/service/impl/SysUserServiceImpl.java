@@ -1,12 +1,29 @@
 package com.ananops.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
+import com.ananops.PubUtils;
+import com.ananops.RedisKeyUtil;
+import com.ananops.base.constant.AliyunMqTopicConstants;
+import com.ananops.base.enums.ErrorCodeEnum;
+import com.ananops.common.core.service.BaseService;
+import com.ananops.common.utils.RandomUtil;
+import com.ananops.system.enums.UacEmailTemplateEnum;
+import com.ananops.provider.model.domain.MqMessageData;
+import com.ananops.system.dto.UserRegisterDto;
+import com.ananops.system.manager.UserManager;
+import com.ananops.system.mq.producer.EmailProducer;
+import com.ananops.system.service.RedisService;
+import com.ananops.system.util.PasswordUtil;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.xiaoleilu.hutool.date.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,17 +48,19 @@ import com.ananops.system.service.ISysUserService;
 
 import cn.hutool.core.util.ArrayUtil;
 
+import javax.annotation.Resource;
+
 /**
  * 用户 业务层处理
  * 
  * @author ananops
  */
 @Service
-public class SysUserServiceImpl implements ISysUserService
+public class SysUserServiceImpl extends BaseService<SysUser> implements ISysUserService
 {
     private static final Logger log = LoggerFactory.getLogger(SysUserServiceImpl.class);
 
-    @Autowired
+    @Resource
     private SysUserMapper       userMapper;
 
     @Autowired
@@ -58,6 +77,88 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Autowired
     private ISysConfigService   configService;
+
+    @Resource
+    private RedisService redisService;
+
+//    @Value("#{ananops.auth.active-user-url}")
+    private String activeUserUrl = "http://dev-api.ananops.com:29995/uac/oauth/token";
+
+    @Resource
+    private EmailProducer emailProducer;
+
+    @Resource
+    private UserManager userManager;
+
+    @Override
+    public Long register(UserRegisterDto registerDto) {
+        // 校验注册信息
+        validateRegisterInfo(registerDto);
+        String phonenumber = registerDto.getPhonenumber();
+        String email = registerDto.getEmail();
+        Date row = new Date();
+//        String salt = String.valueOf(generateId());
+        // 封装注册信息
+        long id = generateId(); //id 雪花算法生成
+        SysUser sysUser = new SysUser();
+        sysUser.setLoginName(registerDto.getLoginName());
+        sysUser.setSalt(RandomUtil.randomStr(6));
+        sysUser.setPassword(PasswordUtil.encryptPassword(sysUser.getLoginName(), sysUser.getPassword(), sysUser.getSalt()));
+        sysUser.setPhonenumber(phonenumber);
+        sysUser.setStatus("1");  //停用
+        sysUser.setCreateTime(row);
+        sysUser.setUpdateTime(row);
+        sysUser.setEmail(email);
+        sysUser.setUserId(id);
+        sysUser.setCreateBy(registerDto.getLoginName());
+        sysUser.setUserName(registerDto.getLoginName());
+        sysUser.setUpdateBy(registerDto.getLoginName());
+
+        // 发送激活邮件
+        String activeToken = PubUtils.uuid() + super.generateId();
+        redisService.setKey(RedisKeyUtil.getActiveUserKey(activeToken), email, 1, TimeUnit.DAYS);
+
+        Map<String, Object> param = Maps.newHashMap();
+        param.put("loginName", registerDto.getLoginName());
+        param.put("email", registerDto.getEmail());
+        param.put("activeUserUrl", activeUserUrl + activeToken);
+        param.put("dateTime", DateUtil.formatDateTime(new Date()));
+
+        Set<String> to = Sets.newHashSet();
+        to.add(registerDto.getEmail());
+
+        MqMessageData mqMessageData = emailProducer.sendEmailMq(to, UacEmailTemplateEnum.ACTIVE_USER, AliyunMqTopicConstants.MqTagEnum.ACTIVE_USER, param);
+        userManager.register(mqMessageData, sysUser);
+
+        return id;
+    }
+
+    private void validateRegisterInfo(UserRegisterDto registerDto) {
+        String mobileNo = registerDto.getPhonenumber();
+
+        Preconditions.checkArgument(!org.springframework.util.StringUtils.isEmpty(registerDto.getLoginName()), ErrorCodeEnum.UAC10011007.msg());
+        Preconditions.checkArgument(!org.springframework.util.StringUtils.isEmpty(registerDto.getEmail()), ErrorCodeEnum.UAC10011018.msg());
+        Preconditions.checkArgument(!org.springframework.util.StringUtils.isEmpty(mobileNo), "手机号不能为空");
+        Preconditions.checkArgument(!org.springframework.util.StringUtils.isEmpty(registerDto.getPassword()), ErrorCodeEnum.UAC10011014.msg());
+        Preconditions.checkArgument(!org.springframework.util.StringUtils.isEmpty(registerDto.getConfirmPwd()), ErrorCodeEnum.UAC10011009.msg());
+        Preconditions.checkArgument(!org.springframework.util.StringUtils.isEmpty(registerDto.getRegisterSource()), "验证类型错误");
+        Preconditions.checkArgument(registerDto.getPassword().equals(registerDto.getConfirmPwd()), "两次密码不一致");
+
+        SysUser sysUser = new SysUser();
+        sysUser.setLoginName(registerDto.getLoginName());
+        sysUser.setPhonenumber(registerDto.getPhonenumber());
+        sysUser.setEmail(registerDto.getEmail());
+
+
+        if (UserConstants.USER_NAME_NOT_UNIQUE.equals(this.checkLoginNameUnique(sysUser.getLoginName()))) {
+            throw new BusinessException("新增用户'" + sysUser.getLoginName() + "'失败，登录账号已存在");
+        } else if (UserConstants.USER_PHONE_NOT_UNIQUE.equals(this.checkPhoneUnique(sysUser))) {
+            throw new BusinessException("新增用户'" + sysUser.getLoginName() + "'失败，手机号码已存在");
+        } else if (UserConstants.USER_EMAIL_NOT_UNIQUE.equals(this.checkEmailUnique(sysUser))) {
+            throw new BusinessException("新增用户'" + sysUser.getLoginName() + "'失败，邮箱账号已存在");
+        }
+
+    }
 
     /**
      * 根据条件分页查询用户列表

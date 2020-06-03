@@ -26,18 +26,18 @@ import com.ananops.system.service.IDonateService;
  * @author zmr
  * @version 1.0
  */
-@RestController
-@RequestMapping("donate")
-public class DonateController extends BaseController
-{
-    @Autowired
-    private IDonateService donateService;
-
-    @GetMapping("list")
-    public R list(Donate donate)
-    {
-        startPage();
-        List<Donate> list = donateService.selectDistrictsList(donate);
-        return result(list);
-    }
-}
+//@RestController
+//@RequestMapping("donate")
+//public class DonateController extends BaseController
+//{
+//    @Autowired
+//    private IDonateService donateService;
+//
+//    @GetMapping("list")
+//    public R list(Donate donate)
+//    {
+//        startPage();
+//        List<Donate> list = donateService.selectDistrictsList(donate);
+//        return result(list);
+//    }
+//}

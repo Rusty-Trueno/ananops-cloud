@@ -9,7 +9,18 @@
 	</parent>
 	<artifactId>ananops-cloud-system</artifactId>
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.freemarker/freemarker -->
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>2.3.30</version>
+		</dependency>
 
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-framework</artifactId>
+			<version>2.13.0</version>
+		</dependency>
 		<!--配置中心客户端 -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -67,7 +78,7 @@
 		<!-- 系统模块 -->
 		<dependency>
 			<groupId>com.ananops</groupId>
-			<artifactId>ananops-system-api</artifactId>
+			<artifactId>ananops-sdk-api</artifactId>
 			<version>1.0</version>
 		</dependency>
 		<!-- 日志模块 -->
@@ -140,6 +151,12 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.ananops</groupId>
+			<artifactId>ananops-opc-api</artifactId>
+			<version>1.0</version>
+			<scope>compile</scope>
 		</dependency>
 
 

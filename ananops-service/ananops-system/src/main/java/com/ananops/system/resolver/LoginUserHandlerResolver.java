@@ -1,5 +1,6 @@
 package com.ananops.system.resolver;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import com.ananops.system.service.ISysUserService;
 @Configuration
 public class LoginUserHandlerResolver implements HandlerMethodArgumentResolver
 {
-    @Autowired
+    @Resource
     private ISysUserService userService;
 
     @Override

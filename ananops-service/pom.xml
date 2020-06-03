@@ -20,5 +20,7 @@
         <module>ananops-amc</module>
         <module>ananops-mdmc</module>
         <module>ananops-bmc</module>
+        <module>ananops-tpc</module>
+        <module>ananops-opc</module>
     </modules>
 </project>
