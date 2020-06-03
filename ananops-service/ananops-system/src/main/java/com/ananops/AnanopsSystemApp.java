@@ -7,6 +7,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 import com.ananops.system.annotation.EnableRyFeignClients;
 
+import org.springframework.scheduling.annotation.EnableScheduling;
 import tk.mybatis.spring.annotation.MapperScan;
 
 /**
@@ -18,6 +19,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @EnableEurekaClient
 @EnableRyFeignClients
 @MapperScan("com.ananops.*.mapper")
+@EnableScheduling
 public class AnanopsSystemApp
 {
     public static void main(String[] args)

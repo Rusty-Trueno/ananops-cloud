@@ -9,7 +9,10 @@
 	</parent>
 	<artifactId>ananops-cloud-system</artifactId>
 	<dependencies>
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
 		<!--配置中心客户端 -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>

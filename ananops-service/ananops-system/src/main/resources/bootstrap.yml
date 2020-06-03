@@ -4,6 +4,13 @@ logging:
     com.ananops: debug
     org.springframework: warn
 spring:
+  rabbitmq:
+    username: guest
+    password: guest
+    host: 127.0.0.1
+    port: 5672
+    publisher-confirms: true
+    publisher-returns: true
   cloud:
     config:
       fail-fast: true
