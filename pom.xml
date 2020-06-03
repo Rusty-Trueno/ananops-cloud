@@ -229,6 +229,7 @@
         <module>ananops-service-api</module>
         <module>ananops-service</module>
         <module>ananops-tool</module>
+        <module>ananops-mailserver</module>
     </modules>
     <packaging>pom</packaging>
 
