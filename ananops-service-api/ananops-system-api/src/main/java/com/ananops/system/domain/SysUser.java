@@ -82,13 +82,6 @@ public class SysUser extends BaseEntity
     @Excel(name = "部门名称", targetAttr = "deptName", type = Type.EXPORT)
     private SysDept           dept;
 
-
-    /** 部门ID */
-    @Excel(name = "公司id", type = Type.IMPORT)
-    private Long companyId;
-
-    private String companyName;
-
     private List<SysRole>     roles;
 
     /** 角色组 */
@@ -315,22 +308,6 @@ public class SysUser extends BaseEntity
         this.buttons = buttons;
     }
 
-    public Long getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
     @Override
     public String toString() {
         return "SysUser{" +
@@ -350,8 +327,6 @@ public class SysUser extends BaseEntity
                 ", loginIp='" + loginIp + '\'' +
                 ", loginDate=" + loginDate +
                 ", dept=" + dept +
-                ", companyId=" + companyId +
-                ", companyName='" + companyName + '\'' +
                 ", roles=" + roles +
                 ", roleIds=" + roleIds +
                 ", postIds=" + Arrays.toString(postIds) +

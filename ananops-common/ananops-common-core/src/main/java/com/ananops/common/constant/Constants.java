@@ -75,4 +75,10 @@ public class Constants
     public final static String ACCESS_USERID    = "access_userid_";
 
     public static final String RESOURCE_PREFIX  = "/profile";
+
+    public static final String REDIS_REGISTRY_ID_ROOT_PATH  = "ananops_registry_serviceid";
+
+    public static final String UNDERLINE  =  "_";
+
+    public static final String REDIS_SERVICEID =  "ananops_serviceid";
 }

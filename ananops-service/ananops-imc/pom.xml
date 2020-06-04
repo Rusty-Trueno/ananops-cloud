@@ -19,6 +19,11 @@
             <artifactId>ananops-imc-api</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.ananops</groupId>
+            <artifactId>ananops-system-api</artifactId>
+            <version>1.0</version>
+        </dependency>
         <!--引入公共组件-->
         <dependency>
             <groupId>com.ananops</groupId>
@@ -118,6 +123,10 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>eu.bitwalker</groupId>
+            <artifactId>UserAgentUtils</artifactId>
         </dependency>
 
 

@@ -7,12 +7,16 @@ import com.ananops.common.core.service.BaseService;
 import com.ananops.common.exception.BusinessException;
 import com.ananops.common.utils.bean.BeanUtils;
 import com.ananops.common.utils.bean.UpdateInfoUtil;
+import com.ananops.imc.domain.AnImcInspectionItemLog;
 import com.ananops.imc.domain.AnImcInspectionTask;
 import com.ananops.imc.dto.*;
 import com.ananops.imc.enums.ItemStatusEnum;
 import com.ananops.imc.enums.TaskStatusEnum;
+import com.ananops.imc.mapper.AnImcInspectionItemLogMapper;
 import com.ananops.imc.mapper.AnImcInspectionTaskMapper;
 import com.ananops.imc.service.IAnImcInspectionTaskService;
+import com.ananops.system.domain.SysUser;
+import com.ananops.system.feign.RemoteUserService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -42,6 +46,12 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
     @Autowired
     private IAnImcInspectionTaskService anImcInspectionTaskService;
 
+    @Autowired
+    private AnImcInspectionItemLogMapper anImcInspectionItemLogMapper;
+
+    @Autowired
+    private RemoteUserService remoteUserService;
+
     /**
      * 查询巡检任务子项
      * 
@@ -49,9 +59,15 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
      * @return 巡检任务子项
      */
     @Override
-    public AnImcInspectionItem selectAnImcInspectionItemById(Long id)
+    public ImcInspectionItemDto selectAnImcInspectionItemById(Long id)
     {
-        return anImcInspectionItemMapper.selectAnImcInspectionItemById(id);
+        AnImcInspectionItem anImcInspectionItem = anImcInspectionItemMapper.selectAnImcInspectionItemById(id);
+        if(null == anImcInspectionItem){
+            return new ImcInspectionItemDto();
+        }
+        List<AnImcInspectionItem> imcInspectionItemDtos = new ArrayList<>();
+        imcInspectionItemDtos.add(anImcInspectionItem);
+        return transform(imcInspectionItemDtos).get(0);
     }
 
     /**
@@ -250,6 +266,22 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
     }
 
     /**
+     * 查询巡检任务子项的日志
+     * @param itemId
+     * @return
+     */
+    @Override
+    public List<ItemLogDto> getItemLogs(Long itemId){
+        List<ItemLogDto> itemLogDtos = anImcInspectionItemLogMapper.getItemLogs(itemId);
+        if(null != itemLogDtos && itemLogDtos.size() > 0){
+            itemLogDtos.forEach(itemLog ->{
+                itemLog.setStatusMsg(ItemStatusEnum.getStatusMsg(itemLog.getStatus()));
+            });
+        }
+        return itemLogDtos;
+    }
+
+    /**
      * 巡检任务子项转换方法
      * @param imcInspectionItems
      * @return
@@ -267,7 +299,11 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
                     imcInspectionItemDto.setMaintainerName(nameMap.get(maintainerId));
                 }else{
                     //调用uac查询用户名
-                    //TODO
+                    SysUser user = remoteUserService.selectSysUserByUserId(maintainerId);
+                    if (null != user) {
+                        nameMap.put(maintainerId,user.getUserName());
+                        imcInspectionItemDto.setMaintainerName(user.getUserName());
+                    }
                 }
             }
             imcInspectionItemDtos.add(imcInspectionItemDto);

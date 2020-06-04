@@ -2,6 +2,7 @@ package com.ananops.common.utils.bean;
 
 import com.ananops.common.core.domain.UpdateInfo;
 import com.ananops.common.core.dto.LoginAuthDto;
+import com.ananops.common.core.generator.UniqueIdGenerator;
 import com.ananops.common.exception.BusinessException;
 import com.ananops.common.utils.DateUtils;
 
@@ -31,6 +32,7 @@ public class UpdateInfoUtil {
             updateInfo.setUpdateBy(user.getUserName());
             updateInfo.setLastOperatorId(user.getUserId());
             updateInfo.setUpdateTime(nowTime);
+            updateInfo.setId(UniqueIdGenerator.generateId());
             BeanUtils.copyBeanProp(pojo, updateInfo);
         } catch (Exception e) {
             throw new BusinessException("Bean拷贝异常");

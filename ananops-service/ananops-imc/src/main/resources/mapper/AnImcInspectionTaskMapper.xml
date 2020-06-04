@@ -29,10 +29,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="frequency"    column="frequency"    />
         <result property="content"     column="content"     />
         <result property="pointSum"     column="point_sum"      />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
     </resultMap>
 
     <sql id="selectAnImcInspectionTaskVo">
-        select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, principal_id, facilitator_id, project_id, location, status, total_cost, maintenance_cost, scheduled_start_time, actual_finish_time, days, inspection_type, remark, task_name, frequency, content, point_sum from an_imc_inspection_task
+        select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, principal_id, facilitator_id, project_id, location, status, total_cost, maintenance_cost, scheduled_start_time, actual_finish_time, days, inspection_type, remark, task_name, frequency, content, point_sum, company_id, company_name from an_imc_inspection_task
     </sql>
 
     <select id="selectAnImcInspectionTaskList" parameterType="AnImcInspectionTask" resultMap="AnImcInspectionTaskResult">
@@ -72,7 +74,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="taskName != null  and taskName != ''">task_name,</if>
             <if test="frequency != null ">frequency,</if>
             <if test="content != null" >content,</if>
-            <if test="point_sum != null">point_sum,</if>
+            <if test="pointSum != null">point_sum,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
          </trim>
     </insert>
 
@@ -101,7 +105,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="taskName != null  and taskName != ''">task_name = #{taskName},</if>
             <if test="frequency != null ">frequency = #{frequency},</if>
             <if test="content != null" >content = #{content},</if>
-            <if test="point_sum != null">point_sum = #{pointSum},</if>
+            <if test="pointSum != null">point_sum = #{pointSum},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
         </trim>
         where id = #{id}
     </update>
@@ -142,7 +148,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="taskName != null  and taskName != ''">task_name = #{taskName},</if>
             <if test="frequency != null ">frequency = #{frequency},</if>
             <if test="content != null" >content = #{content},</if>
-            <if test="point_sum != null">point_sum = #{pointSum},</if>
+            <if test="pointSum != null">point_sum = #{pointSum},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
         </trim>
         where 1=1
         and (

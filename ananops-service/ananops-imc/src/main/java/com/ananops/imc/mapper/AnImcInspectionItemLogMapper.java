@@ -2,6 +2,8 @@ package com.ananops.imc.mapper;
 
 import com.ananops.common.core.dao.BaseMapper;
 import com.ananops.imc.domain.AnImcInspectionItemLog;
+import com.ananops.imc.dto.ItemLogDto;
+
 import java.util.List;
 
 /**
@@ -59,4 +61,11 @@ public interface AnImcInspectionItemLogMapper extends BaseMapper<AnImcInspection
      * @return 结果
      */
     public int deleteAnImcInspectionItemLogByIds(String[] ids);
+
+    /**
+     * 获取巡检任务子项日志
+     * @param itemId
+     * @return
+     */
+    public List<ItemLogDto> getItemLogs(Long itemId);
 }

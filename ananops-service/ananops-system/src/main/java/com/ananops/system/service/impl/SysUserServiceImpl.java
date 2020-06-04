@@ -1,9 +1,15 @@
 package com.ananops.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import cn.hutool.core.date.DateUtil;
+import com.ananops.common.utils.RandomUtil;
+import com.ananops.system.dto.UserRegisterDto;
+import com.ananops.system.manager.UserManager;
+import com.ananops.system.util.PasswordUtil;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +64,9 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Autowired
     private ISysConfigService   configService;
+
+    @Autowired
+    private UserManager userManager;
 
     /**
      * 根据条件分页查询用户列表
@@ -494,4 +503,68 @@ public class SysUserServiceImpl implements ISysUserService
     {
         return ArrayUtil.isNotEmpty(deptIds) ? userMapper.selectUserIdsInDepts(deptIds) : null;
     }
+
+    @Override
+    public void register(UserRegisterDto registerDto) {
+        // 校验注册信息
+        validateRegisterInfo(registerDto);
+        String phonenumber = registerDto.getPhonenumber();
+        String email = registerDto.getEmail();
+        Date row = new Date();
+        // 封装注册信息
+        SysUser sysUser = new SysUser();
+        sysUser.setLoginName(registerDto.getLoginName());
+        sysUser.setSalt(RandomUtil.randomStr(6));
+        sysUser.setPassword(PasswordUtil.encryptPassword(sysUser.getLoginName(), sysUser.getPassword(), sysUser.getSalt()));
+        sysUser.setPhonenumber(phonenumber);
+        sysUser.setStatus("1");  //停用
+        sysUser.setCreateTime(row);
+        sysUser.setUpdateTime(row);
+        sysUser.setEmail(email);
+        sysUser.setCreateBy(registerDto.getLoginName());
+        sysUser.setUserName(registerDto.getLoginName());
+        sysUser.setUpdateBy(registerDto.getLoginName());
+
+        // 发送激活邮件
+
+        Map<String, Object> param = Maps.newHashMap();
+        param.put("loginName", registerDto.getLoginName());
+        param.put("email", registerDto.getEmail());
+//        param.put("activeUserUrl", activeUserUrl + activeToken);
+        param.put("dateTime", DateUtil.formatDateTime(new Date()));
+
+        Set<String> to = Sets.newHashSet();
+        to.add(registerDto.getEmail());
+
+//        MqMessageData mqMessageData = emailProducer.sendEmailMq(to, UacEmailTemplateEnum.ACTIVE_USER, AliyunMqTopicConstants.MqTagEnum.ACTIVE_USER, param);
+        userManager.register(sysUser);
+
+    }
+
+    private void validateRegisterInfo(UserRegisterDto registerDto) {
+        String mobileNo = registerDto.getPhonenumber();
+
+        Preconditions.checkArgument(!org.springframework.util.StringUtils.isEmpty(registerDto.getLoginName()), "登录名不能为空");
+        Preconditions.checkArgument(!org.springframework.util.StringUtils.isEmpty(registerDto.getEmail()), "邮箱不能为空");
+        Preconditions.checkArgument(!org.springframework.util.StringUtils.isEmpty(mobileNo), "手机号不能为空");
+        Preconditions.checkArgument(!org.springframework.util.StringUtils.isEmpty(registerDto.getPassword()), "新密码不能为空");
+        Preconditions.checkArgument(!org.springframework.util.StringUtils.isEmpty(registerDto.getConfirmPwd()), "确认密码不能为空");
+        Preconditions.checkArgument(registerDto.getPassword().equals(registerDto.getConfirmPwd()), "两次密码不一致");
+
+        SysUser sysUser = new SysUser();
+        sysUser.setLoginName(registerDto.getLoginName());
+        sysUser.setPhonenumber(registerDto.getPhonenumber());
+        sysUser.setEmail(registerDto.getEmail());
+
+
+        if (UserConstants.USER_NAME_NOT_UNIQUE.equals(this.checkLoginNameUnique(sysUser.getLoginName()))) {
+            throw new BusinessException("新增用户'" + sysUser.getLoginName() + "'失败，登录账号已存在");
+        } else if (UserConstants.USER_PHONE_NOT_UNIQUE.equals(this.checkPhoneUnique(sysUser))) {
+            throw new BusinessException("新增用户'" + sysUser.getLoginName() + "'失败，手机号码已存在");
+        } else if (UserConstants.USER_EMAIL_NOT_UNIQUE.equals(this.checkEmailUnique(sysUser))) {
+            throw new BusinessException("新增用户'" + sysUser.getLoginName() + "'失败，邮箱账号已存在");
+        }
+
+    }
+
 }

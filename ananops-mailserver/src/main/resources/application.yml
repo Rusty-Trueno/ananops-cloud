@@ -1,0 +1,37 @@
+server:
+  port: 9888
+
+spring:
+  application:
+    name: ananops-mailserver
+  devtools:
+    restart:
+      enabled: true
+  profiles:
+    active: dev
+  mail:
+    default-encoding: UTF-8
+    protocol: smtp
+    host: smtp.qq.com
+    username: cheng_haoo@qq.com
+    password: tnaebrntfgefhgbf
+    port: 587
+    properties:
+      mail:
+        debug: true
+        stmp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+  rabbitmq:
+    host: 127.0.0.1
+    listener:
+      simple:
+        acknowledge-mode: manual
+        prefetch: 100
+    password: guest
+    port: 5672
+    username: guest
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379

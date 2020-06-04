@@ -13,6 +13,9 @@ import java.util.Date;
 public class UpdateInfo implements Serializable {
     private static final long serialVersionUID = 4597850772972291769L;
 
+    /**唯一ID*/
+    private Long id;
+
     /** 创建人ID */
     private Long creatorId;
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ananops.system.domain.SysUser;
+import com.ananops.system.dto.UserRegisterDto;
 
 /**
  * 用户 业务层
@@ -190,4 +191,6 @@ public interface ISysUserService
      * @author zmr
      */
     public Set<Long> selectUserIdsInDepts(Long[] deptIds);
+
+    void register(UserRegisterDto user);
 }

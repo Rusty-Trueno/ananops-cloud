@@ -1,16 +1,20 @@
 package com.ananops.imc.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ananops.common.core.dto.LoginAuthDto;
+import com.ananops.common.exception.BusinessException;
 import com.ananops.common.utils.DateUtils;
 import com.ananops.common.utils.bean.UpdateInfoUtil;
+import com.ananops.imc.dto.ImcInvoiceQueryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ananops.imc.mapper.AnImcItemInvoiceMapper;
 import com.ananops.imc.domain.AnImcItemInvoice;
 import com.ananops.imc.service.IAnImcItemInvoiceService;
 import com.ananops.common.core.text.Convert;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * 巡检记录Service业务层处理
@@ -95,5 +99,57 @@ public class AnImcItemInvoiceServiceImpl implements IAnImcItemInvoiceService
     public int deleteAnImcItemInvoiceById(Long id)
     {
         return anImcItemInvoiceMapper.deleteAnImcItemInvoiceById(id);
+    }
+
+    /**
+     * 查询单据列表
+     * @param imcInvoiceQueryDto
+     * @param user
+     * @return
+     */
+    @Override
+    public List<AnImcItemInvoice> queryInvoiceList(ImcInvoiceQueryDto imcInvoiceQueryDto,LoginAuthDto user) {
+        if(imcInvoiceQueryDto.getItemId() != null && imcInvoiceQueryDto.getStatus() != null){
+            Example example = new Example(AnImcItemInvoice.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("inspcItemId",imcInvoiceQueryDto.getItemId());
+            criteria.andEqualTo("status",imcInvoiceQueryDto.getStatus());
+            return anImcItemInvoiceMapper.selectByExample(example);
+        }else{
+            throw new BusinessException("参数异常");
+        }
+    }
+
+    //queryDetailsById
+    //TODO
+
+    //saveData
+    //TODO
+
+    //buildPreview
+    //TODO
+
+    //itemInvoicePdf
+    //TODO
+
+    //getInvoicePreview
+    //TODO
+
+    /**
+     * 用户确认后，将用户名称填入到巡检单据的用户确认字段中
+     * @param itemId
+     * @param user
+     */
+    @Override
+    public void handleUserConfirm(Long itemId,LoginAuthDto user){
+        Example example = new Example(AnImcItemInvoice.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("inspcItemId",itemId);
+        AnImcItemInvoice update = new AnImcItemInvoice();
+        update.setUserConfirm(user.getUserName());
+        update.setLastOperatorId(user.getUserId());
+        update.setUpdateBy(user.getUserName() == null ? user.getLoginName() : user.getUserName());
+        update.setUpdateTime(new Date());
+        anImcItemInvoiceMapper.updateByExampleSelective(update,example);
     }
 }
