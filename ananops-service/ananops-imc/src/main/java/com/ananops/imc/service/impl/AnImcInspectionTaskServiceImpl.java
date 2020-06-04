@@ -3,6 +3,7 @@ package com.ananops.imc.service.impl;
 import java.util.*;
 
 import com.ananops.common.core.dto.LoginAuthDto;
+import com.ananops.common.core.generator.UniqueIdGenerator;
 import com.ananops.common.core.service.BaseService;
 import com.ananops.common.exception.BusinessException;
 import com.ananops.common.utils.DateUtils;
@@ -91,11 +92,13 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
     @Override
     public ImcAddInspectionTaskDto insertAnImcInspectionTask(ImcAddInspectionTaskDto imcAddInspectionTaskDto, LoginAuthDto user)
     {
+        Long id = UniqueIdGenerator.generateId();
+        logger.info("new id is {}", id);
         //Bean拷贝
         AnImcInspectionTask anImcInspectionTask = new AnImcInspectionTask();
         BeanUtils.copyProperties(imcAddInspectionTaskDto,anImcInspectionTask);
         UpdateInfoUtil.setInsertInfo(anImcInspectionTask,user);
-
+        anImcInspectionTask.setId(id);
         //新建巡检任务
         Integer inspectionType = imcAddInspectionTaskDto.getInspectionType();
         Date startTime = imcAddInspectionTaskDto.getScheduledStartTime();

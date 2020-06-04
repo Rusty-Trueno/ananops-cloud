@@ -78,6 +78,15 @@ public class RedisUtils
     }
 
     /**
+     * 判断某个key是否存在
+     * @param key
+     * @return
+     */
+    public Boolean setnx(String key,String value){
+        return valueOperations.setIfAbsent(key,value);
+    }
+
+    /**
      * 删除缓存
      * @param key 键
      * @author zmr
