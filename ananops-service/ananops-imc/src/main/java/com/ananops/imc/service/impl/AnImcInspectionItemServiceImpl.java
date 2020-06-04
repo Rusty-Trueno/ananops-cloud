@@ -15,6 +15,8 @@ import com.ananops.imc.enums.TaskStatusEnum;
 import com.ananops.imc.mapper.AnImcInspectionItemLogMapper;
 import com.ananops.imc.mapper.AnImcInspectionTaskMapper;
 import com.ananops.imc.service.IAnImcInspectionTaskService;
+import com.ananops.system.domain.SysUser;
+import com.ananops.system.feign.RemoteUserService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -46,6 +48,9 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
 
     @Autowired
     private AnImcInspectionItemLogMapper anImcInspectionItemLogMapper;
+
+    @Autowired
+    private RemoteUserService remoteUserService;
 
     /**
      * 查询巡检任务子项
@@ -294,7 +299,11 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
                     imcInspectionItemDto.setMaintainerName(nameMap.get(maintainerId));
                 }else{
                     //调用uac查询用户名
-                    //TODO
+                    SysUser user = remoteUserService.selectSysUserByUserId(maintainerId);
+                    if (null != user) {
+                        nameMap.put(maintainerId,user.getUserName());
+                        imcInspectionItemDto.setMaintainerName(user.getUserName());
+                    }
                 }
             }
             imcInspectionItemDtos.add(imcInspectionItemDto);

@@ -19,6 +19,8 @@ import com.ananops.imc.enums.TaskTypeEnum;
 import com.ananops.imc.mapper.AnImcInspectionItemMapper;
 import com.ananops.imc.mapper.AnImcInspectionTaskLogMapper;
 import com.ananops.imc.service.IAnImcInspectionItemService;
+import com.ananops.system.domain.SysUser;
+import com.ananops.system.feign.RemoteUserService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -51,6 +53,9 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
 
     @Autowired
     private AnImcInspectionTaskLogMapper anImcInspectionTaskLogMapper;
+
+    @Autowired
+    private RemoteUserService remoteUserService;
 
     /**
      * 查询巡检任务表
@@ -462,9 +467,28 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
             BeanUtils.copyProperties(imcInspectionTask,imcInspectionTaskDto);
             logger.info("imcInspectionTask = {},imcInspectionTaskDto = {}",imcInspectionTask,imcInspectionTaskDto);
             //装入已安排的点位数
-            //TODO
+            Example example = new Example(AnImcInspectionItem.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("inspectionTaskId",imcInspectionTask.getId());
+            List<AnImcInspectionItem> items = anImcInspectionItemMapper.selectByExample(example);
+            int count = 0;
+            if (null != items && items.size() > 0){
+                for(AnImcInspectionItem item :items){
+                    count += item.getCount() != null ? item.getCount() : 0;
+                }
+            }
+            imcInspectionTaskDto.setAlreadyPoint(count);
             //转换用户名
-            //TODO
+            Long principalId = imcInspectionTask.getPrincipalId();
+            if (nameMap.containsKey(principalId)) {
+                imcInspectionTaskDto.setPrincipalName(nameMap.get(principalId));
+            } else {
+                SysUser user = remoteUserService.selectSysUserByUserId(principalId);
+                if ( null != user) {
+                    nameMap.put(principalId,user.getLoginName());
+                    imcInspectionTaskDto.setPrincipalName(user.getUserName());
+                }
+            }
             //转换项目名称
             //TODO
             //转换服务商名称
