@@ -92,13 +92,10 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
     @Override
     public ImcAddInspectionTaskDto insertAnImcInspectionTask(ImcAddInspectionTaskDto imcAddInspectionTaskDto, LoginAuthDto user)
     {
-        Long id = UniqueIdGenerator.generateId();
-        logger.info("new id is {}", id);
         //Bean拷贝
         AnImcInspectionTask anImcInspectionTask = new AnImcInspectionTask();
         BeanUtils.copyProperties(imcAddInspectionTaskDto,anImcInspectionTask);
         UpdateInfoUtil.setInsertInfo(anImcInspectionTask,user);
-        anImcInspectionTask.setId(id);
         //新建巡检任务
         Integer inspectionType = imcAddInspectionTaskDto.getInspectionType();
         Date startTime = imcAddInspectionTaskDto.getScheduledStartTime();
