@@ -1,6 +1,7 @@
 package com.ananops.mdmc.dto;
 
 import com.ananops.mdmc.domain.AnMdmcTask;
+import com.ananops.system.domain.SysUser;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -26,25 +27,25 @@ public class MdmcTaskDetailDto implements Serializable {
     /**
      * 服务商信息
      */
-//    @ApiModelProperty(value = "服务商信息")
-//    private UserInfoDto companyVo;
+    @ApiModelProperty(value = "服务商信息")
+    private SysUser facInfo;
 
     /**
      * 报修人信息
      */
-//    @ApiModelProperty(value = "报修人信息")
-//     private UserInfoDto userInfoDto;
+    @ApiModelProperty(value = "报修人信息")
+     private SysUser userInfoDto;
 
     /**
      * 维修工信息
      */
-//    @ApiModelProperty(value = "维修工信息")
-//    private UserInfoDto engineerDto;
+    @ApiModelProperty(value = "维修工信息")
+    private SysUser engineerInfo;
 
     /**
      * 用户负责人信息
      */
-//    @ApiModelProperty(value = "用户负责人信息")
-//    private UserInfoDto principalInfoDto;
+    @ApiModelProperty(value = "用户负责人信息")
+    private SysUser principalInfo;
 
 }

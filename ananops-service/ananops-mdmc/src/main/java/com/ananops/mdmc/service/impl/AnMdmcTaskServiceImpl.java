@@ -12,6 +12,10 @@ import com.ananops.mdmc.dto.*;
 import com.ananops.mdmc.enums.MdmcTaskStatusEnum;
 import com.ananops.mdmc.mapper.AnMdmcTaskItemMapper;
 import com.ananops.mdmc.service.IAnMdmcTaskItemService;
+import com.ananops.system.domain.SysRole;
+import com.ananops.system.domain.SysUser;
+import com.ananops.system.feign.RemoteRoleService;
+import com.ananops.system.feign.RemoteUserService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -42,6 +46,12 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
     @Resource
     private IAnMdmcTaskItemService itemService;
 
+    @Resource
+    private RemoteUserService userService;
+
+    @Resource
+    private RemoteRoleService roleService;
+
     /**
      * 查询维修工单
      *
@@ -57,7 +67,19 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
             throw new BusinessException("查无此工单");
         }
         taskDetailDto.setMdmcTask(mdmcTask);
-        //todo 调用uac和pmc获取其他信息
+        if (mdmcTask.getFacilitatorId()!=null){
+            taskDetailDto.setFacInfo(userService.selectSysUserByUserId(mdmcTask.getFacilitatorId()));
+        }
+        if (mdmcTask.getMaintainerId()!=null){
+            taskDetailDto.setEngineerInfo(userService.selectSysUserByUserId(mdmcTask.getMaintainerId()));
+        }
+        if (mdmcTask.getPrincipalId()!=null){
+            taskDetailDto.setPrincipalInfo(userService.selectSysUserByUserId(mdmcTask.getPrincipalId()));
+        }
+        if (mdmcTask.getUserId()!=null){
+            taskDetailDto.setUserInfoDto(userService.selectSysUserByUserId(mdmcTask.getUserId()));
+        }
+        //todo 调用获取项目信息
 
         return taskDetailDto;
     }
@@ -71,13 +93,28 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
     @Override
     public PageInfo selectAnMdmcTaskList(MdmcQueryDto queryDto)
     {
-        String roleCode="x";
         Long id=queryDto.getId();
+        if (id==null){
+            throw new BusinessException("用户id不能是空");
+        }
         Integer status=queryDto.getStatus();
         List<AnMdmcTask> taskList=new ArrayList<>();
         Integer pageNum=queryDto.getPageNum();
         Integer pageSize=queryDto.getPageSize();
-        //todo 调用uac查角色
+        SysUser user=userService.selectSysUserByUserId(id);
+        if (user==null){
+            throw new BusinessException("找不到此用户id对应的用户信息");
+        }
+        List<Long> roleIds=user.getRoleIds();
+        if (roleIds==null||roleIds.size()==0){
+            throw new BusinessException("该用户没有绑定角色权限");
+        }
+        Long roleId=roleIds.get(0);
+        SysRole role=roleService.selectSysRoleByRoleId(roleId);
+        if (role==null){
+            throw new BusinessException("根据角色编码查出的角色信息是空");
+        }
+        String roleCode=role.getRoleKey();
         return status==null ? getListByRole(roleCode,pageNum,pageSize,id):getListByRoleAndStatus(roleCode,pageNum,pageSize,id,status);
     }
 
@@ -85,7 +122,7 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
         List<AnMdmcTask> taskList=new ArrayList<>();
         Page page=PageHelper.startPage(pageNum,pageSize);
         switch (role){
-            case "fac_manager":taskList=anMdmcTaskMapper.selectByFacId(id);break;
+            case "fac_leader":taskList=anMdmcTaskMapper.selectByFacId(id);break;
             case "engineer": taskList=anMdmcTaskMapper.selectByMantainerId(id);break;
             case "user_watcher":taskList=anMdmcTaskMapper.selectByUserId(id);break;
             case "user_leader":taskList=anMdmcTaskMapper.selectByBossId(id);break;
@@ -102,7 +139,7 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
         List<AnMdmcTask> taskList=new ArrayList<>();
         Page page=PageHelper.startPage(pageNum,pageSize);
         switch (role){
-            case "fac_manager":taskList=anMdmcTaskMapper.selectByFacIdAndStatus(status,id);break;
+            case "fac_leader":taskList=anMdmcTaskMapper.selectByFacIdAndStatus(status,id);break;
             case "engineer": taskList=anMdmcTaskMapper.selectByMaintainerIdAndStatus(status,id);break;
             case "user_watcher":taskList=anMdmcTaskMapper.selectByUserIdAndStatus(status,id);break;
             case "user_leader":taskList=anMdmcTaskMapper.selectByBossIdAndStatus(status,id);break;
@@ -118,10 +155,22 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
     private List<MdmcTaskDetailDto> transform(List<AnMdmcTask> taskList,Long id){
         List<MdmcTaskDetailDto> taskDetailDtos = new ArrayList<>();
         for(AnMdmcTask task:taskList){
-            MdmcTaskDetailDto taskListDto=new MdmcTaskDetailDto();
-            taskListDto.setMdmcTask(task);
-            //todo 调用其他模块聚合的信息
-            taskDetailDtos.add(taskListDto);
+            MdmcTaskDetailDto taskDetailDto=new MdmcTaskDetailDto();
+            taskDetailDto.setMdmcTask(task);
+            if (task.getFacilitatorId()!=null){
+                taskDetailDto.setFacInfo(userService.selectSysUserByUserId(task.getFacilitatorId()));
+            }
+            if (task.getMaintainerId()!=null){
+                taskDetailDto.setEngineerInfo(userService.selectSysUserByUserId(task.getMaintainerId()));
+            }
+            if (task.getPrincipalId()!=null){
+                taskDetailDto.setPrincipalInfo(userService.selectSysUserByUserId(task.getPrincipalId()));
+            }
+            if (task.getUserId()!=null){
+                taskDetailDto.setUserInfoDto(userService.selectSysUserByUserId(task.getUserId()));
+            }
+            //todo 调用其他模块获取项目信息
+            taskDetailDtos.add(taskDetailDto);
         }
         return taskDetailDtos;
     }

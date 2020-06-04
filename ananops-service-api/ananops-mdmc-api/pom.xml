@@ -26,6 +26,12 @@
             <artifactId>ananops-common-swagger</artifactId>
             <version>1.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.ananops</groupId>
+            <artifactId>ananops-system-api</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
 
