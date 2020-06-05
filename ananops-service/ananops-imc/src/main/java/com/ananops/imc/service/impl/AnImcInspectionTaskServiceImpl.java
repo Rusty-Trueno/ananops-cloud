@@ -5,6 +5,7 @@ import java.util.*;
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.common.core.generator.UniqueIdGenerator;
 import com.ananops.common.core.service.BaseService;
+import com.ananops.common.enums.WsMsgType;
 import com.ananops.common.exception.BusinessException;
 import com.ananops.common.utils.DateUtils;
 import com.ananops.common.utils.StringUtils;
@@ -12,15 +13,14 @@ import com.ananops.common.utils.bean.BeanUtils;
 import com.ananops.common.utils.bean.UpdateInfoUtil;
 import com.ananops.imc.domain.AnImcInspectionItem;
 import com.ananops.imc.dto.*;
-import com.ananops.imc.enums.ItemStatusEnum;
-import com.ananops.imc.enums.RoleEnum;
-import com.ananops.imc.enums.TaskStatusEnum;
-import com.ananops.imc.enums.TaskTypeEnum;
+import com.ananops.imc.enums.*;
 import com.ananops.imc.mapper.AnImcInspectionItemMapper;
 import com.ananops.imc.mapper.AnImcInspectionTaskLogMapper;
 import com.ananops.imc.service.IAnImcInspectionItemService;
 import com.ananops.system.domain.SysUser;
 import com.ananops.system.feign.RemoteUserService;
+import com.ananops.websocket.dto.MsgDto;
+import com.ananops.websocket.feign.RemoteWebSocketService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -56,6 +56,9 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
 
     @Autowired
     private RemoteUserService remoteUserService;
+
+    @Autowired
+    private RemoteWebSocketService remoteWebSocketService;
 
     /**
      * 查询巡检任务表
@@ -133,6 +136,9 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         }
         //更新返回结果
         BeanUtils.copyProperties(anImcInspectionTask,imcAddInspectionTaskDto);
+
+        AnImcInspectionTask task = anImcInspectionTaskMapper.selectByPrimaryKey(taskId);
+        this.handleWsMsgSend(task);
 
         return imcAddInspectionTaskDto;
     }
@@ -246,6 +252,8 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
                 }
                 break;
         }
+        AnImcInspectionTask task = anImcInspectionTaskMapper.selectByPrimaryKey(taskId);
+        this.handleWsMsgSend(task);
         return imcTaskChangeStatusDto;
     }
 
@@ -457,6 +465,35 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
             });
         }
         return taskLogDtos;
+    }
+
+    private void handleWsMsgSend(AnImcInspectionTask task) {
+        Long taskId = task.getId();
+        Integer status = task.getStatus();
+        Long principalId = task.getPrincipalId();
+        Long facilitatorId = task.getFacilitatorId();
+        TaskWsDto taskWsDto = new TaskWsDto();
+        MsgDto<TaskWsDto> msgDto = new MsgDto<>();
+        if (status==-1||status==0||status==1||status==3||status==4||status==5||status==6||status==7) {
+            //发给甲方负责人
+            taskWsDto.setStatus(status);
+            taskWsDto.setStatusMsg(TaskStatusEnum.getStatusMsg(status));
+            taskWsDto.setTaskId(taskId);
+            msgDto.setId(String.valueOf(principalId));
+            msgDto.setMsg(taskWsDto);
+            msgDto.setMsgType(WsMsgType.IMC_TASK_STATUS.getType());
+        } else if (status==2) {
+            //发给服务商的消息
+            taskWsDto.setStatus(status);
+            taskWsDto.setStatusMsg(TaskStatusEnum.getStatusMsg(status));
+            taskWsDto.setTaskId(taskId);
+            msgDto.setId(String.valueOf(facilitatorId));
+            msgDto.setMsg(taskWsDto);
+            msgDto.setMsgType(WsMsgType.IMC_TASK_STATUS.getType());
+        } else {
+            throw new BusinessException("查无此状态");
+        }
+        remoteWebSocketService.createWebsocketMsg(msgDto);
     }
 
     private List<ImcInspectionTaskDto> transform(List<AnImcInspectionTask> imcInspectionTasks){

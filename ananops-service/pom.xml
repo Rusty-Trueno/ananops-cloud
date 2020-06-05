@@ -21,5 +21,6 @@
         <module>ananops-mdmc</module>
         <module>ananops-bmc</module>
         <module>ananops-mdc</module>
+        <module>ananops-websocket</module>
     </modules>
 </project>

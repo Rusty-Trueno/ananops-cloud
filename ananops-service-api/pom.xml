@@ -16,6 +16,7 @@
         <module>ananops-mdmc-api</module>
         <module>ananops-bmc-api</module>
         <module>ananops-mdc-api</module>
+        <module>ananops-websocket-api</module>
     </modules>
     <dependencies>
         <dependency>

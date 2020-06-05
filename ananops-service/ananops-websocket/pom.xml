@@ -9,24 +9,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ananops-cloud-imc</artifactId>
+    <artifactId>ananops-cloud-websocket</artifactId>
     <version>1.0</version>
 
     <dependencies>
-        <!--引入feign-->
+        <!--引入Feign-->
         <dependency>
             <groupId>com.ananops</groupId>
             <artifactId>ananops-websocket-api</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ananops</groupId>
-            <artifactId>ananops-imc-api</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ananops</groupId>
-            <artifactId>ananops-system-api</artifactId>
             <version>1.0</version>
         </dependency>
         <!--引入公共组件-->
@@ -39,12 +29,6 @@
         <dependency>
             <groupId>com.ananops</groupId>
             <artifactId>ananops-common-core</artifactId>
-            <version>1.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ananops</groupId>
-            <artifactId>ananops-common-redis</artifactId>
             <version>1.0</version>
         </dependency>
 
@@ -67,23 +51,6 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
-        <!--web 模块 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <!--排除tomcat依赖 -->
-                <exclusion>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                    <groupId>org.springframework.boot</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!--undertow容器 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-undertow</artifactId>
-        </dependency>
 
         <!--阿里数据库连接池 -->
         <dependency>
@@ -129,13 +96,14 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
+
+        <!--websocket-->
         <dependency>
-            <groupId>eu.bitwalker</groupId>
-            <artifactId>UserAgentUtils</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
-
-
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -154,5 +122,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>
