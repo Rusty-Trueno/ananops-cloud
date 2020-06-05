@@ -178,7 +178,7 @@ public interface ISysUserService
 
     /**
      * 查询拥有当前角色的所有用户
-     * @param roleId
+     * @param roleIds
      * @return
      * @author zmr
      */
@@ -186,7 +186,7 @@ public interface ISysUserService
 
     /**
      * 查询所有当前部门中的用户
-     * @param deptId
+     * @param deptIds
      * @return
      * @author zmr
      */
