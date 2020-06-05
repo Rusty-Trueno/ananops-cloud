@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ananops.mdc.mapper.AnMdcExceptionLogMapper">
+    
+    <resultMap type="AnMdcExceptionLog" id="AnMdcExceptionLogResult">
+        <result property="id"    column="id"    />
+        <result property="applicationName"    column="application_name"    />
+        <result property="exceptionSimpleName"    column="exception_simple_name"    />
+        <result property="exceptionMessage"    column="exception_message"    />
+        <result property="exceptionCause"    column="exception_cause"    />
+        <result property="exceptionStack"    column="exception_stack"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
+    </resultMap>
+
+    <sql id="selectAnMdcExceptionLogVo">
+        select id, application_name, exception_simple_name, exception_message, exception_cause, exception_stack, create_by, creator_id, create_time, remark, company_id, company_name from an_mdc_exception_log
+    </sql>
+
+    <select id="selectAnMdcExceptionLogList" parameterType="AnMdcExceptionLog" resultMap="AnMdcExceptionLogResult">
+        <include refid="selectAnMdcExceptionLogVo"/>
+        <where>  
+            <if test="applicationName != null  and applicationName != ''"> and application_name like concat('%', #{applicationName}, '%')</if>
+            <if test="exceptionSimpleName != null  and exceptionSimpleName != ''"> and exception_simple_name like concat('%', #{exceptionSimpleName}, '%')</if>
+            <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectAnMdcExceptionLogById" parameterType="Long" resultMap="AnMdcExceptionLogResult">
+        <include refid="selectAnMdcExceptionLogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAnMdcExceptionLog" parameterType="AnMdcExceptionLog">
+        insert into an_mdc_exception_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="applicationName != null  and applicationName != ''">application_name,</if>
+            <if test="exceptionSimpleName != null  and exceptionSimpleName != ''">exception_simple_name,</if>
+            <if test="exceptionMessage != null  and exceptionMessage != ''">exception_message,</if>
+            <if test="exceptionCause != null  and exceptionCause != ''">exception_cause,</if>
+            <if test="exceptionStack != null  and exceptionStack != ''">exception_stack,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="creatorId != null ">creator_id,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null  and companyName != ''">company_name,</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnMdcExceptionLog" parameterType="AnMdcExceptionLog">
+        update an_mdc_exception_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="applicationName != null  and applicationName != ''">application_name = #{applicationName},</if>
+            <if test="exceptionSimpleName != null  and exceptionSimpleName != ''">exception_simple_name = #{exceptionSimpleName},</if>
+            <if test="exceptionMessage != null  and exceptionMessage != ''">exception_message = #{exceptionMessage},</if>
+            <if test="exceptionCause != null  and exceptionCause != ''">exception_cause = #{exceptionCause},</if>
+            <if test="exceptionStack != null  and exceptionStack != ''">exception_stack = #{exceptionStack},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null  and companyName != ''">company_name = #{companyName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnMdcExceptionLogById" parameterType="Long">
+        delete from an_mdc_exception_log where id = #{id}
+    </delete>
+
+    <delete id="deleteAnMdcExceptionLogByIds" parameterType="String">
+        delete from an_mdc_exception_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

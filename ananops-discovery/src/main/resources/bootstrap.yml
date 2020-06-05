@@ -6,8 +6,8 @@ spring:
     config:
       server:
         native:
-          search-locations: /home/ananops-cloud/ananops-config-repo
-#          search-locations: E:/GitHub/ananops-config-repo
+#          search-locations: /home/ananops-cloud/ananops-config-repo
+          search-locations: D:/ananops/ananops-cloud-repo
 
 # 注册中心配置
 eureka:

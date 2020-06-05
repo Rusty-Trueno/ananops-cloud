@@ -1,0 +1,10 @@
+server:
+  port: 8030
+spring:
+  application:
+    name: ananops-mdc
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true

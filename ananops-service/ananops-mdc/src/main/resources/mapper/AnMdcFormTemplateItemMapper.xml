@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ananops.mdc.mapper.AnMdcFormTemplateItemMapper">
+    
+    <resultMap type="AnMdcFormTemplateItem" id="AnMdcFormTemplateItemResult">
+        <result property="id"    column="id"    />
+        <result property="templateId"    column="template_id"    />
+        <result property="type"    column="type"    />
+        <result property="content"    column="content"    />
+        <result property="sort"    column="sort"    />
+        <result property="version"    column="version"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="lastOperator"    column="last_operator"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
+    </resultMap>
+
+    <sql id="selectAnMdcFormTemplateItemVo">
+        select id, template_id, type, content, sort, version, create_by, creator_id, create_time, last_operator, update_by, update_time, remark, company_id, company_name from an_mdc_form_template_item
+    </sql>
+
+    <select id="selectAnMdcFormTemplateItemList" parameterType="AnMdcFormTemplateItem" resultMap="AnMdcFormTemplateItemResult">
+        <include refid="selectAnMdcFormTemplateItemVo"/>
+        <where>  
+            <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectAnMdcFormTemplateItemById" parameterType="Long" resultMap="AnMdcFormTemplateItemResult">
+        <include refid="selectAnMdcFormTemplateItemVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAnMdcFormTemplateItem" parameterType="AnMdcFormTemplateItem">
+        insert into an_mdc_form_template_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="templateId != null ">template_id,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="sort != null ">sort,</if>
+            <if test="version != null ">version,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="creatorId != null ">creator_id,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="lastOperator != null  and lastOperator != ''">last_operator,</if>
+            <if test="updateBy != null ">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null  and companyName != ''">company_name,</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnMdcFormTemplateItem" parameterType="AnMdcFormTemplateItem">
+        update an_mdc_form_template_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="templateId != null ">template_id = #{templateId},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="sort != null ">sort = #{sort},</if>
+            <if test="version != null ">version = #{version},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="lastOperator != null  and lastOperator != ''">last_operator = #{lastOperator},</if>
+            <if test="updateBy != null ">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null  and companyName != ''">company_name = #{companyName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnMdcFormTemplateItemById" parameterType="Long">
+        delete from an_mdc_form_template_item where id = #{id}
+    </delete>
+
+    <delete id="deleteAnMdcFormTemplateItemByIds" parameterType="String">
+        delete from an_mdc_form_template_item where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
