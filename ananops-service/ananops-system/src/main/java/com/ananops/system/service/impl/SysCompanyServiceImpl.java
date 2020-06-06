@@ -1,18 +1,28 @@
 package com.ananops.system.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
+import com.ananops.common.constant.UserConstants;
 import com.ananops.common.core.dto.LoginAuthDto;
+import com.ananops.common.exception.BusinessException;
 import com.ananops.common.utils.DateUtils;
 import com.ananops.common.utils.bean.UpdateInfoUtil;
 import com.ananops.system.domain.SysDept;
+import com.ananops.system.domain.SysUser;
+import com.ananops.system.dto.CompanyRegisterDto;
+import com.ananops.system.dto.UserRegisterDto;
+import com.ananops.system.service.ISysUserService;
+import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ananops.system.mapper.SysCompanyMapper;
 import com.ananops.system.domain.SysCompany;
 import com.ananops.system.service.ISysCompanyService;
 import com.ananops.common.core.text.Convert;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 
@@ -27,6 +37,9 @@ import javax.annotation.Resource;
 public class SysCompanyServiceImpl implements ISysCompanyService {
     @Resource
     private SysCompanyMapper sysCompanyMapper;
+
+    @Resource
+    private ISysUserService sysUserService;
 
     /**
      * 查询企业
@@ -60,7 +73,7 @@ public class SysCompanyServiceImpl implements ISysCompanyService {
     public int insertSysCompany(SysCompany sysCompany, LoginAuthDto user) {
         UpdateInfoUtil.setInsertInfo(sysCompany, user);
         sysCompany.setDeptId(user.getDeptId());
-        return sysCompanyMapper.insert(sysCompany);
+        return sysCompanyMapper.insertSysCompany(sysCompany);
     }
 
     /**
@@ -106,6 +119,76 @@ public class SysCompanyServiceImpl implements ISysCompanyService {
         }
         log.info("deptId: " + String.valueOf(deptId));
         return sysCompanyMapper.selectSysCompanyByDeptId(deptId);
+    }
+
+    @Override
+    public void register(CompanyRegisterDto company) {
+        // 校验注册信息
+        validateRegisterInfo(company);
+
+        // 构建UAC User注册Dto
+        UserRegisterDto userRegisterDto = new UserRegisterDto();
+        SysCompany sysCompany = new SysCompany();
+        try {
+            // 绑定用户注册信息
+            BeanUtils.copyProperties(company,userRegisterDto);
+            userRegisterDto.setLoginName(company.getCompanyName());
+            userRegisterDto.setPhonenumber(company.getPhonenumber());
+
+            // 绑定公司注册信息
+            BeanUtils.copyProperties(company,sysCompany);
+        } catch (Exception e) {
+            log.error("服务商Dto与用户Dto属性拷贝异常");
+            e.printStackTrace();
+        }
+        log.info("注册用户. userRegisterDto={}", userRegisterDto);
+        sysUserService.register(userRegisterDto);
+        SysUser userByEmail = sysUserService.selectUserByEmail(userRegisterDto.getEmail());
+        log.info("注册用户成功userId:{}",userByEmail.getUserId());
+
+        // 构造创建对象信息
+        LoginAuthDto loginAuthDto = new LoginAuthDto();
+        loginAuthDto.setUserId(userByEmail.getUserId());
+        loginAuthDto.setUserName(userByEmail.getUserName());
+        loginAuthDto.setUserName(company.getCompanyName());
+        loginAuthDto.setLoginName(company.getCompanyName());
+
+        sysCompany.setUserId(userByEmail.getUserId());
+        log.info("注册组织. sysCompany={}", sysCompany);
+        this.insertSysCompany(sysCompany,loginAuthDto);
+    }
+
+    /**
+     * 校验注册信息
+     *
+     * @param companyRegisterDto 注册的对象
+     */
+    private void validateRegisterInfo(CompanyRegisterDto companyRegisterDto) {
+        String mobileNo = companyRegisterDto.getPhonenumber();
+
+        Preconditions.checkArgument(!StringUtils.isEmpty(companyRegisterDto.getCompanyName()), "登录名不能为空");
+        Preconditions.checkArgument(!StringUtils.isEmpty(companyRegisterDto.getEmail()), "邮箱不能为空");
+        Preconditions.checkArgument(!StringUtils.isEmpty(companyRegisterDto.getCompanyCode()), "社会编码不能为空");
+        Preconditions.checkArgument(!StringUtils.isEmpty(mobileNo), "手机号不能为空");
+        Preconditions.checkArgument(!StringUtils.isEmpty(companyRegisterDto.getPassword()), "密码不能为空");
+        Preconditions.checkArgument(!StringUtils.isEmpty(companyRegisterDto.getConfirmPwd()), "确认密码不能为空");
+        //TODO 短信验证码校验暂时不启用
+        //Preconditions.checkArgument(!StringUtils.isEmpty(companyRegisterDto.getPhoneSmsCode()), "短信验证码不能为空");
+        Preconditions.checkArgument(companyRegisterDto.getPassword().equals(companyRegisterDto.getConfirmPwd()), "两次密码不一致");
+
+        SysUser sysUser = new SysUser();
+        sysUser.setLoginName(companyRegisterDto.getCompanyName());
+        sysUser.setPhonenumber(companyRegisterDto.getPhonenumber());
+        sysUser.setEmail(companyRegisterDto.getEmail());
+
+
+        if (UserConstants.USER_NAME_NOT_UNIQUE.equals(sysUserService.checkLoginNameUnique(sysUser.getLoginName()))) {
+            throw new BusinessException("新增用户'" + sysUser.getLoginName() + "'失败，登录账号已存在");
+        } else if (UserConstants.USER_PHONE_NOT_UNIQUE.equals(sysUserService.checkPhoneUnique(sysUser))) {
+            throw new BusinessException("新增用户'" + sysUser.getLoginName() + "'失败，手机号码已存在");
+        } else if (UserConstants.USER_EMAIL_NOT_UNIQUE.equals(sysUserService.checkEmailUnique(sysUser))) {
+            throw new BusinessException("新增用户'" + sysUser.getLoginName() + "'失败，邮箱账号已存在");
+        }
     }
 
 }

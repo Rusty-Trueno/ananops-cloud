@@ -16,6 +16,11 @@
         <!--引入feign-->
         <dependency>
             <groupId>com.ananops</groupId>
+            <artifactId>ananops-websocket-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ananops</groupId>
             <artifactId>ananops-imc-api</artifactId>
             <version>1.0</version>
         </dependency>

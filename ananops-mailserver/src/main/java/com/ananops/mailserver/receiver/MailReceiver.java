@@ -1,5 +1,6 @@
 package com.ananops.mailserver.receiver;
 
+import com.ananops.system.domain.ActiveUserDto;
 import com.ananops.system.domain.MailConstants;
 import com.ananops.system.domain.SysUser;
 import com.rabbitmq.client.Channel;
@@ -37,8 +38,12 @@ public class MailReceiver {
 
     @RabbitListener(queues = MailConstants.MAIL_QUEUE_NAME) //监听
     public void handler(Message message, Channel channel) throws IOException {
-        SysUser sysUser = (SysUser) message.getPayload();
+//        SysUser sysUser = (SysUser) message.getPayload();
+        ActiveUserDto activeUserDto = (ActiveUserDto) message.getPayload();
+        SysUser sysUser = activeUserDto.getSysUser();
+        String activeUrl = activeUserDto.getActiveUrl();
         log.info("sysUse:{}",sysUser);
+        log.info("activeUrl:{}",activeUrl);
         MessageHeaders headers = message.getHeaders();
         Long tag = (Long) headers.get(AmqpHeaders.DELIVERY_TAG);
         String msgId = headers.get("id").toString();
@@ -59,10 +64,9 @@ public class MailReceiver {
             helper.setSentDate(new Date());
 
             Context context = new Context();
-            context.setVariable("name", sysUser.getUserName());
-            context.setVariable("companyName", sysUser.getCompanyName());
-            context.setVariable("phoneNumber", sysUser.getPhonenumber());
-            String mail = templateEngine.process("mail", context);
+            context.setVariable("loginName", sysUser.getUserName());
+            context.setVariable("activeUserUrl",activeUrl);
+            String mail = templateEngine.process("activeUserTemplate", context);
             helper.setText(mail, true);
             javaMailSender.send(msg);
             //发送成功，把msgId存储到redis中
@@ -76,4 +80,39 @@ public class MailReceiver {
             log.error("邮件发送失败："+e.getMessage());
         }
     }
+
+    @RabbitListener(queues = MailConstants.MAIL_QUEUE_ACTIVE_USER) //监听
+    public void handlerActiveUser(Message message, Channel channel) throws IOException {
+        SysUser sysUser = (SysUser) message.getPayload();
+        log.info("sysUse:{}",sysUser);
+        MessageHeaders headers = message.getHeaders();
+        Long tag = (Long) headers.get(AmqpHeaders.DELIVERY_TAG);
+        String msgId = headers.get("id").toString();
+        //收到消息，发送邮件
+        MimeMessage msg = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg);
+        try {
+            helper.setTo(sysUser.getEmail());
+            helper.setFrom(mailProperties.getUsername());
+            helper.setSubject("欢迎加入安安运维");
+            helper.setSentDate(new Date());
+
+            Context context = new Context();
+            context.setVariable("loginName", sysUser.getUserName());
+            String mail = templateEngine.process("activeUserSuccessTemplate", context);
+            helper.setText(mail, true);
+            javaMailSender.send(msg);
+            //发送成功，把msgId存储到redis中
+            redisTemplate.opsForHash().put("mail_log",msgId,"ananops");
+            channel.basicAck(tag,false);
+            log.info(msgId+":邮件发送成功");
+        } catch (MessagingException e) {
+            //发送失败，手动消息添加到消费队列中
+            channel.basicNack(tag,false,true);
+            e.printStackTrace();
+            log.error("邮件发送失败："+e.getMessage());
+        }
+    }
+
+
 }

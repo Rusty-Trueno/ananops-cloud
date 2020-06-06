@@ -75,3 +75,7 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
+
+ananops:
+  auth:
+    active-user-url: 127.0.0.1:9527/system/auth/activeUser/

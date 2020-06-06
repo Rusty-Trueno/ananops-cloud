@@ -20,4 +20,11 @@ public class MailserverApplication {
     Queue queue() {
         return new Queue(MailConstants.MAIL_QUEUE_NAME);
     }
+
+    @Bean
+    Queue queue2() {
+        return new Queue(MailConstants.MAIL_QUEUE_ACTIVE_USER);
+    }
+
+
 }

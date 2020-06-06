@@ -7,7 +7,6 @@ import com.ananops.common.core.service.BaseService;
 import com.ananops.common.exception.BusinessException;
 import com.ananops.common.utils.bean.BeanUtils;
 import com.ananops.common.utils.bean.UpdateInfoUtil;
-import com.ananops.imc.domain.AnImcInspectionItemLog;
 import com.ananops.imc.domain.AnImcInspectionTask;
 import com.ananops.imc.dto.*;
 import com.ananops.imc.enums.ItemStatusEnum;
@@ -183,9 +182,9 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
         Long itemId = imcItemChangeStatusDto.getItemId();
         int status = imcItemChangeStatusDto.getStatus();
         AnImcInspectionItem anImcInspectionItem = new AnImcInspectionItem();
+        UpdateInfoUtil.setModifyInfo(anImcInspectionItem,user);
         anImcInspectionItem.setId(itemId);
         anImcInspectionItem.setStatus(status);
-        UpdateInfoUtil.setModifyInfo(anImcInspectionItem,user);
         ItemStatusEnum itemStatusEnum = ItemStatusEnum.getEnum(status);
         switch (itemStatusEnum){
             case IN_THE_INSPECTION:

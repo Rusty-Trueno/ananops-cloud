@@ -80,51 +80,141 @@
         where id = #{id}
     </select>
 
+<!--    <insert id="insertSysCompany" parameterType="SysCompany" useGeneratedKeys="true" keyProperty="id">-->
+<!--        insert into sys_company-->
+<!--        <trim prefix="(" suffix=")" suffixOverrides=",">-->
+<!--            <if test="deptId != null ">dept_id,</if>-->
+<!--            <if test="companyCode != null  and companyCode != ''">company_code,</if>-->
+<!--            <if test="companyName != null  and companyName != ''">company_name,</if>-->
+<!--            <if test="type != null  and type != ''">type,</if>-->
+<!--            <if test="legalPersonName != null  and legalPersonName != ''">legal_person_name,</if>-->
+<!--            <if test="legalPersonPhone != null  and legalPersonPhone != ''">legal_person_phone,</if>-->
+<!--            <if test="legalPersonNumber != null  and legalPersonNumber != ''">legal_person_number,</if>-->
+<!--            <if test="mainWork != null  and mainWork != ''">main_work,</if>-->
+<!--            <if test="country != null  and country != ''">country,</if>-->
+<!--            <if test="zipCode != null  and zipCode != ''">zip_code,</if>-->
+<!--            <if test="accountName != null  and accountName != ''">account_name,</if>-->
+<!--            <if test="accountNumber != null  and accountNumber != ''">account_number,</if>-->
+<!--            <if test="licenseType != null  and licenseType != ''">license_type,</if>-->
+<!--            <if test="registeredCaptial != null  and registeredCaptial != ''">registered_captial,</if>-->
+<!--            <if test="expirationDate != null ">expiration_date,</if>-->
+<!--            <if test="businessScope != null  and businessScope != ''">business_scope,</if>-->
+<!--            <if test="productCategory != null  and productCategory != ''">product_category,</if>-->
+<!--            <if test="legalPersonidPhoto != null  and legalPersonidPhoto != ''">legal_personId_photo,</if>-->
+<!--            <if test="businessLicensePhoto != null  and businessLicensePhoto != ''">business_license_photo,</if>-->
+<!--            <if test="accountOpeningLicense != null  and accountOpeningLicense != ''">account_opening_license,</if>-->
+<!--            <if test="compayAddress != null  and compayAddress != ''">compay_address,</if>-->
+<!--            <if test="provinceName != null  and provinceName != ''">province_name,</if>-->
+<!--            <if test="provinceId != null ">province_id,</if>-->
+<!--            <if test="cityName != null  and cityName != ''">city_name,</if>-->
+<!--            <if test="cityId != null ">city_id,</if>-->
+<!--            <if test="areaName != null  and areaName != ''">area_name,</if>-->
+<!--            <if test="areaId != null ">area_id,</if>-->
+<!--            <if test="streetName != null  and streetName != ''">street_name,</if>-->
+<!--            <if test="streetId != null ">street_id,</if>-->
+<!--            <if test="detailAddress != null  and detailAddress != ''">detail_address,</if>-->
+<!--            <if test="status != null  and status != ''">status,</if>-->
+<!--            <if test="delFlag != null  and delFlag != ''">del_flag,</if>-->
+<!--            <if test="version != null ">version,</if>-->
+<!--            <if test="createBy != null  and createBy != ''">create_by,</if>-->
+<!--            <if test="creatorId != null ">creator_id,</if>-->
+<!--            <if test="createTime != null ">create_time,</if>-->
+<!--            <if test="updateBy != null  and updateBy != ''">update_by,</if>-->
+<!--            <if test="lastOperatorId != null ">last_operator_id,</if>-->
+<!--            <if test="updateTime != null ">update_time,</if>-->
+<!--            <if test="remark != null  and remark != ''">remark,</if>-->
+<!--            <if test="userId != null ">user_id,</if>-->
+<!--        </trim>-->
+<!--    </insert>-->
+
     <insert id="insertSysCompany" parameterType="SysCompany" useGeneratedKeys="true" keyProperty="id">
-        insert into sys_company
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="deptId != null ">dept_id,</if>
-            <if test="companyCode != null  and companyCode != ''">company_code,</if>
-            <if test="companyName != null  and companyName != ''">company_name,</if>
-            <if test="type != null  and type != ''">type,</if>
-            <if test="legalPersonName != null  and legalPersonName != ''">legal_person_name,</if>
-            <if test="legalPersonPhone != null  and legalPersonPhone != ''">legal_person_phone,</if>
-            <if test="legalPersonNumber != null  and legalPersonNumber != ''">legal_person_number,</if>
-            <if test="mainWork != null  and mainWork != ''">main_work,</if>
-            <if test="country != null  and country != ''">country,</if>
-            <if test="zipCode != null  and zipCode != ''">zip_code,</if>
-            <if test="accountName != null  and accountName != ''">account_name,</if>
-            <if test="accountNumber != null  and accountNumber != ''">account_number,</if>
-            <if test="licenseType != null  and licenseType != ''">license_type,</if>
-            <if test="registeredCaptial != null  and registeredCaptial != ''">registered_captial,</if>
-            <if test="expirationDate != null ">expiration_date,</if>
-            <if test="businessScope != null  and businessScope != ''">business_scope,</if>
-            <if test="productCategory != null  and productCategory != ''">product_category,</if>
-            <if test="legalPersonidPhoto != null  and legalPersonidPhoto != ''">legal_personId_photo,</if>
-            <if test="businessLicensePhoto != null  and businessLicensePhoto != ''">business_license_photo,</if>
-            <if test="accountOpeningLicense != null  and accountOpeningLicense != ''">account_opening_license,</if>
-            <if test="compayAddress != null  and compayAddress != ''">compay_address,</if>
-            <if test="provinceName != null  and provinceName != ''">province_name,</if>
-            <if test="provinceId != null ">province_id,</if>
-            <if test="cityName != null  and cityName != ''">city_name,</if>
-            <if test="cityId != null ">city_id,</if>
-            <if test="areaName != null  and areaName != ''">area_name,</if>
-            <if test="areaId != null ">area_id,</if>
-            <if test="streetName != null  and streetName != ''">street_name,</if>
-            <if test="streetId != null ">street_id,</if>
-            <if test="detailAddress != null  and detailAddress != ''">detail_address,</if>
-            <if test="status != null  and status != ''">status,</if>
-            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
-            <if test="version != null ">version,</if>
-            <if test="createBy != null  and createBy != ''">create_by,</if>
-            <if test="creatorId != null ">creator_id,</if>
-            <if test="createTime != null ">create_time,</if>
-            <if test="updateBy != null  and updateBy != ''">update_by,</if>
-            <if test="lastOperatorId != null ">last_operator_id,</if>
-            <if test="updateTime != null ">update_time,</if>
-            <if test="remark != null  and remark != ''">remark,</if>
-            <if test="userId != null ">user_id,</if>
-        </trim>
+        insert into sys_company(
+        <if test="companyCode != null  and companyCode != ''">company_code,</if>
+        <if test="companyName != null  and companyName != ''">company_name,</if>
+<!--        <if test="deptId != null and deptId != ''">dept_id,</if>-->
+<!--        <if test="type != null  and type != ''">type,</if>-->
+<!--        <if test="legalPersonName != null  and legalPersonName != ''">legal_person_name,</if>-->
+<!--        <if test="legalPersonPhone != null  and legalPersonPhone != ''">legal_person_phone,</if>-->
+<!--        <if test="legalPersonNumber != null  and legalPersonNumber != ''">legal_person_number,</if>-->
+<!--        <if test="mainWork != null  and mainWork != ''">main_work,</if>-->
+<!--        <if test="country != null  and country != ''">country,</if>-->
+<!--        <if test="zipCode != null  and zipCode != ''">zip_code,</if>-->
+<!--        <if test="accountName != null  and accountName != ''">account_name,</if>-->
+<!--        <if test="accountNumber != null  and accountNumber != ''">account_number,</if>-->
+<!--        <if test="licenseType != null  and licenseType != ''">license_type,</if>-->
+<!--        <if test="registeredCaptial != null  and registeredCaptial != ''">registered_captial,</if>-->
+<!--        <if test="expirationDate != null ">expiration_date,</if>-->
+<!--        <if test="businessScope != null  and businessScope != ''">business_scope,</if>-->
+<!--        <if test="productCategory != null  and productCategory != ''">product_category,</if>-->
+<!--        <if test="legalPersonidPhoto != null  and legalPersonidPhoto != ''">legal_personId_photo,</if>-->
+<!--        <if test="businessLicensePhoto != null  and businessLicensePhoto != ''">business_license_photo,</if>-->
+<!--        <if test="accountOpeningLicense != null  and accountOpeningLicense != ''">account_opening_license,</if>-->
+<!--        <if test="compayAddress != null  and compayAddress != ''">compay_address,</if>-->
+<!--        <if test="provinceName != null  and provinceName != ''">province_name,</if>-->
+<!--        <if test="provinceId != null ">province_id,</if>-->
+<!--        <if test="cityName != null  and cityName != ''">city_name,</if>-->
+<!--        <if test="cityId != null ">city_id,</if>-->
+<!--        <if test="areaName != null  and areaName != ''">area_name,</if>-->
+<!--        <if test="areaId != null ">area_id,</if>-->
+<!--        <if test="streetName != null  and streetName != ''">street_name,</if>-->
+<!--        <if test="streetId != null ">street_id,</if>-->
+<!--        <if test="detailAddress != null  and detailAddress != ''">detail_address,</if>-->
+<!--        <if test="status != null  and status != ''">status,</if>-->
+<!--        <if test="delFlag != null  and delFlag != ''">del_flag,</if>-->
+<!--        <if test="version != null ">version,</if>-->
+<!--        <if test="createBy != null  and createBy != ''">create_by,</if>-->
+<!--        <if test="creatorId != null ">creator_id,</if>-->
+<!--        <if test="updateBy != null  and updateBy != ''">update_by,</if>-->
+<!--        <if test="lastOperatorId != null ">last_operator_id,</if>-->
+<!--        <if test="updateTime != null ">update_time,</if>-->
+<!--        <if test="remark != null  and remark != ''">remark,</if>-->
+<!--        <if test="userId != null ">user_id,</if>-->
+        create_time
+        )values(
+        <if test="companyCode != null  and companyCode != ''">#{companyCode},</if>
+        <if test="companyName != null  and companyName != ''">#{companyName},</if>
+<!--        <if test="deptId != null and deptId != ''">#{deptId},</if>-->
+        <!--        <if test="type != null  and type != ''">#{type},</if>-->
+<!--        <if test="legalPersonName != null  and legalPersonName != ''">#{legalPersonName},</if>-->
+<!--        <if test="legalPersonPhone != null  and legalPersonPhone != ''">#{legalPersonPhone},</if>-->
+<!--        <if test="legalPersonNumber != null  and legalPersonNumber != ''">#{legalPersonNumber},</if>-->
+<!--        <if test="mainWork != null  and mainWork != ''">#{mainWork},</if>-->
+<!--        <if test="country != null  and country != ''">#{country},</if>-->
+<!--        <if test="zipCode != null  and zipCode != ''">#{zip_Code},</if>-->
+<!--        <if test="accountName != null  and accountName != ''">#{accountName},</if>-->
+<!--        <if test="accountNumber != null  and accountNumber != ''">#{accountNumber},</if>-->
+<!--        <if test="licenseType != null  and licenseType != ''">#{licenseType},</if>-->
+<!--        <if test="registeredCaptial != null  and registeredCaptial != ''">#{registeredCaptial},</if>-->
+<!--        <if test="expirationDate != null ">#{expirationDate},</if>-->
+<!--        <if test="businessScope != null  and businessScope != ''">#{businessScope},</if>-->
+<!--        <if test="productCategory != null  and productCategory != ''">#{productCategory},</if>-->
+<!--        <if test="legalPersonidPhoto != null  and legalPersonidPhoto != ''">#{legalPersonIdPhoto},</if>-->
+<!--        <if test="businessLicensePhoto != null  and businessLicensePhoto != ''">#{businessLicensePhoto},</if>-->
+<!--        <if test="accountOpeningLicense != null  and accountOpeningLicense != ''">#{accountOpeningLicense},</if>-->
+<!--        <if test="compayAddress != null  and compayAddress != ''">#{compayAddress},</if>-->
+<!--        <if test="provinceName != null  and provinceName != ''">#{provinceName},</if>-->
+<!--        <if test="provinceId != null ">#{provinceId},</if>-->
+<!--        <if test="cityName != null  and cityName != ''">#{cityName},</if>-->
+<!--        <if test="cityId != null ">#{cityId},</if>-->
+<!--        <if test="areaName != null  and areaName != ''">#{areaName},</if>-->
+<!--        <if test="areaId != null ">#{areaId},</if>-->
+<!--        <if test="streetName != null  and streetName != ''">#{streetName},</if>-->
+<!--        <if test="streetId != null ">#{streetId},</if>-->
+<!--        <if test="detailAddress != null  and detailAddress != ''">#{detailAddress},</if>-->
+<!--        <if test="status != null  and status != ''">#{status},</if>-->
+<!--        <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>-->
+<!--        <if test="version != null ">#{version},</if>-->
+<!--        <if test="createBy != null  and createBy != ''">#{createBy},</if>-->
+<!--        <if test="creatorId != null ">#{creatorId},</if>-->
+<!--        <if test="createTime != null ">#{createTime},</if>-->
+<!--        <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>-->
+<!--        <if test="lastOperatorId != null ">#{lastOperatorId},</if>-->
+<!--        <if test="updateTime != null ">#{updateTime},</if>-->
+<!--        <if test="remark != null  and remark != ''">#{remark},</if>-->
+<!--        <if test="userId != null ">#{userId},</if>-->
+        sysdate()
+        )
+
     </insert>
 
     <update id="updateSysCompany" parameterType="SysCompany">

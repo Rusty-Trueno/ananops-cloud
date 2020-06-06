@@ -19,7 +19,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @EnableEurekaClient
 @EnableRyFeignClients
 @MapperScan("com.ananops.*.mapper")
-@EnableScheduling
+//@EnableScheduling
 public class AnanopsSystemApp
 {
     public static void main(String[] args)

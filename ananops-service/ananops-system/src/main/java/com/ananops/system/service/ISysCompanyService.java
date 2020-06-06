@@ -3,6 +3,7 @@ package com.ananops.system.service;
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.system.domain.SysCompany;
 import com.ananops.system.domain.SysDept;
+import com.ananops.system.dto.CompanyRegisterDto;
 
 import java.util.List;
 
@@ -67,4 +68,6 @@ public interface ISysCompanyService {
      * @return
      */
     SysCompany selectSysCompanyByDeptId(SysDept sysDept);
+
+    void register(CompanyRegisterDto company);
 }
