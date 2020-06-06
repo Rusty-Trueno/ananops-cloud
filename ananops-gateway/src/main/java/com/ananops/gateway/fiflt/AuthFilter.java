@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 
 import com.alibaba.fastjson.JSON;
@@ -35,6 +36,7 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthFilter implements GlobalFilter, Ordered
 {
+    private AntPathMatcher antPathMatcher = new AntPathMatcher();
     // 排除过滤的 uri 地址
     // swagger排除自行添加
     @Value("#{'${spring.cloud.gateway.whiteList}'.split(',')}")
@@ -49,9 +51,15 @@ public class AuthFilter implements GlobalFilter, Ordered
         String url = exchange.getRequest().getURI().getPath();
         log.info("url:{}", url);
         // 跳过不需要验证的路径
-        if (whiteList.contains(url))
-        {
-            return chain.filter(exchange);
+//        if (whiteList.contains(url))
+//        {
+//            return chain.filter(exchange);
+//        }
+        for (String s : whiteList) {
+            if (antPathMatcher.match(s, url)) {
+                log.info("白名单直接放行");
+                return chain.filter(exchange);
+            }
         }
         String token = exchange.getRequest().getHeaders().getFirst(Constants.TOKEN);
         // token为空
