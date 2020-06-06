@@ -193,9 +193,10 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         Long taskId = imcTaskChangeStatusDto.getTaskId();
         Integer status = imcTaskChangeStatusDto.getStatus();
         AnImcInspectionTask anImcInspectionTask = new AnImcInspectionTask();
+        UpdateInfoUtil.setModifyInfo(anImcInspectionTask,user);
         anImcInspectionTask.setId(taskId);
         anImcInspectionTask.setStatus(status);
-        UpdateInfoUtil.setModifyInfo(anImcInspectionTask,user);
+        logger.info("anImcInspectionTask is {}",anImcInspectionTask);
         switch (TaskStatusEnum.getEnum(status)){
             case WAITING_FOR_PAY:
                 //如果当前任务状态修改为等待支付，意味着任务已经被确认
