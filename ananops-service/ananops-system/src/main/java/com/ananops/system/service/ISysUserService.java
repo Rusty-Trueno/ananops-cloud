@@ -193,4 +193,6 @@ public interface ISysUserService
     public Set<Long> selectUserIdsInDepts(Long[] deptIds);
 
     void register(UserRegisterDto user);
+
+    void activeUser(String activeUserToken);
 }

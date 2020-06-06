@@ -73,7 +73,7 @@ public class SysCompanyServiceImpl implements ISysCompanyService {
     public int insertSysCompany(SysCompany sysCompany, LoginAuthDto user) {
         UpdateInfoUtil.setInsertInfo(sysCompany, user);
         sysCompany.setDeptId(user.getDeptId());
-        return sysCompanyMapper.insert(sysCompany);
+        return sysCompanyMapper.insertSysCompany(sysCompany);
     }
 
     /**

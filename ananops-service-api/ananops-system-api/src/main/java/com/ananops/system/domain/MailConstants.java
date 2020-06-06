@@ -12,4 +12,6 @@ public class MailConstants {
     public static final String MAIL_QUEUE_NAME = "ananops.mail.queue";
     public static final String MAIL_EXCHANGE_NAME = "ananops.mail.exchange";
     public static final String MAIL_ROUTING_KEY_NAME = "ananops.mail.routing.key";
+    public static final String MAIL_QUEUE_ACTIVE_USER = "ananops.activeUser.queue";
+
 }

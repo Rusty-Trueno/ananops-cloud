@@ -1,13 +1,16 @@
 package com.ananops.system.manager;
 
+import com.ananops.common.exception.BusinessException;
 import com.ananops.system.domain.MailConstants;
 import com.ananops.system.domain.SysUser;
 import com.ananops.system.domain.MailSendLog;
 import com.ananops.system.domain.SysUserRole;
+import com.ananops.system.domain.ActiveUserDto;
 import com.ananops.system.mapper.SysUserMapper;
 import com.ananops.system.mapper.SysUserRoleMapper;
 import com.ananops.system.service.IMailSendLogService;
 import com.ananops.system.service.ISysUserService;
+import com.ananops.system.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -42,7 +45,10 @@ public class UserManager {
     @Resource
     SysUserRoleMapper sysUserRoleMapper;
 
-    public void register(final SysUser sysUser) {
+    @Resource
+    RedisService redisService;
+
+    public void register(final SysUser sysUser,final String para) {
         log.info("注册用户. user={}", sysUser);
         int result = sysUserMapper.insertUser(sysUser);
 
@@ -55,7 +61,7 @@ public class UserManager {
             sysUserRole.setRoleId((long)16);
             userRoleList.add(sysUserRole);
             sysUserRoleMapper.batchUserRole(userRoleList);
-            
+
             String msgId = UUID.randomUUID().toString();
             MailSendLog mailSendLog = new MailSendLog();
             mailSendLog.setMsgId(msgId);
@@ -66,7 +72,24 @@ public class UserManager {
             //第一次重试时间设置为一分钟后
             mailSendLog.setTryTime(new Date(System.currentTimeMillis() + 1000 * 60 * MailConstants.MSG_TIMEOUT));
             mailSendLogService.insert(mailSendLog);
-            rabbitTemplate.convertAndSend(MailConstants.MAIL_EXCHANGE_NAME, MailConstants.MAIL_ROUTING_KEY_NAME, user, new CorrelationData(msgId));
+            ActiveUserDto activeUserDto = new ActiveUserDto();
+            activeUserDto.setActiveUrl(para);
+            activeUserDto.setSysUser(user);
+            rabbitTemplate.convertAndSend(MailConstants.MAIL_EXCHANGE_NAME, MailConstants.MAIL_ROUTING_KEY_NAME, activeUserDto, new CorrelationData(msgId));
         }
+    }
+
+    public void activeUser(SysUser sysUser, String activeUserKey) {
+        log.info("激活用户. user={}", sysUser);
+         int result = sysUserService.changeStatus(sysUser);
+        if (result < 1) {
+            throw new BusinessException("激活用户失败");
+        }
+
+        String msgId = UUID.randomUUID().toString();
+        rabbitTemplate.convertAndSend(MailConstants.MAIL_QUEUE_ACTIVE_USER, sysUser, new CorrelationData(msgId));
+
+        // 删除 activeUserToken
+        redisService.deleteKey(activeUserKey);
     }
 }

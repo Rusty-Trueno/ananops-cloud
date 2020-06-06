@@ -9,10 +9,7 @@ import com.ananops.system.service.ISysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -57,4 +54,19 @@ public class AuthRestController extends BaseController {
         sysCompanyService.register(company);
         return R.ok("注册成功");
     }
+
+    /**
+     * 激活用户.
+     *
+     * @param activeUserToken the active user token
+     *
+     * @return the wrapper
+     */
+    @GetMapping(value = "/activeUser/{activeUserToken}")
+    @ApiOperation(value = "激活用户")
+    public R activeUser(@PathVariable String activeUserToken) {
+        sysUserService.activeUser(activeUserToken);
+        return R.ok("激活成功");
+    }
+
 }

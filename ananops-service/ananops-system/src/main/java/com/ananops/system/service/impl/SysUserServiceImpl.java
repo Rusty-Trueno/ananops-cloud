@@ -1,11 +1,14 @@
 package com.ananops.system.service.impl;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import cn.hutool.core.date.DateUtil;
+import com.ananops.common.redis.util.RedisKeyUtil;
 import com.ananops.common.utils.RandomUtil;
 import com.ananops.system.dto.UserRegisterDto;
 import com.ananops.system.manager.UserManager;
+import com.ananops.system.service.RedisService;
 import com.ananops.system.util.PasswordUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
@@ -13,6 +16,7 @@ import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +40,8 @@ import com.ananops.system.service.ISysConfigService;
 import com.ananops.system.service.ISysUserService;
 
 import cn.hutool.core.util.ArrayUtil;
+
+import javax.annotation.Resource;
 
 /**
  * 用户 业务层处理
@@ -68,6 +74,11 @@ public class SysUserServiceImpl implements ISysUserService
     @Autowired
     private UserManager userManager;
 
+    @Value("${ananops.auth.active-user-url}")
+    private String activeUserUrl;
+
+    @Resource
+    private RedisService redisService;
     /**
      * 根据条件分页查询用户列表
      * 
@@ -526,19 +537,37 @@ public class SysUserServiceImpl implements ISysUserService
         sysUser.setUpdateBy(registerDto.getLoginName());
 
         // 发送激活邮件
+        String activeToken = UUID.randomUUID().toString();
+        redisService.setKey(RedisKeyUtil.getActiveUserKey(activeToken), email, 1, TimeUnit.DAYS);
 
-        Map<String, Object> param = Maps.newHashMap();
-        param.put("loginName", registerDto.getLoginName());
-        param.put("email", registerDto.getEmail());
-//        param.put("activeUserUrl", activeUserUrl + activeToken);
-        param.put("dateTime", DateUtil.formatDateTime(new Date()));
+        String param =  activeUserUrl + activeToken;
+
 
         Set<String> to = Sets.newHashSet();
         to.add(registerDto.getEmail());
 
-//        MqMessageData mqMessageData = emailProducer.sendEmailMq(to, UacEmailTemplateEnum.ACTIVE_USER, AliyunMqTopicConstants.MqTagEnum.ACTIVE_USER, param);
-        userManager.register(sysUser);
+        userManager.register(sysUser,param);
 
+    }
+
+    @Override
+    public void activeUser(String activeUserToken) {
+        Preconditions.checkArgument(!org.springframework.util.StringUtils.isEmpty(activeUserToken), "激活用户失败");
+        String activeUserKey = RedisKeyUtil.getActiveUserKey(activeUserToken);
+
+        String email = redisService.getKey(activeUserKey);
+
+        if (org.springframework.util.StringUtils.isEmpty(email)) {
+            throw new BusinessException("激活失败, 链接已过期");
+        }
+        // 修改用户状态, 绑定访客角色
+        SysUser sysUser = this.selectUserByEmail(email);
+        if (sysUser == null) {
+            log.error("找不到用户信息. email={}", email);
+            throw new BusinessException("找不到用户信息");
+        }
+        sysUser.setStatus("0");
+        userManager.activeUser( sysUser, activeUserKey);
     }
 
     private void validateRegisterInfo(UserRegisterDto registerDto) {
