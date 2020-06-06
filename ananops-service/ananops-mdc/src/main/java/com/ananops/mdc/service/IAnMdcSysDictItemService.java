@@ -34,7 +34,7 @@ public interface IAnMdcSysDictItemService
      * @param anMdcSysDictItem 【请填写功能名称】
      * @return 结果
      */
-     int insertAnMdcSysDictItem(AnMdcSysDictItem anMdcSysDictItem);
+    int insertAnMdcSysDictItem(AnMdcSysDictItem anMdcSysDictItem);
 
     /**
      * 修改【请填写功能名称】
@@ -42,7 +42,7 @@ public interface IAnMdcSysDictItemService
      * @param anMdcSysDictItem 【请填写功能名称】
      * @return 结果
      */
-     int updateAnMdcSysDictItem(AnMdcSysDictItem anMdcSysDictItem);
+    int updateAnMdcSysDictItem(AnMdcSysDictItem anMdcSysDictItem);
 
     /**
      * 批量删除【请填写功能名称】

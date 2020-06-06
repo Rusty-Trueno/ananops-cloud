@@ -11,7 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="sort"    column="sort"    />
         <result property="mark"    column="mark"    />
         <result property="code"    column="code"    />
-        <result property="groupId"    column="group_id"    />
+        <result property="deptId"    column="dept_id"    />
         <result property="dr"    column="dr"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectAnMdcSysDictItemVo">
-        select id, dict_id, name, sort, mark, code, group_id, dr, create_time, update_time, latitude, longitude, version, create_by, creator_id, last_operator, update_by, remark, company_id, company_name from an_mdc_sys_dict_item
+        select id, dict_id, name, sort, mark, code, dept_id, dr, create_time, update_time, latitude, longitude, version, create_by, creator_id, last_operator, update_by, remark, company_id, company_name from an_mdc_sys_dict_item
     </sql>
 
     <select id="selectAnMdcSysDictItemList" parameterType="AnMdcSysDictItem" resultMap="AnMdcSysDictItemResult">
@@ -53,7 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sort != null ">sort,</if>
             <if test="mark != null  and mark != ''">mark,</if>
             <if test="code != null  and code != ''">code,</if>
-            <if test="groupId != null ">group_id,</if>
+            <if test="deptId != null ">dept_id,</if>
             <if test="dr != null  and dr != ''">dr,</if>
             <if test="createTime != null ">create_time,</if>
             <if test="updateTime != null ">update_time,</if>
@@ -78,7 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sort != null ">sort = #{sort},</if>
             <if test="mark != null  and mark != ''">mark = #{mark},</if>
             <if test="code != null  and code != ''">code = #{code},</if>
-            <if test="groupId != null ">group_id = #{groupId},</if>
+            <if test="deptId != null ">dept_id = #{deptId},</if>
             <if test="dr != null  and dr != ''">dr = #{dr},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
             <if test="updateTime != null ">update_time = #{updateTime},</if>

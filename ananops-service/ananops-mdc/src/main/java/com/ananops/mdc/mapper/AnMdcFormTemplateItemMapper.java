@@ -2,6 +2,8 @@ package com.ananops.mdc.mapper;
 
 import com.ananops.common.core.dao.BaseMapper;
 import com.ananops.mdc.domain.AnMdcFormTemplateItem;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -11,6 +13,8 @@ import java.util.List;
  * @author ananops
  * @date 2020-06-04
  */
+@Mapper
+@Component
 public interface AnMdcFormTemplateItemMapper extends BaseMapper<AnMdcFormTemplateItem>
 {
     /**

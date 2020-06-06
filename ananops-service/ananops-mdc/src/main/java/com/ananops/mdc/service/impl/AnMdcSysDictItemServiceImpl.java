@@ -22,6 +22,7 @@ public class AnMdcSysDictItemServiceImpl implements IAnMdcSysDictItemService
     @Autowired
     private AnMdcSysDictItemMapper anMdcSysDictItemMapper;
 
+
     /**
      * 查询【请填写功能名称】
      * 
@@ -47,7 +48,7 @@ public class AnMdcSysDictItemServiceImpl implements IAnMdcSysDictItemService
     }
 
     /**
-     * 新增【请填写功能名称】
+     * 新增字典子项
      * 
      * @param anMdcSysDictItem 【请填写功能名称】
      * @return 结果

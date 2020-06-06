@@ -42,7 +42,7 @@ public class AnMdcFormTemplate extends BaseEntity
 
     /** 公司组织ID */
     @Excel(name = "公司组织ID")
-    private Long groupId;
+    private Long deptId;
 
     /** 关联的项目ID */
     @Excel(name = "关联的项目ID")
@@ -121,14 +121,14 @@ public class AnMdcFormTemplate extends BaseEntity
     {
         return mark;
     }
-    public void setGroupId(Long groupId) 
+    public void setDeptId(Long deptId)
     {
-        this.groupId = groupId;
+        this.deptId = deptId;
     }
 
-    public Long getGroupId() 
+    public Long getDeptId()
     {
-        return groupId;
+        return deptId;
     }
     public void setProjectId(Long projectId) 
     {
@@ -211,7 +211,7 @@ public class AnMdcFormTemplate extends BaseEntity
             .append("type", getType())
             .append("status", getStatus())
             .append("mark", getMark())
-            .append("groupId", getGroupId())
+            .append("deptId", getDeptId())
             .append("projectId", getProjectId())
             .append("projectName", getProjectName())
             .append("dr", getDr())

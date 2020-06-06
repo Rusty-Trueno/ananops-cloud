@@ -46,7 +46,7 @@ public class AnMdcSysDictItem extends BaseEntity
 
     /** 公司组织Id */
     @Excel(name = "公司组织Id")
-    private Long groupId;
+    private Long deptId;
 
     /** 逻辑删除 */
     @Excel(name = "逻辑删除")
@@ -134,14 +134,14 @@ public class AnMdcSysDictItem extends BaseEntity
     {
         return code;
     }
-    public void setGroupId(Long groupId) 
+    public void setDeptId(Long deptId)
     {
-        this.groupId = groupId;
+        this.deptId = deptId;
     }
 
-    public Long getGroupId() 
+    public Long getDeptId()
     {
-        return groupId;
+        return deptId;
     }
     public void setDr(String dr) 
     {
@@ -225,7 +225,7 @@ public class AnMdcSysDictItem extends BaseEntity
             .append("sort", getSort())
             .append("mark", getMark())
             .append("code", getCode())
-            .append("groupId", getGroupId())
+            .append("deptId", getDeptId())
             .append("dr", getDr())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())

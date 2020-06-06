@@ -1,11 +1,17 @@
 package com.ananops.mdc.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.ananops.common.core.controller.BaseController;
 import com.ananops.common.core.domain.R;
+import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.mdc.domain.AnMdcFormTemplate;
+import com.ananops.mdc.dto.FormDataDto;
+import com.ananops.mdc.service.IAnMdcFormTemplateEnService;
 import com.ananops.mdc.service.IAnMdcFormTemplateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 /**
@@ -19,19 +25,25 @@ import org.springframework.web.bind.annotation.*;
 @Api("表单模板")
 public class AnMdcFormTemplateController extends BaseController
 {
-	
+
 	@Autowired
-	private IAnMdcFormTemplateService anMdcFormTemplateService;
+	private IAnMdcFormTemplateEnService anMdcFormTemplateEnService;
 	
 	/**
 	 * 查询表单模板
 	 */
-	@ApiOperation(value = "查询表单模板")
-	@GetMapping("get/{id}")
-	public AnMdcFormTemplate get(@PathVariable("id") Long id)
+	@ApiOperation(value = "查询表单模板详情")
+	@GetMapping("get/{templateId}")
+	public AnMdcFormTemplate get(@PathVariable("templateId") Long templateId)
 	{
-		return anMdcFormTemplateService.selectAnMdcFormTemplateById(id);
+		return anMdcFormTemplateEnService.queryById(templateId);
 		
+	}
+
+	@PostMapping(value = "/queryDetailsById/{templateId}")
+	@ApiOperation(httpMethod = "GET",value = "查询表单模板详情（包括内容项）")
+	public FormDataDto queryDetailsById(@PathVariable Long templateId) {
+		return anMdcFormTemplateEnService.queryDetailsById(templateId);
 	}
 	
 	/**
@@ -39,10 +51,11 @@ public class AnMdcFormTemplateController extends BaseController
 	 */
 	@ApiOperation(value = "查询表单模板列表")
 	@GetMapping("list")
-	public R list(AnMdcFormTemplate anMdcFormTemplate)
+	public R list()
 	{
+		LoginAuthDto loginAuthDto = getLoginAuthDto();
 		startPage();
-        return result(anMdcFormTemplateService.selectAnMdcFormTemplateList(anMdcFormTemplate));
+        return result(anMdcFormTemplateEnService.getFormTemplateList(loginAuthDto));
 	}
 	
 	
@@ -51,9 +64,11 @@ public class AnMdcFormTemplateController extends BaseController
 	 */
 	@ApiOperation(value = "新增保存表单模板")
 	@PostMapping("save")
-	public R addSave(@RequestBody AnMdcFormTemplate anMdcFormTemplate)
-	{		
-		return toAjax(anMdcFormTemplateService.insertAnMdcFormTemplate(anMdcFormTemplate));
+	public R addSave(@ApiParam(name = "mdcFormDataDto",value = "添加或编辑动态表单模板")@RequestBody JSONObject jsonObject)
+	{
+		FormDataDto mdcFormDataDto = JSON.parseObject(jsonObject.toJSONString(), FormDataDto.class);
+		LoginAuthDto loginAuthDto = getLoginAuthDto();
+		return R.data(anMdcFormTemplateEnService.saveFormTemplate(mdcFormDataDto, loginAuthDto));
 	}
 
 	/**
@@ -61,19 +76,21 @@ public class AnMdcFormTemplateController extends BaseController
 	 */
 	@ApiOperation(value = "修改保存表单模板")
 	@PostMapping("update")
-	public R editSave(@RequestBody AnMdcFormTemplate anMdcFormTemplate)
-	{		
-		return toAjax(anMdcFormTemplateService.updateAnMdcFormTemplate(anMdcFormTemplate));
+	public R editSave(@ApiParam(name = "mdcFormTemplate",value = "添加或编辑动态表单模板单项")@RequestBody AnMdcFormTemplate mdcFormTemplate)
+	{
+		LoginAuthDto loginAuthDto =getLoginAuthDto();
+		return R.data(anMdcFormTemplateEnService.updateFormTemplate(mdcFormTemplate, loginAuthDto));
 	}
-	
+
 	/**
-	 * 删除表单模板
+	 * 根据表单模板Id删除动态表单模板
+	 *
+	 * @return 返回
 	 */
-	@ApiOperation(value = "删除表单模板")
-	@PostMapping("remove")
-	public R remove(String ids)
-	{		
-		return toAjax(anMdcFormTemplateService.deleteAnMdcFormTemplateByIds(ids));
+	@PostMapping(value = "/deleteFormTemplateById/{templateId}")
+	@ApiOperation(httpMethod = "GET",value = "根据表单模板Id删除动态表单模板")
+	public R deleteById(@PathVariable Long templateId) {
+		return R.data(anMdcFormTemplateEnService.deleteById(templateId));
 	}
 	
 }

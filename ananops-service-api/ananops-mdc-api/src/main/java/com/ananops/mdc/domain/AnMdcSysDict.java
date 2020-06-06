@@ -42,7 +42,7 @@ public class AnMdcSysDict extends BaseEntity
 
     /** 如果为-1，表示都能查看 */
     @Excel(name = "如果为-1，表示都能查看")
-    private Long groupId;
+    private Long deptId;
 
     /** 逻辑删除 */
     @Excel(name = "逻辑删除")
@@ -113,14 +113,14 @@ public class AnMdcSysDict extends BaseEntity
     {
         return mark;
     }
-    public void setGroupId(Long groupId) 
+    public void setDeptId(Long deptId)
     {
-        this.groupId = groupId;
+        this.deptId = deptId;
     }
 
-    public Long getGroupId() 
+    public Long getDeptId()
     {
-        return groupId;
+        return deptId;
     }
     public void setDr(String dr) 
     {
@@ -185,7 +185,7 @@ public class AnMdcSysDict extends BaseEntity
             .append("dictLevel", getDictLevel())
             .append("status", getStatus())
             .append("mark", getMark())
-            .append("groupId", getGroupId())
+            .append("deptId", getDeptId())
             .append("dr", getDr())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())

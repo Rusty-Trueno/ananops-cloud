@@ -2,8 +2,11 @@ package com.ananops.mdc.controller;
 
 import com.ananops.common.core.controller.BaseController;
 import com.ananops.common.core.domain.R;
+import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.mdc.domain.AnMdcSysDictItem;
-import com.ananops.mdc.service.IAnMdcSysDictItemService;
+import com.ananops.mdc.dto.MdcAddDictItemDto;
+import com.ananops.mdc.dto.SysDictItemsDto;
+import com.ananops.mdc.service.IAnMdcSysDictItemEnService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +22,9 @@ import org.springframework.web.bind.annotation.*;
 @Api("字典子项")
 public class AnMdcSysDictItemController extends BaseController
 {
-	
+
 	@Autowired
-	private IAnMdcSysDictItemService anMdcSysDictItemService;
+	private IAnMdcSysDictItemEnService iAnMdcSysDictItemEnService;
 	
 	/**
 	 * 查询字典子项
@@ -30,7 +33,8 @@ public class AnMdcSysDictItemController extends BaseController
 	@GetMapping("get/{id}")
 	public AnMdcSysDictItem get(@PathVariable("id") Long id)
 	{
-		return anMdcSysDictItemService.selectAnMdcSysDictItemById(id);
+		LoginAuthDto loginAuthDto = getLoginAuthDto();
+		return iAnMdcSysDictItemEnService.selectAnMdcSysDictItemById(id,loginAuthDto);
 		
 	}
 	
@@ -39,10 +43,11 @@ public class AnMdcSysDictItemController extends BaseController
 	 */
 	@ApiOperation(value = "查询字典子项列表")
 	@GetMapping("list")
-	public R list(AnMdcSysDictItem anMdcSysDictItem)
+	public R list(@RequestBody MdcAddDictItemDto mdcAddDictItemDto)
 	{
+		LoginAuthDto loginAuthDto = getLoginAuthDto();
 		startPage();
-        return result(anMdcSysDictItemService.selectAnMdcSysDictItemList(anMdcSysDictItem));
+        return result(iAnMdcSysDictItemEnService.selectAnMdcSysDictItemList(mdcAddDictItemDto,loginAuthDto));
 	}
 	
 	
@@ -51,9 +56,10 @@ public class AnMdcSysDictItemController extends BaseController
 	 */
 	@ApiOperation(value = "新增保存字典子项")
 	@PostMapping("save")
-	public R addSave(@RequestBody AnMdcSysDictItem anMdcSysDictItem)
-	{		
-		return toAjax(anMdcSysDictItemService.insertAnMdcSysDictItem(anMdcSysDictItem));
+	public R addSave(@RequestBody MdcAddDictItemDto mdcAddDictItemDto)
+	{
+		LoginAuthDto loginAuthDto = getLoginAuthDto();
+		return R.data(iAnMdcSysDictItemEnService.insertAnMdcSysDictItem(mdcAddDictItemDto,loginAuthDto));
 	}
 
 	/**
@@ -61,9 +67,10 @@ public class AnMdcSysDictItemController extends BaseController
 	 */
 	@ApiOperation(value = "修改保存字典子项")
 	@PostMapping("update")
-	public R editSave(@RequestBody AnMdcSysDictItem anMdcSysDictItem)
-	{		
-		return toAjax(anMdcSysDictItemService.updateAnMdcSysDictItem(anMdcSysDictItem));
+	public R editSave(@RequestBody MdcAddDictItemDto mdcAddDictItemDto)
+	{
+		LoginAuthDto loginAuthDto = getLoginAuthDto();
+		return R.data(iAnMdcSysDictItemEnService.updateAnMdcSysDictItem(mdcAddDictItemDto,loginAuthDto));
 	}
 	
 	/**
@@ -72,8 +79,22 @@ public class AnMdcSysDictItemController extends BaseController
 	@ApiOperation(value = "删除字典子项")
 	@PostMapping("remove")
 	public R remove(String ids)
-	{		
-		return toAjax(anMdcSysDictItemService.deleteAnMdcSysDictItemByIds(ids));
+	{
+		LoginAuthDto loginAuthDto = getLoginAuthDto();
+		return toAjax(iAnMdcSysDictItemEnService.deleteAnMdcSysDictItemByIds(ids,loginAuthDto));
+	}
+
+	/**
+	 * 为维修工单页面提供准备数据
+	 *
+	 * @return 返回
+	 */
+	@GetMapping(value = "/getSysDictItemList")
+	@ApiOperation(httpMethod = "GET",value = "为维修工单页面提供准备数据")
+	public R getSysDictItemList(){
+		LoginAuthDto loginAuthDto = getLoginAuthDto();
+		SysDictItemsDto sysDictItemsDto = iAnMdcSysDictItemEnService.getSysDictItems(loginAuthDto);
+		return R.data(sysDictItemsDto);
 	}
 	
 }

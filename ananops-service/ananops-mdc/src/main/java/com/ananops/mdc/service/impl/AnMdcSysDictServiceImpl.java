@@ -5,6 +5,8 @@ import com.ananops.common.utils.DateUtils;
 import com.ananops.mdc.domain.AnMdcSysDict;
 import com.ananops.mdc.mapper.AnMdcSysDictMapper;
 import com.ananops.mdc.service.IAnMdcSysDictService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ import java.util.List;
 @Service
 public class AnMdcSysDictServiceImpl implements IAnMdcSysDictService
 {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private AnMdcSysDictMapper anMdcSysDictMapper;
 
@@ -31,6 +35,7 @@ public class AnMdcSysDictServiceImpl implements IAnMdcSysDictService
     @Override
     public AnMdcSysDict selectAnMdcSysDictById(Long id)
     {
+        logger.info("AnMdcSysDictServiceImpl.selectAnMdcSysDictById--{}",id);
         return anMdcSysDictMapper.selectAnMdcSysDictById(id);
     }
 

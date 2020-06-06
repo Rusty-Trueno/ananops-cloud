@@ -1,6 +1,10 @@
 package com.ananops.mdc.service;
 
+import com.ananops.common.core.service.IService;
 import com.ananops.mdc.domain.AnMdcFormTemplate;
+import com.ananops.mdc.domain.AnMdcFormTemplateItem;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -10,7 +14,7 @@ import java.util.List;
  * @author ananops
  * @date 2020-06-04
  */
-public interface IAnMdcFormTemplateService 
+public interface IAnMdcFormTemplateService
 {
     /**
      * 查询【请填写功能名称】

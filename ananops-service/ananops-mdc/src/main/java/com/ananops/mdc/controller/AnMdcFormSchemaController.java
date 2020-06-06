@@ -2,12 +2,18 @@ package com.ananops.mdc.controller;
 
 import com.ananops.common.core.controller.BaseController;
 import com.ananops.common.core.domain.R;
+import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.mdc.domain.AnMdcFormSchema;
+import com.ananops.mdc.dto.MdcFormSchemaDto;
+import com.ananops.mdc.service.IAnMdcFormSchemaEnService;
 import com.ananops.mdc.service.IAnMdcFormSchemaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 /**
  * 巡检表单的表结构 提供者
  * 
@@ -22,6 +28,9 @@ public class AnMdcFormSchemaController extends BaseController
 	
 	@Autowired
 	private IAnMdcFormSchemaService anMdcFormSchemaService;
+
+	@Autowired
+	private IAnMdcFormSchemaEnService anMdcFormSchemaEnService;
 	
 	/**
 	 * 查询巡检表单的表结构
@@ -74,6 +83,19 @@ public class AnMdcFormSchemaController extends BaseController
 	public R remove(String ids)
 	{		
 		return toAjax(anMdcFormSchemaService.deleteAnMdcFormSchemaByIds(ids));
+	}
+
+	/**
+	 * 获取巡检表单的表结构
+	 *
+	 * @return 返回
+	 */
+	@GetMapping(value = "/getInspcFormSchema")
+	@ApiOperation(httpMethod = "GET",value = "获取巡检表单的表结构")
+	public R getInspcFormSchema() {
+		logger.info("获取巡检表单的表结构");
+		LoginAuthDto loginAuthDto = getLoginAuthDto();
+		return R.data(anMdcFormSchemaEnService.getInspcFormSchema(loginAuthDto));
 	}
 	
 }
