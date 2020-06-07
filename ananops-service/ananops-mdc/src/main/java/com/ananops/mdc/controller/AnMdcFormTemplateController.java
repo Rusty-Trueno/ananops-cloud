@@ -34,16 +34,16 @@ public class AnMdcFormTemplateController extends BaseController
 	 */
 	@ApiOperation(value = "查询表单模板详情")
 	@GetMapping("get/{templateId}")
-	public AnMdcFormTemplate get(@PathVariable("templateId") Long templateId)
+	public R get(@PathVariable("templateId") Long templateId)
 	{
-		return anMdcFormTemplateEnService.queryById(templateId);
+		return R.data(anMdcFormTemplateEnService.queryById(templateId));
 		
 	}
 
-	@PostMapping(value = "/queryDetailsById/{templateId}")
+	@GetMapping(value = "/queryDetailsById/{templateId}")
 	@ApiOperation(httpMethod = "GET",value = "查询表单模板详情（包括内容项）")
-	public FormDataDto queryDetailsById(@PathVariable Long templateId) {
-		return anMdcFormTemplateEnService.queryDetailsById(templateId);
+	public R queryDetailsById(@PathVariable Long templateId) {
+		return R.data(anMdcFormTemplateEnService.queryDetailsById(templateId));
 	}
 	
 	/**

@@ -15,6 +15,8 @@ import com.ananops.mdc.mapper.AnMdcSysDictItemMapper;
 import com.ananops.mdc.mapper.AnMdcSysDictMapper;
 import com.ananops.mdc.service.IAnMdcSysDictItemEnService;
 import com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,8 @@ import java.util.List;
 
 @Component
 public class AnMdcSysDictItemEnServiceImpl implements IAnMdcSysDictItemEnService {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private AnMdcSysDictItemServiceImpl AnMdcSysDictItemServiceImpl;
 
@@ -45,6 +49,7 @@ public class AnMdcSysDictItemEnServiceImpl implements IAnMdcSysDictItemEnService
     {
         AnMdcSysDictItem anMdcSysDictItem=new AnMdcSysDictItem();
         BeanUtils.copyProperties(mdcAddDictItemDto,anMdcSysDictItem);
+        logger.info("AnMdcSysDictItemEnServiceImpl.selectAnMdcSysDictItemList--{}",anMdcSysDictItem);
         return AnMdcSysDictItemServiceImpl.selectAnMdcSysDictItemList(anMdcSysDictItem);
     }
 

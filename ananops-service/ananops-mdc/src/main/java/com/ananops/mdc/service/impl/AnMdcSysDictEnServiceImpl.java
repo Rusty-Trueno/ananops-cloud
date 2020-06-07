@@ -49,7 +49,21 @@ public class AnMdcSysDictEnServiceImpl implements IAnMdcSysDictEnService {
     {
         AnMdcSysDict dict = new AnMdcSysDict();
         copyPropertiesWithIgnoreNullProperties(mdcAddDictDto,dict);
-        return anMdcSysDictService.selectAnMdcSysDictList(dict);
+        List<AnMdcSysDict> res = new ArrayList<>();
+        dict.setDr(String.valueOf(0));
+        dict.setDeptId(-1L);
+        List<AnMdcSysDict> dictList=anMdcSysDictService.selectAnMdcSysDictList(dict);
+        if (dictList.size()>0){
+            res.addAll(dictList);
+        }
+        if(mdcAddDictDto.getDeptId()!=null){
+            dict.setDeptId(mdcAddDictDto.getDeptId());
+            List<AnMdcSysDict> dictList1=anMdcSysDictService.selectAnMdcSysDictList(dict);
+            if(dictList1.size()>0){
+                res.addAll(dictList1);
+            }
+        }
+        return res;
     }
 
     @Override

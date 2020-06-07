@@ -36,9 +36,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+            <if test="dictId != null  and dictId != ''"> and dict_id =#{dictId}</if>
+            <if test="dr != null  and dr != ''"> and dr =#{dr}</if>
+            <if test="deptId != null  and deptId != ''"> and dept_id =#{deptId}</if>
         </where>
     </select>
-    
+
+
     <select id="selectAnMdcSysDictItemById" parameterType="Long" resultMap="AnMdcSysDictItemResult">
         <include refid="selectAnMdcSysDictItemVo"/>
         where id = #{id}
