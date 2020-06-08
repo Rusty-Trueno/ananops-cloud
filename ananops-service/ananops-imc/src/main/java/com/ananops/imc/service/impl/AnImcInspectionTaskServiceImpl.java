@@ -137,8 +137,7 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         //更新返回结果
         BeanUtils.copyProperties(anImcInspectionTask,imcAddInspectionTaskDto);
 
-        AnImcInspectionTask task = anImcInspectionTaskMapper.selectByPrimaryKey(taskId);
-        this.handleWsMsgSend(task);
+        this.handleWsMsgSend(anImcInspectionTask);
 
         return imcAddInspectionTaskDto;
     }
@@ -475,22 +474,17 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         Long facilitatorId = task.getFacilitatorId();
         TaskWsDto taskWsDto = new TaskWsDto();
         MsgDto<TaskWsDto> msgDto = new MsgDto<>();
+        taskWsDto.setStatus(status);
+        taskWsDto.setStatusMsg(TaskStatusEnum.getStatusMsg(status));
+        taskWsDto.setTaskId(taskId);
+        msgDto.setMsgType(WsMsgType.IMC_TASK_STATUS.getType());
+        msgDto.setMsg(taskWsDto);
         if (status==-1||status==0||status==1||status==3||status==4||status==5||status==6||status==7) {
             //发给甲方负责人
-            taskWsDto.setStatus(status);
-            taskWsDto.setStatusMsg(TaskStatusEnum.getStatusMsg(status));
-            taskWsDto.setTaskId(taskId);
             msgDto.setId(String.valueOf(principalId));
-            msgDto.setMsg(taskWsDto);
-            msgDto.setMsgType(WsMsgType.IMC_TASK_STATUS.getType());
         } else if (status==2) {
             //发给服务商的消息
-            taskWsDto.setStatus(status);
-            taskWsDto.setStatusMsg(TaskStatusEnum.getStatusMsg(status));
-            taskWsDto.setTaskId(taskId);
             msgDto.setId(String.valueOf(facilitatorId));
-            msgDto.setMsg(taskWsDto);
-            msgDto.setMsgType(WsMsgType.IMC_TASK_STATUS.getType());
         } else {
             throw new BusinessException("查无此状态");
         }

@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.common.core.service.BaseService;
+import com.ananops.common.enums.WsMsgType;
 import com.ananops.common.exception.BusinessException;
 import com.ananops.common.utils.bean.BeanUtils;
 import com.ananops.common.utils.bean.UpdateInfoUtil;
@@ -16,6 +17,8 @@ import com.ananops.imc.mapper.AnImcInspectionTaskMapper;
 import com.ananops.imc.service.IAnImcInspectionTaskService;
 import com.ananops.system.domain.SysUser;
 import com.ananops.system.feign.RemoteUserService;
+import com.ananops.websocket.dto.MsgDto;
+import com.ananops.websocket.feign.RemoteWebSocketService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -50,6 +53,9 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
 
     @Autowired
     private RemoteUserService remoteUserService;
+
+    @Autowired
+    private RemoteWebSocketService remoteWebSocketService;
 
     /**
      * 查询巡检任务子项
@@ -129,6 +135,9 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
 
         //bean更新
         BeanUtils.copyProperties(anImcInspectionItem,imcAddInspectionItemDto);
+
+        this.handleWsMsgSend(anImcInspectionItem);
+
         return imcAddInspectionItemDto;
     }
 
@@ -223,6 +232,10 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
                 }
                 break;
         }
+
+        AnImcInspectionItem item = anImcInspectionItemMapper.selectByPrimaryKey(itemId);
+        this.handleWsMsgSend(item);
+
         return imcItemChangeStatusDto;
     }
 
@@ -278,6 +291,40 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
             });
         }
         return itemLogDtos;
+    }
+
+    /**
+     * 发送websocket消息
+     * @param item
+     */
+    private void handleWsMsgSend(AnImcInspectionItem item) {
+        Long itemId = item.getId();
+        Long taskId = item.getInspectionTaskId();
+        Integer status = item.getStatus();
+        Long maintainerId = item.getMaintainerId();
+        AnImcInspectionTask task = anImcInspectionTaskMapper.selectByPrimaryKey(taskId);
+        Long principalId = task.getPrincipalId();
+        Long facilitatorId = task.getFacilitatorId();
+        ItemWsDto itemWsDto = new ItemWsDto();
+        MsgDto<ItemWsDto> msgDto = new MsgDto<>();
+        itemWsDto.setItemId(itemId);
+        itemWsDto.setStatus(status);
+        itemWsDto.setStatusMsg(ItemStatusEnum.getStatusMsg(status));
+        msgDto.setMsgType(WsMsgType.IMC_ITEM_STATUS.getType());
+        msgDto.setMsg(itemWsDto);
+        if (status==2||status==5) {
+            //给工程师发消息
+            msgDto.setId(String.valueOf(maintainerId));
+        } else if (status==1) {
+            //给服务商发消息
+            msgDto.setId(String.valueOf(facilitatorId));
+        } else if (status==3||status==4) {
+            //给甲方负责人发消息
+            msgDto.setId(String.valueOf(principalId));
+        } else {
+            throw new BusinessException("查无此状态");
+        }
+        remoteWebSocketService.createWebsocketMsg(msgDto);
     }
 
     /**
