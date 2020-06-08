@@ -137,7 +137,7 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         //更新返回结果
         BeanUtils.copyProperties(anImcInspectionTask,imcAddInspectionTaskDto);
 
-        this.handleWsMsgSend(anImcInspectionTask);
+        this.handleWsMsgSend(anImcInspectionTask,user);
 
         return imcAddInspectionTaskDto;
     }
@@ -253,7 +253,7 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
                 break;
         }
         AnImcInspectionTask task = anImcInspectionTaskMapper.selectByPrimaryKey(taskId);
-        this.handleWsMsgSend(task);
+        this.handleWsMsgSend(task,user);
         return imcTaskChangeStatusDto;
     }
 
@@ -467,7 +467,7 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         return taskLogDtos;
     }
 
-    private void handleWsMsgSend(AnImcInspectionTask task) {
+    private void handleWsMsgSend(AnImcInspectionTask task,LoginAuthDto user) {
         Long taskId = task.getId();
         Integer status = task.getStatus();
         Long principalId = task.getPrincipalId();
@@ -479,6 +479,7 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         taskWsDto.setTaskId(taskId);
         msgDto.setMsgType(WsMsgType.IMC_TASK_STATUS.getType());
         msgDto.setMsg(taskWsDto);
+        msgDto.setUser(user);
         if (status==-1||status==0||status==1||status==3||status==4||status==5||status==6||status==7) {
             //发给甲方负责人
             msgDto.setId(String.valueOf(principalId));

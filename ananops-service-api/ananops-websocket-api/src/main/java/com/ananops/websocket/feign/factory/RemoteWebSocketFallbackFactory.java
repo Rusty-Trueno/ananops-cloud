@@ -1,5 +1,6 @@
 package com.ananops.websocket.feign.factory;
 
+import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.websocket.dto.MsgDto;
 import com.ananops.websocket.feign.RemoteWebSocketService;
 import feign.hystrix.FallbackFactory;

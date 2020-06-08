@@ -5,7 +5,7 @@ import com.ananops.websocket.dto.MsgDto;
 /**
  * Created by rongshuai on 2020/6/5 17:55
  */
-public interface WebsocketPushMsgService {
+public interface WebsocketMsgService {
 
     void SendMsgToFrontend(MsgDto msg);
 }

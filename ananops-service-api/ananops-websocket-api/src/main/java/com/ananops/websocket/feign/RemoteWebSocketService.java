@@ -1,6 +1,7 @@
 package com.ananops.websocket.feign;
 
 import com.ananops.common.constant.ServiceNameConstants;
+import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.websocket.dto.MsgDto;
 import com.ananops.websocket.feign.factory.RemoteWebSocketFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;

@@ -136,7 +136,7 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
         //bean更新
         BeanUtils.copyProperties(anImcInspectionItem,imcAddInspectionItemDto);
 
-        this.handleWsMsgSend(anImcInspectionItem);
+        this.handleWsMsgSend(anImcInspectionItem,user);
 
         return imcAddInspectionItemDto;
     }
@@ -234,7 +234,7 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
         }
 
         AnImcInspectionItem item = anImcInspectionItemMapper.selectByPrimaryKey(itemId);
-        this.handleWsMsgSend(item);
+        this.handleWsMsgSend(item,user);
 
         return imcItemChangeStatusDto;
     }
@@ -297,7 +297,7 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
      * 发送websocket消息
      * @param item
      */
-    private void handleWsMsgSend(AnImcInspectionItem item) {
+    private void handleWsMsgSend(AnImcInspectionItem item,LoginAuthDto user) {
         Long itemId = item.getId();
         Long taskId = item.getInspectionTaskId();
         Integer status = item.getStatus();
@@ -312,6 +312,7 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
         itemWsDto.setStatusMsg(ItemStatusEnum.getStatusMsg(status));
         msgDto.setMsgType(WsMsgType.IMC_ITEM_STATUS.getType());
         msgDto.setMsg(itemWsDto);
+        msgDto.setUser(user);
         if (status==2||status==5) {
             //给工程师发消息
             msgDto.setId(String.valueOf(maintainerId));

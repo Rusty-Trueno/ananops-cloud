@@ -1,5 +1,6 @@
 package com.ananops.websocket.dto;
 
+import com.ananops.common.core.dto.LoginAuthDto;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
@@ -18,4 +19,6 @@ public class MsgDto<T> implements Serializable {
     String msgType;
 
     T msg;
+
+    LoginAuthDto user;
 }
