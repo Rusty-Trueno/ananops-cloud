@@ -19,10 +19,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="userId"    column="user_id"    />
         <result property="msgType"    column="msg_type"    />
         <result property="msg"    column="msg"    />
+        <result property="status"  column="status"/>
     </resultMap>
 
     <sql id="selectAnWebsocketMsgVo">
-        select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, remark, company_id, company_name, user_id, msg_type, msg from an_websocket_msg
+        select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, remark, company_id, company_name, user_id, msg_type, status, msg from an_websocket_msg
     </sql>
 
     <select id="selectAnWebsocketMsgList" parameterType="AnWebsocketMsg" resultMap="AnWebsocketMsgResult">
@@ -86,5 +87,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="getWebsocketMsg" resultMap="AnWebsocketMsgResult">
+        <include refid="selectAnWebsocketMsgVo"/>
+        where 1=1
+        <if test="userId != null">and user_id = #{userId}</if>
+        <if test="status != null">and status = #{status}</if>
+        <if test="msgType != null and msgType != ''">and msg_type like concat('%',#{msgType},'%')</if>
+        order by create_time desc
+    </select>
     
 </mapper>

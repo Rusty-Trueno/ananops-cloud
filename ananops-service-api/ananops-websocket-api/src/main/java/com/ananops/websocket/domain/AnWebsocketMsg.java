@@ -48,6 +48,10 @@ public class AnWebsocketMsg extends BaseEntity
     @Excel(name = "消息体")
     private String msg;
 
+    /**消息状态*/
+    @Excel(name = "消息状态")
+    private Integer status;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -113,6 +117,14 @@ public class AnWebsocketMsg extends BaseEntity
         return msg;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -130,6 +142,7 @@ public class AnWebsocketMsg extends BaseEntity
             .append("userId", getUserId())
             .append("msgType", getMsgType())
             .append("msg", getMsg())
+            .append("status", getStatus())
             .toString();
     }
 }

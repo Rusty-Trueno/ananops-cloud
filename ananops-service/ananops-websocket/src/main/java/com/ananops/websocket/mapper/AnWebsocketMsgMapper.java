@@ -2,6 +2,8 @@ package com.ananops.websocket.mapper;
 
 import com.ananops.common.core.dao.BaseMapper;
 import com.ananops.websocket.domain.AnWebsocketMsg;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 /**
@@ -59,4 +61,13 @@ public interface AnWebsocketMsgMapper extends BaseMapper<AnWebsocketMsg>
      * @return 结果
      */
     public int deleteAnWebsocketMsgByIds(String[] ids);
+
+    /**
+     * 查询消息
+     * @param userId
+     * @param status
+     * @param msgType
+     * @return
+     */
+    public List<AnWebsocketMsg> getWebsocketMsg(@Param("userId") Long userId,@Param("status")Integer status,@Param("msgType")String msgType);
 }
