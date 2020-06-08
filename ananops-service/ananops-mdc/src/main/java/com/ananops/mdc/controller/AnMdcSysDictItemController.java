@@ -31,10 +31,10 @@ public class AnMdcSysDictItemController extends BaseController
 	 */
 	@ApiOperation(value = "查询字典子项")
 	@GetMapping("get/{id}")
-	public AnMdcSysDictItem get(@PathVariable("id") Long id)
+	public R get(@PathVariable("id") Long id)
 	{
 		LoginAuthDto loginAuthDto = getLoginAuthDto();
-		return iAnMdcSysDictItemEnService.selectAnMdcSysDictItemById(id,loginAuthDto);
+		return R.data(iAnMdcSysDictItemEnService.selectAnMdcSysDictItemById(id,loginAuthDto));
 		
 	}
 	
@@ -42,7 +42,7 @@ public class AnMdcSysDictItemController extends BaseController
 	 * 查询字典子项列表
 	 */
 	@ApiOperation(value = "查询字典子项列表")
-	@GetMapping("list")
+	@PostMapping("list")
 	public R list(@RequestBody MdcAddDictItemDto mdcAddDictItemDto)
 	{
 		LoginAuthDto loginAuthDto = getLoginAuthDto();

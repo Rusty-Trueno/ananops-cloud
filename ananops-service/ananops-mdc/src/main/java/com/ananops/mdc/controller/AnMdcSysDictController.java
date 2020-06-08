@@ -30,11 +30,11 @@ public class AnMdcSysDictController extends BaseController
 	 */
 	@ApiOperation(value = "查询字典")
 	@GetMapping("get/{id}")
-	public AnMdcSysDict get(@PathVariable("id") Long id)
+	public R get(@PathVariable("id") Long id)
 	{
 		logger.info("query dict by {}",id);
 		LoginAuthDto loginAuthDto = getLoginAuthDto();
-		return anMdcSysDictEnService.selectAnMdcSysDictById(id,loginAuthDto);
+		return R.data(anMdcSysDictEnService.selectAnMdcSysDictById(id,loginAuthDto));
 		
 	}
 	

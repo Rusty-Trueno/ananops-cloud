@@ -15,6 +15,8 @@ import com.ananops.mdc.service.IAnMdcFormTemplateEnService;
 import com.ananops.mdc.service.IAnMdcFormTemplateItemService;
 import com.ananops.mdc.service.IAnMdcFormTemplateService;
 import com.ananops.mdc.util.PublicUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,6 +28,7 @@ import java.util.List;
 
 @Component
 public class AnMdcFormTemplateEnServiceImpl implements IAnMdcFormTemplateEnService {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private IAnMdcFormTemplateService anMdcFormTemplateService;
@@ -128,6 +131,7 @@ public class AnMdcFormTemplateEnServiceImpl implements IAnMdcFormTemplateEnServi
     public List<AnMdcFormTemplate> getFormTemplateList(LoginAuthDto loginAuthDto) {
         // 这里默认只能管理员登录，管理员账号直接挂在公司组织下的，所以用户组织就是公司组织
         Long deptId = loginAuthDto.getDeptId();
+        logger.info("getFormTemplateList by {}",deptId);
         List<AnMdcFormTemplate> res = new ArrayList<>();
         AnMdcFormTemplate anMdcFormTemplate=new AnMdcFormTemplate();
         anMdcFormTemplate.setDeptId(-1L);
