@@ -1,5 +1,6 @@
 package com.ananops.common.core.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,6 +18,7 @@ public class LoginAuthDto implements Serializable {
 
     private String avatar;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     private String delFlag;
@@ -27,6 +29,7 @@ public class LoginAuthDto implements Serializable {
 
     private String email;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date loginDate;
 
     private String loginIp;
