@@ -24,6 +24,11 @@
             <artifactId>ananops-system-api</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.ananops</groupId>
+            <artifactId>ananops-websocket-api</artifactId>
+            <version>1.0</version>
+        </dependency>
         <!--引入公共组件-->
         <dependency>
             <groupId>com.ananops</groupId>

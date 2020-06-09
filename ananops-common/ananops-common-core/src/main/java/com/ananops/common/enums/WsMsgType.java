@@ -10,7 +10,9 @@ public enum WsMsgType {
     
     IMC_TASK_STATUS(0,"巡检任务状态消息","IMC_TASK_STATUS"),
 
-    IMC_ITEM_STATUS(1,"巡检任务子项状态消息","IMC_ITEM_STATUS");
+    IMC_ITEM_STATUS(1,"巡检任务子项状态消息","IMC_ITEM_STATUS"),
+
+    MDMC_TASK_STATUS(2,"维修工单状态消息","MDMC_TASK_STATUS");
 
     /**
      * The typeNum.

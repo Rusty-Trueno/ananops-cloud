@@ -3,7 +3,9 @@ package com.ananops.mdmc.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alibaba.fastjson.JSON;
 import com.ananops.common.core.dto.LoginAuthDto;
+import com.ananops.common.enums.WsMsgType;
 import com.ananops.common.exception.BusinessException;
 import com.ananops.common.utils.bean.BeanUtils;
 import com.ananops.common.utils.bean.UpdateInfoUtil;
@@ -16,6 +18,8 @@ import com.ananops.system.domain.SysRole;
 import com.ananops.system.domain.SysUser;
 import com.ananops.system.feign.RemoteRoleService;
 import com.ananops.system.feign.RemoteUserService;
+import com.ananops.websocket.dto.MsgDto;
+import com.ananops.websocket.feign.RemoteWebSocketService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -51,6 +55,9 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
 
     @Resource
     private RemoteRoleService roleService;
+
+    @Resource
+    private RemoteWebSocketService remoteWebSocketService;
 
     /**
      * 查询维修工单
@@ -210,7 +217,9 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
         //更新返回结果
         BeanUtils.copyProperties(task,mdmcAddTaskDto);
 
-        //todo 消息
+        if (task.getStatus()!=null&&task.getStatus()!=4 &&task.getStatus()!=14&&task.getStatus()!=15){
+            this.sendMsg(task,loginAuthDto);
+        }
         return mdmcAddTaskDto;
     }
 
@@ -224,8 +233,8 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
     public AnMdmcTask updateAnMdmcTask(MdmcAddTaskDto updateTaskDto,LoginAuthDto loginAuthDto)
     {
         AnMdmcTask task = new AnMdmcTask();
+        UpdateInfoUtil.setModifyInfo(task,loginAuthDto);
         BeanUtils.copyProperties(updateTaskDto,task);
-        UpdateInfoUtil.setInsertInfo(task,loginAuthDto);
         Long taskId=updateTaskDto.getId();
         if(anMdmcTaskMapper.selectByPrimaryKey(taskId)==null){
             throw new BusinessException("当前工单不存在");
@@ -241,7 +250,9 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
 
         //todo 文件
         //todo 巡检
-        //todo 消息
+        if (task.getStatus()!=null&&task.getStatus()!=4 &&task.getStatus()!=14&&task.getStatus()!=15){
+            this.sendMsg(task,loginAuthDto);
+        }
         return task;
     }
 
@@ -289,9 +300,9 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
             throw new BusinessException("查无此工单");
         }
         AnMdmcTask task=new AnMdmcTask();
+        UpdateInfoUtil.setModifyInfo(task,loginAuthDto);
         task.setStatus(status);
         task.setId(changeStatusDto.getTaskId());
-        UpdateInfoUtil.setModifyInfo(task,loginAuthDto);
         if(anMdmcTaskMapper.updateTaskStatus(task)<=0){
             throw new BusinessException("工单更改状态失败");
         }
@@ -303,8 +314,63 @@ public class AnMdmcTaskServiceImpl implements IAnMdmcTaskService
         }
         changeStatusDto.setTask(anMdmcTaskMapper.selectByPrimaryKey(taskId));
         //todo 巡检引起工单状态改变
-        //todo 消息
+        if (task.getStatus()!=null&&task.getStatus()!=4 &&task.getStatus()!=14&&task.getStatus()!=15){
+          this.sendMsg(task,loginAuthDto);
+        }
         return changeStatusDto;
+    }
+
+    private void sendMsg(AnMdmcTask mdmcTask,LoginAuthDto loginAuthDto){
+        Long taskId = mdmcTask.getId();
+        Long userId=mdmcTask.getUserId();
+        Long facilitatorId = mdmcTask.getFacilitatorId();
+        Long principalId = mdmcTask.getPrincipalId();
+        Long maintainerId=mdmcTask.getMaintainerId();
+        int status = mdmcTask.getStatus();
+        String statusMsg = MdmcTaskStatusEnum.getStatusMsg(status);
+        MdmcMsgDto mdmcSendMsgDto=new MdmcMsgDto();
+        MsgDto<MdmcMsgDto> mqSendMsgDto = new MsgDto<>();
+        if((status==1 || status==6 || status==10 ||status==12)&& userId!=null){
+            //发给值机员的消息
+            mdmcSendMsgDto.setStatus(status);
+            mdmcSendMsgDto.setStatusMsg(statusMsg);
+            mdmcSendMsgDto.setTaskId(taskId);
+            mqSendMsgDto.setId(String.valueOf(userId));
+            mqSendMsgDto.setMsg(mdmcSendMsgDto);
+            mqSendMsgDto.setMsgType(WsMsgType.MDMC_TASK_STATUS.getType());
+            mqSendMsgDto.setUser(loginAuthDto);
+        }else if((status==2||status==8||status==11||status==13)&&principalId!=null){
+            //发给用户负责人的消息
+            mdmcSendMsgDto.setStatus(status);
+            mdmcSendMsgDto.setStatusMsg(statusMsg);
+            mdmcSendMsgDto.setTaskId(taskId);
+            mqSendMsgDto.setId(String.valueOf(userId));
+            mqSendMsgDto.setMsg(mdmcSendMsgDto);
+            mqSendMsgDto.setMsgType(WsMsgType.MDMC_TASK_STATUS.getType());
+            mqSendMsgDto.setUser(loginAuthDto);
+        }else if(status==3 && facilitatorId!=null){
+            //发给服务商业务员的消息
+            mdmcSendMsgDto.setStatus(status);
+            mdmcSendMsgDto.setStatusMsg(statusMsg);
+            mdmcSendMsgDto.setTaskId(taskId);
+            mqSendMsgDto.setId(String.valueOf(userId));
+            mqSendMsgDto.setMsg(mdmcSendMsgDto);
+            mqSendMsgDto.setMsgType(WsMsgType.MDMC_TASK_STATUS.getType());
+            mqSendMsgDto.setUser(loginAuthDto);
+        }else if((status==5 ||status==9 ||status==16 ||status==17)&&maintainerId!=null ){
+            //发给维修工程师的消息
+            mdmcSendMsgDto.setStatus(status);
+            mdmcSendMsgDto.setStatusMsg(statusMsg);
+            mdmcSendMsgDto.setTaskId(taskId);
+            mqSendMsgDto.setId(String.valueOf(userId));
+            mqSendMsgDto.setMsg(mdmcSendMsgDto);
+            mqSendMsgDto.setUser(loginAuthDto);
+            mqSendMsgDto.setMsgType(WsMsgType.MDMC_TASK_STATUS.getType());
+        }else {
+            //找不到发送消息的对象
+            throw new BusinessException("找不到发送消息的对象");
+        }
+        remoteWebSocketService.createWebsocketMsg(mqSendMsgDto);
     }
 
     @Override

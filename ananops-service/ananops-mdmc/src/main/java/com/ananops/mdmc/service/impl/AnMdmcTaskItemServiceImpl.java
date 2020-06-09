@@ -104,8 +104,8 @@ public class AnMdmcTaskItemServiceImpl implements IAnMdmcTaskItemService
             throw new BusinessException("查无此任务子项");
         }
        AnMdmcTaskItem item=new AnMdmcTaskItem();
-        BeanUtils.copyProperties(itemDto,item);
         UpdateInfoUtil.setModifyInfo(item,loginAuthDto);
+        BeanUtils.copyProperties(itemDto,item);
         anMdmcTaskItemMapper.updateByPrimaryKeySelective(item);
         AnMdmcTaskItem item1=anMdmcTaskItemMapper.selectByPrimaryKey(itemId);
         BeanUtils.copyProperties(item1,item);
