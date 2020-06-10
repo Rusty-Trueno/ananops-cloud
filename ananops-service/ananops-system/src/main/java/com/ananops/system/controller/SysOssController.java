@@ -168,7 +168,12 @@ public class SysOssController extends BaseController
         ossEntity.setFileName(fileName);
         ossEntity.setCreateTime(new Date());
         ossEntity.setService(storage.getService());
-        return toAjax(sysOssService.insertSysOss(ossEntity));
+        int result = sysOssService.insertSysOss(ossEntity);
+        if( result > 0) {
+            return R.data(ossEntity);
+        } else {
+            throw new OssException("文件上传失败");
+        }
     }
 
     /**
