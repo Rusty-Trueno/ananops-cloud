@@ -25,7 +25,7 @@ hystrix:
           enabled: true
         isolation:
           thread:
-            timeoutInMilliseconds: 5000 #断路器超时时间，默认1000ms
+            timeoutInMilliseconds: 20000 #断路器超时时间，默认1000ms
 
 # 暴露监控端点
 management:

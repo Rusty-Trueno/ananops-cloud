@@ -64,3 +64,12 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+
+ribbon:
+  eager-load:
+    enabled: true
+  MaxAutoRetries: 1
+  MaxAutoRetriesNextServer: 2
+  OkToRetryOnAllOperations: false
+  ConnectTimeout: 60000
+  ReadTimeout: 20000
