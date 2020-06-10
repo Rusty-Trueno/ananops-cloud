@@ -27,6 +27,16 @@ feign:
   hystrix:
     enabled: true
 
+hystrix:
+  command:
+    default:  #default全局有效，service id指定应用有效
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 20000 #断路器超时时间，默认1000ms
+
 eureka:
   client: #客户端注册进eureka服务列表内
     service-url:

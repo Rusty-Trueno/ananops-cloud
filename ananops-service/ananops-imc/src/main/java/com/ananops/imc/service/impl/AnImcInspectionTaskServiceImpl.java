@@ -1,7 +1,11 @@
 package com.ananops.imc.service.impl;
 
+import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
+import com.ananops.common.core.domain.R;
 import com.ananops.common.core.dto.LoginAuthDto;
 import com.ananops.common.core.generator.UniqueIdGenerator;
 import com.ananops.common.core.service.BaseService;
@@ -12,18 +16,30 @@ import com.ananops.common.utils.StringUtils;
 import com.ananops.common.utils.bean.BeanUtils;
 import com.ananops.common.utils.bean.UpdateInfoUtil;
 import com.ananops.imc.domain.AnImcInspectionItem;
+import com.ananops.imc.domain.AnImcSingleFile;
 import com.ananops.imc.dto.*;
 import com.ananops.imc.enums.*;
 import com.ananops.imc.mapper.AnImcInspectionItemMapper;
 import com.ananops.imc.mapper.AnImcInspectionTaskLogMapper;
+import com.ananops.imc.mapper.AnImcSingleFileMapper;
 import com.ananops.imc.service.IAnImcInspectionItemService;
+import com.ananops.imc.utils.PdfUtil;
+import com.ananops.imc.utils.WaterMark;
+import com.ananops.system.domain.SysOss;
 import com.ananops.system.domain.SysUser;
+import com.ananops.system.dto.FileUploadDto;
+import com.ananops.system.feign.RemoteOssService;
 import com.ananops.system.feign.RemoteUserService;
 import com.ananops.websocket.dto.MsgDto;
 import com.ananops.websocket.feign.RemoteWebSocketService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ananops.imc.mapper.AnImcInspectionTaskMapper;
@@ -59,6 +75,12 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
 
     @Autowired
     private RemoteWebSocketService remoteWebSocketService;
+
+    @Autowired
+    private AnImcSingleFileMapper anImcSingleFileMapper;
+
+    @Autowired
+    private RemoteOssService remoteOssService;
 
     /**
      * 查询巡检任务表
@@ -450,6 +472,216 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
             pageInfo.setPageNum(page.getPageNum());
             return pageInfo;
         }else throw new BusinessException("参数异常");
+    }
+
+    /**
+     * 生成巡检任务报表
+     * @param taskId
+     * @param user
+     * @return
+     */
+    @Override
+    public FileUploadDto generateImcTaskPdf (Long taskId,LoginAuthDto user) {
+        AnImcInspectionTask task = anImcInspectionTaskMapper.selectByPrimaryKey(taskId);
+        if (null == task) throw new BusinessException("查无此任务");
+        List<AnImcInspectionTask> tasks = new ArrayList<>();
+        tasks.add(task);
+        //获取巡检任务信息
+        ImcInspectionTaskDto taskDto = this.transform(tasks).get(0);
+        //获取巡检任务对应的全部子项信息
+        Example example = new Example(AnImcInspectionItem.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("inspectionTaskId",taskId);
+        List<AnImcInspectionItem> items = anImcInspectionItemMapper.selectByExample(example);
+        List<ImcInspectionItemDto> itemDtos = anImcInspectionItemService.transform(items);
+        ImcTaskReportDto taskReportDto = new ImcTaskReportDto();
+        taskReportDto.setImcInspectionTaskDto(taskDto);
+        taskReportDto.setImcInspectionItemDtos(itemDtos);
+        return createPdf(taskReportDto,user);
+    }
+
+    /**
+     * 生成报表pdf
+     * @param taskReportDto
+     * @param user
+     * @return
+     */
+    private FileUploadDto createPdf(ImcTaskReportDto taskReportDto,LoginAuthDto user) {
+        FileUploadDto fileUploadDto = new FileUploadDto();
+        ImcInspectionTaskDto imcInspectionTaskDto = taskReportDto.getImcInspectionTaskDto();
+        List<ImcInspectionItemDto> imcInspectionItemDtos = taskReportDto.getImcInspectionItemDtos();
+        logger.info("taskReportDto={}",taskReportDto);
+        //创建文档对象
+        Document document = new Document(PageSize.A4);
+        try{
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            PdfWriter writer = PdfWriter.getInstance(document,out);
+
+            writer.setPageEvent(new WaterMark("安安运维（北京）科技有限公司"));// 水印
+
+            document.open();
+            document.addTitle("安安运维巡检报告");
+            //基本文字格式
+            BaseFont bfChinese = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
+            Font titlefont = new Font(bfChinese, 16, Font.BOLD);
+            Font headfont = new Font(bfChinese, 14, Font.BOLD);
+            Font keyfont = new Font(bfChinese, 10, Font.BOLD);
+            Font textfont = new Font(bfChinese, 10, Font.NORMAL);
+
+            //日期转化工具
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            // 段落
+            Paragraph paragraph = PdfUtil.createParagraph("安安运维巡检报告");
+
+            //直线
+            Paragraph p1 = new Paragraph();
+            p1.add(new Chunk(new LineSeparator()));
+
+            document.add(paragraph);
+            document.add(p1);
+
+            //增添巡检任务表单
+            PdfPTable table = PdfUtil.createTable(2,10);
+            table.addCell(PdfUtil.createCell("巡检报告：",headfont, Element.ALIGN_LEFT, 6, false));
+
+            table.addCell(PdfUtil.createCell("巡检任务Id", textfont));
+
+            table.addCell(PdfUtil.createCell(String.valueOf(imcInspectionTaskDto.getId()), textfont));
+
+            table.addCell(PdfUtil.createCell("巡检任务名称", textfont));
+
+            table.addCell(PdfUtil.createCell(imcInspectionTaskDto.getTaskName(), textfont));
+
+            table.addCell(PdfUtil.createCell("巡检类型", textfont));
+
+            table.addCell(PdfUtil.createCell(imcInspectionTaskDto.getInspectionType()==1? "计划巡检":"临时巡检", textfont));
+
+            table.addCell(PdfUtil.createCell("项目名称", textfont));
+
+            table.addCell(PdfUtil.createCell(imcInspectionTaskDto.getProjectName(), textfont));
+
+            table.addCell(PdfUtil.createCell("项目负责人姓名", textfont));
+
+            table.addCell(PdfUtil.createCell(imcInspectionTaskDto.getPrincipalName(), textfont));
+
+            table.addCell(PdfUtil.createCell("服务商名称", textfont));
+
+            table.addCell(PdfUtil.createCell(imcInspectionTaskDto.getFacilitatorName(), textfont));
+
+            table.addCell(PdfUtil.createCell("计划起始时间", textfont));
+
+            table.addCell(PdfUtil.createCell(formatter.format(imcInspectionTaskDto.getScheduledStartTime()), textfont));
+
+            table.addCell(PdfUtil.createCell("巡检周期", textfont));
+
+            table.addCell(PdfUtil.createCell(String.valueOf(imcInspectionTaskDto.getFrequency()), textfont));
+
+            table.addCell(PdfUtil.createCell("实际完成时间", textfont));
+
+            table.addCell(PdfUtil.createCell(formatter.format(imcInspectionTaskDto.getActualFinishTime()), textfont));
+
+            table.addCell(PdfUtil.createCell("巡检任务内容", textfont));
+
+            table.addCell(PdfUtil.createCell(imcInspectionTaskDto.getContent(), textfont));
+
+            document.add(table);
+
+            //添加巡检任务子项表
+            ImcInspectionItemDto imcInspectionItemDto;
+            for(int i=0;i<imcInspectionItemDtos.size();i++){
+                imcInspectionItemDto = imcInspectionItemDtos.get(i);
+                table = PdfUtil.createTable(2,10);
+                table.addCell(PdfUtil.createCell("巡检子项" + (i+1) + ":",headfont, Element.ALIGN_LEFT, 6, false));
+
+                table.addCell(PdfUtil.createCell("巡检子项Id", textfont));
+
+                table.addCell(PdfUtil.createCell(String.valueOf(imcInspectionItemDto.getId()), textfont));
+
+                table.addCell(PdfUtil.createCell("巡检子项名称", textfont));
+
+                table.addCell(PdfUtil.createCell(imcInspectionItemDto.getItemName(), textfont));
+
+                table.addCell(PdfUtil.createCell("巡检网点", textfont));
+
+                table.addCell(PdfUtil.createCell(imcInspectionItemDto.getLocation(), textfont));
+
+                table.addCell(PdfUtil.createCell("计划起始时间", textfont));
+
+                table.addCell(PdfUtil.createCell(formatter.format(imcInspectionItemDto.getScheduledStartTime()), textfont));
+
+                table.addCell(PdfUtil.createCell("计划完成天数", textfont));
+
+                table.addCell(PdfUtil.createCell(String.valueOf(imcInspectionItemDto.getDays()), textfont));
+
+                table.addCell(PdfUtil.createCell("实际起始时间", textfont));
+
+                table.addCell(PdfUtil.createCell(formatter.format(imcInspectionItemDto.getActualStartTime()), textfont));
+
+                table.addCell(PdfUtil.createCell("实际完成时间", textfont));
+
+                table.addCell(PdfUtil.createCell(formatter.format(imcInspectionItemDto.getActualFinishTime()), textfont));
+
+                table.addCell(PdfUtil.createCell("维修工姓名", textfont));
+
+                table.addCell(PdfUtil.createCell(imcInspectionItemDto.getMaintainerName(), textfont));
+
+                table.addCell(PdfUtil.createCell("巡检子项内容", textfont));
+
+                table.addCell(PdfUtil.createCell(imcInspectionItemDto.getDescription(), textfont));
+
+                table.addCell(PdfUtil.createCell("巡检结果描述", textfont));
+
+                table.addCell(PdfUtil.createCell(imcInspectionItemDto.getResult(), textfont));
+
+                document.add(table);
+            }
+
+            // 添加图片
+            Image image = Image.getInstance("classpath:/static/Logo.png");
+            image.setAlignment(Image.ALIGN_CENTER);
+            image.scalePercent(40); //依照比例缩放
+
+            document.add(image);
+
+            document.close();
+
+            String filename = "巡检任务报表" + imcInspectionTaskDto.getId() + ".pdf";
+
+            fileUploadDto = uploadReportPdf(out.toByteArray(),filename,user,imcInspectionTaskDto.getId());
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            document.close();
+        }
+        return fileUploadDto;
+    }
+
+    /**
+     * 报表上传
+     * @param data
+     * @param fileName
+     * @param user
+     * @param taskId
+     * @return
+     */
+    private FileUploadDto uploadReportPdf(byte[] data, String fileName, LoginAuthDto user, Long taskId) {
+        FileUploadDto fileUploadDto = new FileUploadDto();
+        fileUploadDto.setUser(user);
+        fileUploadDto.setFileName(fileName);
+        fileUploadDto.setData(data);
+
+        //附件上传
+        SysOss result = remoteOssService.editSave(fileUploadDto);
+        if (null != result) {
+            AnImcSingleFile singleFile = new AnImcSingleFile();
+            singleFile.setUniqueId(taskId);
+            singleFile.setUrl(result.getUrl());
+            anImcSingleFileMapper.insert(singleFile);
+        } else {
+            throw new BusinessException("附件上传失败");
+        }
+        return fileUploadDto;
     }
 
     /**

@@ -151,7 +151,7 @@ public class SysOssController extends BaseController
 
     @PostMapping("remoteUpload")
     @ApiOperation("模块间的文件上传")
-    public R remoteUpload(@RequestBody FileUploadDto fileUploadDto) {
+    public SysOss remoteUpload(@RequestBody FileUploadDto fileUploadDto) {
         if (null == fileUploadDto || null == fileUploadDto.getData() || null == fileUploadDto.getFileName()) {
             throw new OssException("上传文件不能为空");
         }
@@ -170,7 +170,7 @@ public class SysOssController extends BaseController
         ossEntity.setService(storage.getService());
         int result = sysOssService.insertSysOss(ossEntity);
         if( result > 0) {
-            return R.data(ossEntity);
+            return ossEntity;
         } else {
             throw new OssException("文件上传失败");
         }

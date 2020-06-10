@@ -3,6 +3,7 @@ package com.ananops.system.feign.factory;
 
 
 import com.ananops.common.core.domain.R;
+import com.ananops.system.domain.SysOss;
 import com.ananops.system.dto.FileUploadDto;
 import com.ananops.system.feign.RemoteOssService;
 import feign.hystrix.FallbackFactory;
@@ -24,7 +25,7 @@ public class RemoteOssFallbackFactory implements FallbackFactory<RemoteOssServic
         {
 
             @Override
-            public R editSave(FileUploadDto fileUploadDto)
+            public SysOss editSave(FileUploadDto fileUploadDto)
             {
                 return null;
             }

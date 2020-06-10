@@ -226,9 +226,15 @@ public class AnImcInspectionTaskController extends BaseController
 			uploadDto.setData(multipartFile.getBytes());
 			uploadDto.setFileName(multipartFile.getOriginalFilename());
 			uploadDto.setUser(getLoginAuthDto());
-			return remoteOssService.editSave(uploadDto);
+			return R.data(remoteOssService.editSave(uploadDto));
 		} catch (Exception e) {
 			return R.error("文件上传异常");
 		}
+	}
+
+	@ApiOperation(value = "生成任务报表")
+	@PostMapping(value = "generateTaskReport/{taskId}")
+	public R generateTaskReport(@PathVariable("taskId")Long taskId) {
+		return R.data(anImcInspectionTaskService.generateImcTaskPdf(taskId,getLoginAuthDto()));
 	}
 }

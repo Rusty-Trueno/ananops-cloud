@@ -94,4 +94,11 @@ public interface IAnImcInspectionItemService extends IService<AnImcInspectionIte
      * @return
      */
     public List<ItemLogDto> getItemLogs(Long itemId);
+
+    /**
+     * 子项转化
+     * @param imcInspectionItems
+     * @return
+     */
+    public List<ImcInspectionItemDto> transform(List<AnImcInspectionItem> imcInspectionItems);
 }

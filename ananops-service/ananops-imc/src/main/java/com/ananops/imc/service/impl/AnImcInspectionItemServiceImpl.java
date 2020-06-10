@@ -333,7 +333,8 @@ public class AnImcInspectionItemServiceImpl extends BaseService<AnImcInspectionI
      * @param imcInspectionItems
      * @return
      */
-    private List<ImcInspectionItemDto> transform(List<AnImcInspectionItem> imcInspectionItems){
+    @Override
+    public List<ImcInspectionItemDto> transform(List<AnImcInspectionItem> imcInspectionItems){
         List<ImcInspectionItemDto> imcInspectionItemDtos = new ArrayList<>();
         Map<Long,String> nameMap = new HashMap<>();
         for(AnImcInspectionItem imcInspectionItem : imcInspectionItems){
