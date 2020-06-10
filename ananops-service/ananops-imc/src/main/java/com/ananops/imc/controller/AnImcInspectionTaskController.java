@@ -7,13 +7,11 @@ import com.ananops.imc.dto.ImcTaskChangeStatusDto;
 import com.ananops.imc.dto.TaskQueryDto;
 import com.ananops.imc.enums.RoleEnum;
 import com.ananops.imc.enums.TaskStatusEnum;
+import com.ananops.system.dto.FileUploadDto;
+import com.ananops.system.feign.RemoteOssService;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +20,7 @@ import com.ananops.common.core.domain.R;
 import com.ananops.common.core.controller.BaseController;
 import com.ananops.imc.domain.AnImcInspectionTask;
 import com.ananops.imc.service.IAnImcInspectionTaskService;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 巡检任务表 提供者
@@ -37,6 +36,9 @@ public class AnImcInspectionTaskController extends BaseController
 	
 	@Autowired
 	private IAnImcInspectionTaskService anImcInspectionTaskService;
+
+	@Autowired
+	private RemoteOssService remoteOssService;
 	
 	/**
 	 * 查询巡检任务
@@ -214,5 +216,19 @@ public class AnImcInspectionTaskController extends BaseController
 	@PostMapping(value = "getTaskLogs/{taskId}")
 	public R getTaskLogs(@PathVariable Long taskId){
 		return result(anImcInspectionTaskService.getTaskLogs(taskId));
+	}
+
+	@ApiOperation(value = "文件上传测试")
+	@PostMapping(value = "upload")
+	public R fileUpload(@RequestParam("file") MultipartFile multipartFile) {
+		try {
+			FileUploadDto uploadDto = new FileUploadDto();
+			uploadDto.setData(multipartFile.getBytes());
+			uploadDto.setFileName(multipartFile.getOriginalFilename());
+			uploadDto.setUser(getLoginAuthDto());
+			return remoteOssService.editSave(uploadDto);
+		} catch (Exception e) {
+			return R.error("文件上传异常");
+		}
 	}
 }

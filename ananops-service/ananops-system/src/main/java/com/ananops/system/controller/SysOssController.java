@@ -3,6 +3,8 @@ package com.ananops.system.controller;
 import java.io.IOException;
 import java.util.Date;
 
+import com.ananops.system.dto.FileUploadDto;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -141,6 +143,28 @@ public class SysOssController extends BaseController
         ossEntity.setUrl(url);
         ossEntity.setFileSuffix(suffix);
         ossEntity.setCreateBy(getLoginName());
+        ossEntity.setFileName(fileName);
+        ossEntity.setCreateTime(new Date());
+        ossEntity.setService(storage.getService());
+        return toAjax(sysOssService.insertSysOss(ossEntity));
+    }
+
+    @PostMapping("remoteUpload")
+    @ApiOperation("模块间的文件上传")
+    public R remoteUpload(@RequestBody FileUploadDto fileUploadDto) {
+        if (null == fileUploadDto || null == fileUploadDto.getData() || null == fileUploadDto.getFileName()) {
+            throw new OssException("上传文件不能为空");
+        }
+        //上传文件
+        String fileName = fileUploadDto.getFileName();
+        String suffix = fileName.substring(fileName.lastIndexOf("."));
+        CloudStorageService storage = OSSFactory.build();
+        String url = storage.uploadSuffix(fileUploadDto.getData(), suffix);
+        // 保存文件信息
+        SysOss ossEntity = new SysOss();
+        ossEntity.setUrl(url);
+        ossEntity.setFileSuffix(suffix);
+        ossEntity.setCreateBy(fileUploadDto.getUser().getLoginName());
         ossEntity.setFileName(fileName);
         ossEntity.setCreateTime(new Date());
         ossEntity.setService(storage.getService());
