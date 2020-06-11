@@ -232,9 +232,11 @@ public class AnImcInspectionTaskController extends BaseController
 		}
 	}
 
-	@ApiOperation(value = "生成任务报表")
-	@PostMapping(value = "generateTaskReport/{taskId}")
-	public R generateTaskReport(@PathVariable("taskId")Long taskId) {
-		return R.data(anImcInspectionTaskService.generateImcTaskPdf(taskId,getLoginAuthDto()));
+	@ApiOperation(value = "获取任务报表")
+	@PostMapping(value = "getTaskReport/{taskId}")
+	public R getTaskReport(@PathVariable("taskId")Long taskId) {
+		return R.data(anImcInspectionTaskService.getTaskReport(taskId,getLoginAuthDto()));
 	}
+
+
 }

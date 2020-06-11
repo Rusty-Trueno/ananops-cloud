@@ -143,4 +143,12 @@ public interface IAnImcInspectionTaskService extends IService<AnImcInspectionTas
      * @return
      */
     public FileUploadDto generateImcTaskPdf (Long taskId, LoginAuthDto user);
+
+    /**
+     * 获取任务报表
+     * @param taskId
+     * @param user
+     * @return
+     */
+    public String getTaskReport (Long taskId, LoginAuthDto user);
 }

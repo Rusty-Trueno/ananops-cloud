@@ -474,6 +474,18 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
         }else throw new BusinessException("参数异常");
     }
 
+    @Override
+    public String getTaskReport (Long taskId, LoginAuthDto user) {
+        AnImcSingleFile singleFile = anImcSingleFileMapper.selectByPrimaryKey(taskId);
+        if (singleFile != null) {
+            return singleFile.getUrl();
+        } else {
+            generateImcTaskPdf(taskId,user);
+            singleFile = anImcSingleFileMapper.selectByPrimaryKey(taskId);
+            return singleFile.getUrl();
+        }
+    }
+
     /**
      * 生成巡检任务报表
      * @param taskId
@@ -638,7 +650,7 @@ public class AnImcInspectionTaskServiceImpl extends BaseService<AnImcInspectionT
             }
 
             // 添加图片
-            Image image = Image.getInstance("classpath:/static/Logo.png");
+            Image image = Image.getInstance("Logo.png");
             image.setAlignment(Image.ALIGN_CENTER);
             image.scalePercent(40); //依照比例缩放
 
