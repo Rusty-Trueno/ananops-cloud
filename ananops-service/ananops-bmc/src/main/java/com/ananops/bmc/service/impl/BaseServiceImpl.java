@@ -6,6 +6,10 @@ import com.ananops.bmc.dto.BillCreateDto;
 import com.ananops.bmc.dto.BillDisplayDto;
 import com.ananops.bmc.mapper.AnBmcBillMapper;
 import com.ananops.bmc.service.BaseService;
+import com.ananops.system.domain.SysDept;
+import com.ananops.system.domain.SysUser;
+import com.ananops.system.feign.RemoteDeptService;
+import com.ananops.system.feign.RemoteUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -25,58 +29,51 @@ public class BaseServiceImpl implements BaseService {
     @Resource
     AnBmcBillMapper bmcBillMapper;
 
-//    @Resource
-//    private UacUserFeignApi uacUserFeignApi;
-//
-//    @Resource
-//    private UacGroupFeignApi uacGroupFeignApi;
-//
-//    @Resource
-//    private UacGroupBindUserFeignApi uacGroupBindUserFeignApi;
-//
+    @Resource
+    private RemoteUserService remoteUserService;
+
+    @Resource
+    private RemoteDeptService remoteDeptService;
+
+    //TODO:等待SPC
 //    @Resource
 //    private SpcCompanyFeignApi spcCompanyFeignApi;
 
-//    @Override
-//    public void insert(BillCreateDto billCreateDto, BigDecimal devicePrice, BigDecimal servicePrice, String transactionMethod) {
-////        JSONObject jsonObject=JSONObject.parseObject(billCreateDto.toString());
-////        String paymentMethod=jsonObject.get("paymentMethod").toString();
-////        String userid=jsonObject.get("userid").toString();
-////        String workorderid=jsonObject.get("workorderid").toString();
-////        String supplier=jsonObject.get("supplier").toString();
-//        //TODO
-////        Float amount=Float.valueOf(jsonObject.get("amount").toString());
-////        String transactionMethod=jsonObject.get("transactionMethod").toString();
-////        String payDto = jsonObject.get("payDto").toString();
-////        JsonObject jsonObject1 = new JsonParser().parse(payDto).getAsJsonObject();
-//        Date date=new Date();
-//        Long time=date.getTime();
-//        AnBmcBill bill = new AnBmcBill();
-//
-//        int billIndex = bmcBillMapper.selectAll().size()%100000;
-//
-//        String idString = String.format("%04d", date.getYear()+1900)+String.format("%02d", date.getMonth()+1)+String.format("%02d",date.getDate())+String.format("%02d", date.getHours())+String.format("%02d", date.getMinutes())+String.format("%02d", date.getSeconds())+String.format("%05d",billIndex);
-//        Long id = Long.valueOf(idString);
-//        bill.setId(id);
-//        bill.setPaymentMethod(billCreateDto.getPaymentMethod());
-//        /*
-//        transactionMethod（1-现结、2-账期、3-年结）
-//         */
-//        switch (transactionMethod){
-//            case "1":
-//                bill.setTransactionMethod("现结");
-//                break;
-//            case "2":
-//                bill.setTransactionMethod("账期");
-//                break;
-//            case "3":
-//                bill.setTransactionMethod("年结");
-//                break;
-//        }
-//        bill.setUserId(billCreateDto.getUserId());
-//        bill.setTime(time);
-//        Long groupId = uacGroupBindUserFeignApi.getCompanyGroupIdByUserId(billCreateDto.getSupplier()).getResult();
-//        CompanyDto companyDto = uacGroupFeignApi.getCompanyInfoById(groupId).getResult();
+    @Override
+    public void insert(BillCreateDto billCreateDto, BigDecimal devicePrice, BigDecimal servicePrice, String transactionMethod) {
+        Date date=new Date();
+        Long time=date.getTime();
+        AnBmcBill bill = new AnBmcBill();
+
+        int billIndex = bmcBillMapper.selectAll().size()%100000;
+
+        String idString = String.format("%04d", date.getYear()+1900)+String.format("%02d", date.getMonth()+1)+String.format("%02d",date.getDate())+String.format("%02d", date.getHours())+String.format("%02d", date.getMinutes())+String.format("%02d", date.getSeconds())+String.format("%05d",billIndex);
+        Long id = Long.valueOf(idString);
+        bill.setId(id);
+        bill.setPaymentMethod(billCreateDto.getPaymentMethod());
+        /*
+        transactionMethod（1-现结、2-账期、3-年结）
+         */
+        switch (transactionMethod){
+            case "1":
+                bill.setTransactionMethod("现结");
+                break;
+            case "2":
+                bill.setTransactionMethod("账期");
+                break;
+            case "3":
+                bill.setTransactionMethod("年结");
+                break;
+        }
+        bill.setUserId(billCreateDto.getUserId());
+        bill.setTime(time);
+        SysUser sysUser = remoteUserService.selectSysUserByUserId(billCreateDto.getSupplier());
+        Long groupId = sysUser.getDeptId();
+        SysDept sysDept = remoteDeptService.selectSysDeptByDeptId(groupId);
+        if (sysDept.getParentId() == 0){
+        } else {
+            groupId = sysDept.getParentId();
+        }
 //        switch (companyDto.getType()){
 //            case "department":
 //                groupId = companyDto.getPid();
@@ -86,38 +83,31 @@ public class BaseServiceImpl implements BaseService {
 //            default:
 //                log.info("暂不支持此类公司类型，公司类型："+companyDto.getType());
 //        }
-//        bill.setSupplier(groupId);
-//        bill.setWorkOrderId(billCreateDto.getWorkOrderId());
-//        bill.setProjectId(billCreateDto.getProjectId());
-//        bill.setState(billCreateDto.getState());
-//        bill.setDeviceAmount(devicePrice);
-//        bill.setServiceAmount(servicePrice);
-//        bill.setAmount(bill.getDeviceAmount().add(bill.getServiceAmount()));
-//        UserInfoDto uacUserInfo = uacUserFeignApi.getUacUserById(bill.getUserId()).getResult();
-//        if(uacUserInfo != null){
-//            bill.setUserName(uacUserInfo.getUserName());
-//        }else{
-//            log.info("通过用户ID："+bill.getUserId()+"找到的用户名为空");
-//        }
+        bill.setSupplier(groupId);
+        bill.setWorkOrderId(billCreateDto.getWorkOrderId());
+        bill.setProjectId(billCreateDto.getProjectId());
+        bill.setState(billCreateDto.getState());
+        bill.setDeviceAmount(devicePrice.longValue());
+        bill.setServiceAmount(servicePrice.longValue());
+        bill.setAmount(bill.getDeviceAmount()+bill.getServiceAmount());
+        //sysUser
+//        UserInfoDto sysUser = remoteUserService.getUacUserById(bill.getUserId()).getResult();
+        bill.setUserName(sysUser.getUserName());
+        //TODO:等待SPC
 //        CompanyVo companyVo = spcCompanyFeignApi.getCompanyDetailsById(groupId).getResult();
 //        if(companyVo != null){
 //            bill.setSupplierName(companyVo.getGroupName());
 //        }else{
 //            log.info("通过服务商ID："+bill.getSupplier()+"找到的服务商名为空");
 //        }
-//        bill.setVersion((long) 1);
-//        bill.setCreateBy(bill.getUserName());
-//        bill.setCreatorId(bill.getUserId());
-//        bill.setCreateTime(new Date());
-//        bill.setLastOperator(bill.getUserName());
-////        bill.setLastOperatorId(bill.getUserId());
-//        bill.setUpdateTime(new Date());
-//        bmcBillMapper.insertSelective(bill);
-//    }
-
-    @Override
-    public void insert(BillCreateDto billCreateDto, BigDecimal devicePrice, BigDecimal servicePrice, String transactionMethod) {
-
+        bill.setVersion((long) 1);
+        bill.setCreateBy(bill.getUserName());
+        bill.setCreatorId(bill.getUserId());
+        bill.setCreateTime(new Date());
+        bill.setLastOperator(bill.getUserName());
+//        bill.setLastOperatorId(bill.getUserId());
+        bill.setUpdateTime(new Date());
+        bmcBillMapper.insertSelective(bill);
     }
 
     @Override
